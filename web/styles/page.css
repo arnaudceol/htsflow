@@ -1,0 +1,426 @@
+@charset "UTF-8";
+
+html, body {
+	/* font: normal 14px; */
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: 'Open Sans', sans-serif;
+	background-color: white;
+	color: #003366;
+	height: 100%;
+}
+
+.fa {
+	color: #004466;
+	text-decoration: none;
+}
+
+a {
+	outline: 0;
+}
+
+.centered {
+	text-align: center;
+}
+
+.message {
+	margin: 10px;
+	text-align: center;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background-color: #FFCBA4;
+}
+
+.popupstyle {
+	position: absolute;
+	padding: 8px;
+	border: thin solid #003366;
+	background-color: white;
+	z-index: 1002;
+	overflow: auto;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.over-form {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	right: 20px;
+	bottom: 20px;
+	padding: 20px;
+	border: thin solid #003366;
+	background-color: #fff; /* DDDDDD; */
+	z-index: 1003;
+	overflow: auto;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.table-container {
+	width: 100%;
+	/* max-height: 450px;  */
+	/* overflow-y: auto;	 */
+}
+
+#wrapper {
+	min-height: 100%;
+	height: auto !important;
+	/* This line and the next line are not necessary unless you need IE6 support */
+	height: 100%;
+	margin: 0 auto -4em; /* margin: 0 auto -155px;  */
+/* the bottom margin is the negative value of the footer's height */
+}
+
+#content {
+	/* padding-bottom:30px; */ /* Height of the footer element */
+	padding-left: 10%;
+	padding-right: 10%;
+}
+
+.title {
+	background-color: #FFFFFF; 
+}
+
+.search-select {
+	margin: 30px auto;
+	width: 200px;
+}
+
+.search-select .field {
+	border: 1px solid #cbbeb9;
+	box-shadow: 0 1px 0px #f1efee;
+	height: 20px;
+	width: 300px;
+	line-height: 20px;
+	padding: 15px 10px;
+	display: inline-block;
+	background-image: -moz-linear-gradient(#fafafa, #fdfbfa);
+	background-image: -webkit-linear-gradient(#fafafa, #fdfbfa);
+	background-image: linear-gradient(#fafafa, #fdfbfa);
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+
+/* Logo */
+#logo {
+	position: relative;
+	z-index: 100;
+	padding-bottom: 10px;
+	background: white url("/images/logo.png") no-repeat;
+	background-color: #D2D2D3;
+}
+
+#userlog {
+	background: white;
+}
+
+hr {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border-top: 1px solid grey;
+}
+
+/* Tables */
+.datagrid table {
+	border-collapse: collapse;
+	/* text-align: left; */
+	background-color: #fff;
+	width: 100%;
+}
+
+.datagrid {
+	overflow: hidden;
+}
+
+.datagrid table td, .datagrid table th {
+	padding: 3px 3px;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.datagrid table thead th {
+	text-transform: lowercase;
+	font-weight: normal;
+	border-bottom: 2px solid #0288AD;
+}
+
+.datagrid table tbody td {
+	font-weight: normal;
+	border-bottom: 1px solid #ccc;
+}
+
+.datagrid table tbody .alt td {
+	background: #E1EEf4;
+}
+
+.datagrid table td table td {
+	border: none;
+}
+
+.datagrid table tfoot td {
+	padding: 0;
+	font-size: 12px
+}
+
+.datagrid table tfoot td div {
+	padding: 2px;
+}
+
+.datagrid table tfoot td ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-align: right;
+}
+
+.datagrid table tfoot  li {
+	display: inline;
+}
+
+.datagrid table tfoot li a {
+	text-decoration: none;
+	display: inline-block;
+	padding: 2px 8px;
+	margin: 1px;
+	color: #FFFFFF;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #006699
+		), color-stop(1, #00557F));
+	background: -moz-linear-gradient(center top, #006699 5%, #00557F 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699',
+		endColorstr='#00557F');
+	background-color: #006699;
+}
+
+.datagrid table tfoot ul.active, .datagrid table tfoot ul a:hover {
+	text-decoration: none;
+	color: #FFFFFF;
+	background: none;
+	background-color: #006699;
+}
+
+.subButton {
+	width: 200px;
+	font-size: 1.3em
+}
+
+.highlighted {
+	background: yellow;
+}
+
+/* Menu */
+#linkmenu-wrapper {
+	height: 46px;
+	overflow: hidden;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	color: #fff;
+	background-color: #0288AD; /* 0288AD d02552  F6F3EC*/
+	border-bottom: 5px solid #0288AD;
+}
+
+#linkmenu {
+	/* border: 1px solid #CCCCCC; */
+	height: 55px;
+}
+
+#linkmenu ul {
+	line-height: normal;
+	text-align: center;
+	overflow: hidden;
+}
+
+#linkmenu li {
+	display: inline;
+	padding: 10px;
+}
+
+#linkmenu a {
+	letter-spacing: 1px;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 16px;
+	color: #fff;
+	margin-left: 5px;
+}
+
+#linkmenu a:hover, #linkmenu .current_page_item a {
+	text-decoration: underline;
+}
+
+/* Tiles */
+.tiletext {
+	padding: 5px;
+	height: 180px;
+	text-align: justify;
+	/* 	font-weight: bold; */
+	font-size: 70%;
+	color: #EEE;
+	background-color: rgba(0, 0, 0, 0.5);
+	background-size: 100%;
+}
+
+.tiletext:hover {
+	padding: 5px;
+	height: 175px;
+}
+
+.apptile {
+	border-style: solid;
+	border-width: 0px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	box-shadow: 5px 5px 5px #888888;
+	background-color: rgb(255, 255, 255);
+	background-size: 80%;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.apptile:hover {
+	box-shadow: 3px 3px 3px #888888;
+	margin-left: 5px;
+	margin-top: 5px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.big {
+	width: 250px;
+	height: 230px;
+	float: left;
+}
+
+.big:hover {
+	width: 245px;
+	height: 225px;
+	float: left;
+}
+
+.small {
+	width: 200px;
+	height: 35px;
+	float: left;
+}
+
+.apptile-title {
+	height: 30px;
+	top: 15px;
+	padding: 5px;
+	font-weight: bold;
+	color: #1C95C4; /*#123459 #64898C*/
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.apptile-title:hover {
+	height: 28px;
+	top: 13px;
+}
+
+.apptile-container {
+	overflow: hidden;
+	margin-top: 35px;
+	margin-bottom: 35px;
+}
+
+/* tabs */
+
+/* TR overrides */
+.ui-spinner .ui-icon-triangle-1-s {
+	/* need to fix icons sprite */
+	background-position: -65px -16px;
+}
+
+.ui-tabs {
+	position: relative;
+	/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+	padding: .2em;
+}
+
+.ui-tabs .ui-tabs-nav {
+	margin-bottom: 50px;
+	padding: .2em .2em 0;
+}
+
+.ui-tabs .ui-tabs-nav li {
+	list-style: none;
+	float: left;
+	position: relative;
+	top: 0;
+	margin: 1px .2em 0 0;
+	border-bottom-width: 0;
+	padding: 0;
+	white-space: nowrap;
+}
+
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+	float: left;
+	padding: .5em 1em;
+	color: #00557F;
+	font-size: 1.5em;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+	background-color: #FFFFFF; /* 0288AD d02552  F6F3EC*/
+	border-bottom: 5px solid #0288AD;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor, .ui-tabs .ui-tabs-nav li.ui-state-disabled .ui-tabs-anchor,
+	.ui-tabs .ui-tabs-nav li.ui-tabs-loading .ui-tabs-anchor {
+	cursor: text;
+}
+
+.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor {
+	cursor: pointer;
+}
+
+.ui-tabs .ui-tabs-panel {
+	display: block;
+	border-width: 0;
+	padding: 1em 1.4em;
+	background: none;
+}
+
+.filtertable {
+	border-style: solid;
+	border-color: #FFCBA4;
+	background-color: #FFF; /* #FFCBA4; */
+	margin-top: 10px;
+	margin-bottom: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.filtertable select {
+	/* background-color: #b2cecf; 0288AD; */
+	color: #0288AD;
+	font-style: normal;
+	font-size: 12px;
+}
+
+button, input[type="button"], input[type="submit"] {
+	background: #0288AD;
+	-webkit-border-radius: 28;
+	-moz-border-radius: 28;
+	border-radius: 28px;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+button, input[type="button"], input[type="submit"] :hover {
+	background: #0288AD;
+	text-decoration: none;
+}

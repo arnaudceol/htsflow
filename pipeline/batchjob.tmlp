@@ -1,0 +1,28 @@
+#!/bin/bash
+# The name of the job, can be anything, simply used when displaying the list of running jobs
+#$ -N <%= job.name %>
+# One needs to tell the queue system to use the current directory as the working directory
+# Or else the script may fail as it will execute in your top level home directory /home/username
+#$ -cwd
+#$ -j yes
+# use environment variables
+#$ -V
+#$ -S /bin/bash
+
+if [ -z "$HTSFLOW_CONF" ]; then
+    echo "Need to set HTSFLOW_CONF"
+    exit 1
+fi
+
+echo "HTSFLOW_CONF: $HTSFLOW_CONF"
+HTSFLOW_PIPELINE=$(awk -F "=" '/HTSFLOW_PIPELINE/ {print $2}' $HTSFLOW_CONF);
+HTSFLOW_RPATH=$(awk -F "=" '/Rbase/ {print $2}' $HTSFLOW_CONF);
+
+echo "Pipeline: $HTSFLOW_PIPELINE"
+echo "Rpath: $HTSFLOW_RPATH"
+
+cd $HTSFLOW_PIPELINE
+
+$HTSFLOW_RPATH/bin/R CMD BATCH --no-save --no-restore "<%= rscript %>" /dev/stdout
+
+exit 0

@@ -1,0 +1,21 @@
+General sample description:
+organism: human/⁠mouse/⁠rat/⁠drosophila
+tissue: liver, spleen, lung, brain etc.
+cell type: purified B cells, whole liver, fetal hepatoblasts (if applicable: include purification protocol) etc.
+cell line: 3T9, HepG2, HeLa, Eµ-myc lymphoma 12345, etc.
+genotype: tet-Myc/LaptTA, Eµ-myc etc.; genotype and mutations etc.
+genetic modification: shRNA, overexpression, stable MycER, CRISPR/Cas9 etc.
+treatment: OHT, nutlin, serum etc.
+time-point within a time-series?
+project: experimenter; group xxx/xxx; collaboration with xxx
+reliability: reliable/untrustworthy
+
+ChIPseq:
+mantibody: order number, company, lot number
+protocol: sepharose beads, dyna beads etc
+spike-in: ChIPspike+, ChIPspike-
+
+RNAseq:
+spike-⁠in: RNAspike+/RNAspike- (#1, #2, spiked how?)
+RNA: ribozero, polyA, total
+library preparation: regular, stranded (please select one of these two words only! non-stranded would interfere with searchability)
