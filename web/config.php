@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$conf= "/home/aceol/workspace45/htsflow2/conf/htsflow-local.ini";
+$conf= "../conf/htsflow-local.ini";
 
 $HTSFLOW_PATHS=array();
 
