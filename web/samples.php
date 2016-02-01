@@ -113,7 +113,7 @@ header('Content-type: text/html; charset=utf-8');
 			<div
 				style="text-align: right; margin: 20px; font-style: italic; font-weight: bold"
 				onclick="javascript:toggle('external_div')">close</div>
-			<div class="title">Add external data:</div><br/>
+			<div class="title">Add external data: (<a href="http://localhost:3030/usage.php#title4">see how to prepare data</a>).</div><br/>
 			<form name="external" action="samples.php" method="post">				
 				<table ><tr style="vertical-align: top;"><td>
 				<table >

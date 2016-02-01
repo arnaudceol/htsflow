@@ -232,13 +232,13 @@ header('Content-type: text/html; charset=utf-8');
 					</div>
 					<div>The <i class="fa fa-share"></i> icon is used to see the primary analysis 
 					run on a sample.</div>
+
+					<h3>Preparing the FASTQ file(s)</h3>
 					<p>External data (FASTQ) should be stored in a location accessible
 						to the web server. HTS-flow does not accept BAM files as external
 						data. If the starting file is in BAM format, it must first be
 						converted in FASTQ format (for example, using bamtools available
 						here https://github.com/pezmaster31/bamtools).</p>
-
-					<h3>Preparing the FASTQ file(s)</h3>
 					<div>Each sample must be stored in HTS-flow’s external_data folder
 						(defined in the configuration file), or a folder accessible from
 						the web server.</div>
