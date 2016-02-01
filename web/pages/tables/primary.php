@@ -113,8 +113,8 @@ if (isset($_POST["extendedTable"])) {
 }
 
 $pageURL = 'http';
-if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-$pageURL .= "://";
+if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+    $pageURL .= "://";
 if ($_SERVER["SERVER_PORT"] != "80") {
     $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 } else {
@@ -160,12 +160,21 @@ switch ($numOfelements) {
 //         break;
 }
 
-error_log( "SELECT COUNT(*) FROM (". $sql . ") as g" );
 $result = mysqli_query($con, "SELECT COUNT(*) FROM (". $sql . ") as g" );
 $count=$result->fetch_row();
 $result->close();
 $numRighe= $count[0];
 $result = mysqli_query($con, $sql .  " ORDER BY primary_analysis.id desc " . $pagination);
+
+
+// Get list of merging
+$sqlMerged = "SELECT result_primary_id FROM merged_primary;";
+
+$mergedQuery = mysqli_query($con, $sqlMerged );
+$mergedIds = array();
+while($mergedResult = mysqli_fetch_array($mergedQuery)) {
+    $mergedIds[] = $mergedResult[0];
+}
 
 ?>
   
@@ -323,9 +332,11 @@ while ($row = mysqli_fetch_assoc($result)) {
             
             
             
-            ?><?php if ($row["status"] == "completed") { ?>
-							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><i title="Browse results" class="fa fa-folder"></i></a>
-							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download results" class="fa fa-download"></i></a>
+            ?><?php if ($row["status"] == "completed") { 
+            		if (! in_array($row ["id_pre"], $mergedIds)) { ?>
+							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><i title="Browse FastQC Report" class="fa fa-folder"></i></a>
+							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a>
+					<?php } ?>
 							<a href="secondary-browse.php?primaryId=<?php  echo $row ["id_pre"]; ?>" ><i  title="Go to secondary analyses" class="fa fa-share"></i></a>
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
@@ -356,7 +367,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<td><?php echo $row["status"]; ?>
 					<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 
 					   echo $row["user_name"];  
-					   if ($row["SOURCE"] == 1) {
+					   if (in_array($row ["id_pre"], $mergedId)) {
 					       echo '/M';
 					   } else {
 					       echo "/P";
