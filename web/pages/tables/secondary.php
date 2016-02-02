@@ -160,27 +160,7 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 						onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>', 'selectedIds');"></a>
 						<div id="OPTIONS_<?php echo $row["id"]; ?>"
 							style="display: none" class="popupstyle">
-							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a>
-							<p><b>Description: </b><?php echo $row['description']; ?>
-							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("description_<?php echo $row["id"]; ?>")'></a><form action=""
-										name="submitDescription_<?php echo $row["id"]; ?>"
-										method="post"><div id="description_<?php echo $row["id"]; ?>"
-											style="display: none" class="popupstyle"><table>
-												<tbody>
-													<tr>
-														<td width="100%"><textarea rows="2" name="TEXTdescription"
-																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
-														</td>
-														<td><input type="submit" value="Submit"
-															name="submitDescription" /> <input type="hidden" name="ID"
-															value="<?php echo $row["id"]; ?>" /></td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</form><?php  } ?></p>
-							<p>
+							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a>							
 							<b>Start: </b><?php echo $row["dateStart"];  ?><br/>
 							<b>End/time (hh:mm:ss): </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?><br/>
 							</p>
@@ -218,12 +198,11 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					</table>
 					</td>
 					<td class="centered"><?php echo $row["method"]; ?></td>		
-					<td><a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a><?php 
-					   echo $row['description']; ?>
+					<td><?php echo $row['description']; ?>
 							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("description_<?php echo $row["id"]; ?>")'></a><form action=""
 										name="submitDescription_<?php echo $row["id"]; ?>"
-										method="post"><div id="description_<?php echo $row["id"]; ?>"
+										method="post"><div id="description_<?php echo $row["id"]; ?>" 
 											style="display: none" class="popupstyle"><table>
 												<tbody>
 													<tr>

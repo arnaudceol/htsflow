@@ -267,26 +267,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                 		<div id="OPTIONS_<?php echo $row["id_pre"]; ?>"
 							style="display: none" class="popupstyle">
 							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id_pre"]; ?>'); "></a>
-							<p><b>Description: </b><?php echo $row['description']; ?>
-							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("description_<?php echo $row["id_pre"]; ?>")'></a><form action=""
-										name="submitDescription_<?php echo $row["id"]; ?>"
-										method="post"><div id="description_<?php echo $row["id_pre"]; ?>"
-											style="display: none" class="popupstyle"><table>
-												<tbody>
-													<tr>
-														<td width="100%"><textarea rows="2" name="TEXTdescription"
-																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
-														</td>
-														<td><input type="submit" value="Submit"
-															name="submitDescriptionPrimary" /> <input type="hidden" name="ID"
-															value="<?php echo $row["id_pre"]; ?>" /></td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</form><?php  } ?>	
-							</p>
 							<p>
 							<b>Start: </b><?php echo $row["dateStart"];  ?><br/>
 							<b>End/time (hh:mm:ss): </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?><br/>
@@ -346,7 +326,24 @@ while ($row = mysqli_fetch_assoc($result)) {
 							</span>		
 							<?php }?>
 					</td>	
-					<td><?php echo $row[description]; ?></td>			
+					<td><?php echo $row[description]; ?><?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
+									onclick='javascript:toggle("description_<?php echo $row["id_pre"]; ?>")'></a><form action=""
+										name="submitDescription_<?php echo $row["id"]; ?>"
+										method="post"><div id="description_<?php echo $row["id_pre"]; ?>"
+											style="display: none" class="popupstyle"><table>
+												<tbody>
+													<tr>
+														<td width="100%"><textarea rows="2" name="TEXTdescription"
+																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
+														</td>
+														<td><input type="submit" value="Submit"
+															name="submitDescriptionPrimary" /> <input type="hidden" name="ID"
+															value="<?php echo $row["id_pre"]; ?>" /></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</form><?php  } ?>	</td>			
 					<td class="centered"><?php echo $row["id_sample_fk"]; ?><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><i title="Go to sample" class="fa fa-reply"></i></a></td>
 					<td><?php echo $row["sample_name"]; ?></td>
 					<td class="centered"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); ?></td>
