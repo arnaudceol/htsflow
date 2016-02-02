@@ -23,6 +23,7 @@
 <li><i class="fa fa-thumbs-down"></i> Analysis with error.</li>
 <li><i class="fa fa-cog"></i> Running analysis.</li>
 <li><i class="fa fa-times" style="color: grey"></i> Deleted analyses.</li>
+<li><i class="fa fa-clock-o" style="color: grey"></i> Queued/Waiting to start.</li>
 </ul>
 
 <b>Table navigation:</b>
@@ -38,7 +39,7 @@
 <ul class="fa-ul">
 <li><i class="fa fa-eraser"></i> Delete analysis: all data output will be removed from disk and the analysis will be marked as deleted.</li>
 <li><i class="fa fa-repeat"></i> Repeat the analysis: only available for analysis which have been previously deleted.</li>
-<li><i class="fa fa-eye"></i> Click to show details.</li>
+<li><i class="fa fa-info"></i> Click to show details.</li>
 <li><i class="fa fa-pencil"></i> Edit information.</li> 
 <li><i class="fa fa-file-text-o" style="color: green"></i> Description available (click to edit).</li>
 <li><i class="fa fa-file-o" style="color: red"></i> Missing description (click to edit).</li>

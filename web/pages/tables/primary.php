@@ -224,17 +224,16 @@ include 'browseScripts.php';
 					<?php } ?>					
 					<th class="centered">PRIMARY ID</th>
 					<th style="width: 0%"></th>
+					<th>DESCRIPTION</th>
 					<th class="centered">SAMPLE ID</th>
 					<th style="text-align: left">Sample name</th>
 					<th class="centered">READS NUM (raw/aligned)</th>
 					<th class="centered">REF GENOME</th>
 					<th class="centered">METHOD</th>
-					<th class="centered">SOURCE</th>
-					<th>START</th>
-					<th>END/TIME (hh:mm:ss)</th>
-					<th>STATUS</th>					
-					<th class="centered">USER</th>
-					<th class="centered">SAMPLE SUBMITTER</th>
+					<th class="centered">SOURCE</th>			
+					<th class="centered">SAMPLE SUBMITTER</th>								
+					<th style="text-align: right">USER</th>
+					<th></th>		
 				</tr>
 			</thead>
 			<tbody>
@@ -264,12 +263,12 @@ while ($row = mysqli_fetch_assoc($result)) {
             $res = mysqli_query($con, $query);
             while ($row_details = mysqli_fetch_assoc($res)) {
                 ?>
-                	<a title="show details" id="ICON_<?php echo $row["id_pre"]; ?>" class="fa fa-eye" href="#" onclick="javascript:toggle('OPTIONS_<?php echo $row["id_pre"]; ?>'); $(this).toggleClass('fa-eye');$(this).toggleClass('fa-eye-slash')"></a>                	                	
+                	<a title="show details" id="ICON_<?php echo $row["id_pre"]; ?>" class="fa fa-info" href="#" onclick="javascript:toggle('OPTIONS_<?php echo $row["id_pre"]; ?>');"></a>                	                	
                 		<div id="OPTIONS_<?php echo $row["id_pre"]; ?>"
 							style="display: none" class="popupstyle">
-							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id_pre"]; ?>'); $('#ICON_<?php echo $row["id_pre"]; ?>').toggleClass('fa-eye');$('#ICON_<?php echo $row["id_pre"]; ?>').toggleClass('fa-eye-slash')"></a>
-							<b>Description: </b><?php echo $row['description']; ?>
-							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil fa-lg" href='#'
+							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id_pre"]; ?>'); "></a>
+							<p><b>Description: </b><?php echo $row['description']; ?>
+							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("description_<?php echo $row["id_pre"]; ?>")'></a><form action=""
 										name="submitDescription_<?php echo $row["id"]; ?>"
 										method="post"><div id="description_<?php echo $row["id_pre"]; ?>"
@@ -286,9 +285,12 @@ while ($row = mysqli_fetch_assoc($result)) {
 												</tbody>
 											</table>
 										</div>
-									</form><?php  } ?><br/>
-							
-							
+									</form><?php  } ?>	
+							</p>
+							<p>
+							<b>Start: </b><?php echo $row["dateStart"];  ?><br/>
+							<b>End/time (hh:mm:ss): </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?><br/>
+							</p>
 							<div><b>Options: </b></div>
 							<table style="text-align: left">
 								<tbody>
@@ -341,10 +343,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
-							</span>
-		
-							<?php }?>	</td>
-				
+							</span>		
+							<?php }?>
+					</td>	
+					<td><?php echo $row[description]; ?></td>			
 					<td class="centered"><?php echo $row["id_sample_fk"]; ?><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><i title="Go to sample" class="fa fa-reply"></i></a></td>
 					<td><?php echo $row["sample_name"]; ?></td>
 					<td class="centered"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); ?></td>
@@ -352,19 +354,18 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<td class="centered method"><?php echo $row["seq_method"]; ?></td>
 					<td class="centered"><?php echo $mergArr[$row["SOURCE"]]; 
 					   if ($row["SOURCE"] == 1) {
-				        ?><a  href="#" id="ICON_MERGE_<?php echo $row["id_pre"]; ?>" title="Go to sample" class="fa fa-eye" onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $(this).toggleClass('fa-eye');$(this).toggleClass('fa-eye-slash')"></a>
+				        ?><a  href="#" id="ICON_MERGE_<?php echo $row["id_pre"]; ?>" title="Go to sample" class="fa fa-info" onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $(this).toggleClass('fa-info');$(this).toggleClass('fa-info-slash')"></a>
 				        <div id="MERGE_<?php echo $row["id_pre"]; ?>" style="display: none" class="popupstyle">
-				        	<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $('#ICON_MERGE_<?php echo $row["id_pre"];?>').toggleClass('fa-eye');$('#ICON_MERGE_<?php echo $row["id_pre"]; ?>').toggleClass('fa-eye-slash')"></a>
+				        	<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $('#ICON_MERGE_<?php echo $row["id_pre"];?>').toggleClass('fa-info');$('#ICON_MERGE_<?php echo $row["id_pre"]; ?>').toggleClass('fa-info-slash')"></a>
 				        	<?php
 				        	   $mergedPrimaryId = $row["id_pre"];
 				        	   include 'mergeDetails.php';
 				        	?>
 				        </div>
 				        <?php 
-				    } ?></td>
-					<td><?php echo $row["dateStart"];  ?></td>
-					<td><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?></td>
-					<td><?php echo $row["status"]; ?>
+				    } ?></td>					
+					<td class="centered"><?php echo $row["sample_owner"]; ?></td>
+					<td style="text-align: right"><?php echo $row["user_name"];  ?>
 					<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 
 					   echo $row["user_name"];  
 					   if (in_array($row ["id_pre"], $mergedId)) {
@@ -373,8 +374,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 					       echo "/P";
 					   }
 					   echo $row["id_pre"];
-				    ?>" ><i title="Show logs"class="fa fa-newspaper-o"></i></a></td>					
-					<td class="centered"><?php echo $row["user_name"];  ?>
+				    ?>" ><i title="Show logs"class="fa fa-newspaper-o"></i></a>
+					</td><td width="10px">
 					<?php if ($_SESSION['grantedAdmin'] == 1 
 					    &&  ($row['status'] == 'completed' || strpos($row['status'], 'Error') === 0)) { ?>
 					<a style="float: right;margin: 4px;" title="Delete" class="fa fa-eraser" href="#"  onclick="$.post('pages/primary/removePrimaryForm.php', {id: '<?php echo $row['id_pre']; ?>', }, function(response) { $( '#DELETE_<?php echo $row["id_pre"]; ?>_FORM' ).html(response);});javascript:toggle('DELETE_<?php echo $row["id_pre"]; ?>');"></a>
@@ -399,7 +400,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 									</div>
 									<?php  }?>					
 					</td>
-					<td class="centered"><?php echo $row["sample_owner"]; ?></td>
+							
 				</tr> <?php
     
 }

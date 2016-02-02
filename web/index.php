@@ -90,7 +90,6 @@ header('Content-type: text/html; charset=utf-8');
 
 
 		</div>
-<a href="http://127.0.0.1:7085/UnibrowControl?scriptfile=http://127.0.0.1:3030/htsflow2/web/igb.php?id%3D12980">IGB</a>
 	</div>
         <?php
         include ("pages/footer.php");

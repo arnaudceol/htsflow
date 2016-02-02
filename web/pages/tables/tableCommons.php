@@ -40,13 +40,15 @@ $mergArr = array(
 
 function printStatus($status) {
     if ($status == 'completed') {
-         echo '<i title="Completed" class="fa fa-thumbs-up"></i>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-up"></i>'; 
     } else  if ($status == 'deleted') {
-         echo '<i title="Deleted" class="fa fa-times" style="color: grey"></i>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-times" style="color: grey"></a>'; 
     } else  if (strpos($status, 'Error') === 0) {
-         echo '<i title="Error" class="fa fa-thumbs-down" style="color: red"></i>'; 
-    } else {
-    	echo '<i title="Running" style="color: grey" class="fa fa-gear"></i>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-down" style="color: red"></a>'; 
+    } else if (strpos($status, 'wait') === 0 || $status == 'queued') {
+         echo '<a href="#" title="' . $status . '" class="fa fa-clock-o" style="color: grey"></a>'; 
+    } else  {
+    	echo '<a href="#" title="' . $status . '" style="color: grey" class="fa fa-gear"></a>'; 
     } 
 }
 

@@ -125,10 +125,10 @@ $result = mysqli_query($con, $sql . $pagination);
 							?> <tr>
 					<td><?php echo $row["id"]; ?> <?php printStatus($row['status']); ?></td>
 					<td>
-					<a id="ICON_<?php echo $row["id"]; ?>" class="fa fa-eye" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>'); $(this).toggleClass('fa-eye');$(this).toggleClass('fa-eye-slash')"></a>
+					<a id="ICON_<?php echo $row["id"]; ?>" class="fa fa-" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>'); "></a>
 						<div id="OPTIONS_<?php echo $row["id"]; ?>"
 							style="display: none" class="popupstyle">
-							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>'); $('#ICON_<?php echo $row["id"]; ?>').toggleClass('fa-eye');$('#ICON_<?php echo $row["id"]; ?>').toggleClass('fa-eye-slash')"></a>
+							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>'); "></a>
 							<?php 
 						if ($row["level"] == 'secondary') {?>
 							<?php

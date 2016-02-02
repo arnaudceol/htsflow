@@ -140,10 +140,9 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					<th style="width:0%;"></th>
 					<th style="width: 100px; text-align:left" >TITLE</th>
 					<th>METHOD</th>
-					<th>START</th>
-					<th>END/TIME (hh:mm:ss)</th>
-					<th>STATUS</th>
-					<th>USER</th>
+					<th>DESCRIPTION</th>
+					<th style="text-align:right">USER</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -157,13 +156,13 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					
 							?> <tr  <?php if ($row['status'] == "deleted") { echo " style=\"color: grey\""; }?>>
 					<td class="centered"><?php echo $row["id"]; ?> <?php printStatus($row['status']); ?></td>
-					<td><a id="ICON_<?php echo $row["id"]; ?>" class="fa fa-eye"  href='#'
-						onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>', 'selectedIds'); $(this).toggleClass('fa-eye');$(this).toggleClass('fa-eye-slash')"></a>
+					<td><a id="ICON_<?php echo $row["id"]; ?>" class="fa fa-info"  href='#'
+						onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>', 'selectedIds');"></a>
 						<div id="OPTIONS_<?php echo $row["id"]; ?>"
 							style="display: none" class="popupstyle">
-							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>'); $('#ICON_<?php echo $row["id"]; ?>').toggleClass('fa-eye');$('#ICON_<?php echo $row["id"]; ?>').toggleClass('fa-eye-slash')"></a>
-							<b>Description: </b><?php echo $row['description']; ?>
-							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil fa-lg" href='#'
+							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a>
+							<p><b>Description: </b><?php echo $row['description']; ?>
+							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("description_<?php echo $row["id"]; ?>")'></a><form action=""
 										name="submitDescription_<?php echo $row["id"]; ?>"
 										method="post"><div id="description_<?php echo $row["id"]; ?>"
@@ -180,7 +179,11 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 												</tbody>
 											</table>
 										</div>
-									</form><?php  } ?><br/>
+									</form><?php  } ?></p>
+							<p>
+							<b>Start: </b><?php echo $row["dateStart"];  ?><br/>
+							<b>End/time (hh:mm:ss): </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?><br/>
+							</p>
 							
 							<?php
 							include '../secondary/' . $row ["method"] . '/detail_table.php'; ?>
@@ -191,7 +194,7 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					<table>
 						<tbody>
 							<tr>
-								<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><td style="width: 20px"><a class="fa fa-pencil fa-lg" href='#'
+								<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><td style="width: 5px"><a class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("title_<?php echo $row["id"]; ?>")'></a><form action=""
 										name="submitTitle_<?php echo $row["id"]; ?>"
 										method="post"><div id="title_<?php echo $row["id"]; ?>"
@@ -214,16 +217,35 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 						</tbody>
 					</table>
 					</td>
-					<td class="centered"><?php echo $row["method"]; ?></td>
-					<td><?php echo $row["dateStart"];  ?></td>
-					<td><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?></td>				
-						
-					<td class="centered"><?php echo $row["status"]; ?> <a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 
+					<td class="centered"><?php echo $row["method"]; ?></td>		
+					<td><a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a><?php 
+					   echo $row['description']; ?>
+							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
+									onclick='javascript:toggle("description_<?php echo $row["id"]; ?>")'></a><form action=""
+										name="submitDescription_<?php echo $row["id"]; ?>"
+										method="post"><div id="description_<?php echo $row["id"]; ?>"
+											style="display: none" class="popupstyle"><table>
+												<tbody>
+													<tr>
+														<td width="100%"><textarea rows="2" name="TEXTdescription"
+																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
+														</td>
+														<td><input type="submit" value="Submit"
+															name="submitDescription" /> <input type="hidden" name="ID"
+															value="<?php echo $row["id"]; ?>" /></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</form><?php  } ?>
+					</td>			
+					<td style="text-align: right"><?php echo $row["user_name"]; ?><a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 
 					   echo $row["user_name"];  
 					   echo "/S";
 					   echo $row ["id"];
-				    ?>" ><i class="fa fa-newspaper-o"></i></a></td>
-					<td class="centered"><?php echo $row["user_name"]; ?>
+				    ?>" ><i class="fa fa-newspaper-o"></i></a>
+				    </td>
+				    <td width="10px">
 					<?php if ($_SESSION['grantedAdmin'] == 1 
 					    &&  ($row['status'] == 'completed' || strpos($row['status'], 'Error') === 0)) { ?>
 					<a style="float: right;margin: 4px;" class="fa fa-eraser" href="#"  onclick="$.post('pages/secondary/common/removeSecondaryForm.php', {id: '<?php echo $row['id']; ?>', }, function(response) { $( '#DELETE_<?php echo $row["id"]; ?>_FORM' ).html(response);});javascript:toggle('DELETE_<?php echo $row["id"]; ?>');"></a>
@@ -265,7 +287,8 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					<td>-</td>
 				</tr><?php
 				}
-				?></tbody>
+				?>				
+				</tbody>
 		</table>
 	</div>
 </div>

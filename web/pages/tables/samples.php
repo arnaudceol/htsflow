@@ -190,7 +190,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				<td><table>
 						<tbody>
 							<tr>
-								<td style="width: 20px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a title="Edit" class="fa fa-pencil fa-lg" href='#'
+								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a title="Edit" class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("SAMPLENAME_<?php echo $row["id"]; ?>")'></a><?php  } ?><form action=""
 										name="submitSAMPLENAME_<?php echo $row["id"]; ?>"
 										method="post"><div id="SAMPLENAME_<?php echo $row["id"]; ?>"
@@ -217,7 +217,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<table>
 						<tbody>
 							<tr>
-								<td><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil fa-lg" href='#'
+								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil" href='#'
 									title="Edit"  onclick='javascript:toggle("SEQMETHOD_<?php echo $row["id"]; ?>")'></a> <?php  }?>
 									<form action=""
 										name="submitSEQMETHOD_<?php echo $row["id"]; ?>"
@@ -248,7 +248,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<table>
 						<tbody>
 							<tr>
-								<td><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil fa-lg"  href='#'
+								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil"  href='#'
 									title="Edit"  onclick='javascript:toggle("REFGEN_<?php echo $row["id"]; ?>")'></a><?php } ?>
 									<div id="REFGEN_<?php echo $row["id"]; ?>"
 										style="display: none" class="popupstyle">
@@ -290,7 +290,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				    echo $mergArr[$row["source"]];
 				    if ($row["source"] == 1) {
 				        ?>
-				        <a  href="#" title="Edit" class="fa fa-eye" onclick="javascript:toggle('MERGE_<?php echo $row["id"]; ?>'); $(this).toggleClass('fa-eye');$(this).toggleClass('fa-eye-slash')"></a>
+				        <a  href="#" title="See merged samples" class="fa fa-info" onclick="javascript:toggle('MERGE_<?php echo $row["id"]; ?>');"></a>
 				        <div id="MERGE_<?php echo $row["id"]; ?>" style="display: none" class="popupstyle">
 				        	<?php
 				        	   $sampleId = $row["id"];
