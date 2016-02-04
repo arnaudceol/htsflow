@@ -55,7 +55,7 @@ $description = trim($_POST ["description"]);
 $title = trim($_POST ["title"]);
 foreach ($_POST as $key => $value) {
     if ($key == "method") {
-        $QuerySec = "INSERT INTO secondary_analysis (id, method, user_id, status, title, description) VALUES ('" . $new_id_sec . "','" . $value . "','" . $user_id . "','queue', '" .mysqli_real_escape_string($con, $title) . "', '" .mysqli_real_escape_string($con, $description) . "');";
+        $QuerySec = "INSERT INTO secondary_analysis (id, method, user_id, status, title, description) VALUES ('" . $new_id_sec . "','" . $value . "','" . $user_id . "','scheduled', '" .mysqli_real_escape_string($con, $title) . "', '" .mysqli_real_escape_string($con, $description) . "');";
         $stmt = mysqli_prepare($con, $QuerySec);
         if ($stmt) {
             mysqli_stmt_execute($stmt);

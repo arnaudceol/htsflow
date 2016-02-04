@@ -45,7 +45,7 @@ function printStatus($status) {
          echo '<a href="#" title="' . $status . '" class="fa fa-times" style="color: grey"></a>'; 
     } else  if (strpos($status, 'Error') === 0) {
          echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-down" style="color: red"></a>'; 
-    } else if (strpos($status, 'wait') === 0 || $status == 'queued') {
+    } else if (strpos($status, 'wait') === 0 || $status == 'queue' || $status == 'queued'|| $status == 'scheduled') {
          echo '<a href="#" title="' . $status . '" class="fa fa-clock-o" style="color: grey"></a>'; 
     } else  {
     	echo '<a href="#" title="' . $status . '" style="color: grey" class="fa fa-gear"></a>'; 
