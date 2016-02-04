@@ -23,3 +23,4 @@ A PHP-based web interface allows the users to run and follow the progression of 
 
 Information on how to install HTS-flow is available from the wiki at: https://github.com/arnaudceol/htsflow/wiki
 
+HTS-flow has been developped by Valerio Bianchi - Istituto Italiano di Tecnologia.
