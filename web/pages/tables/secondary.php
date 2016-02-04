@@ -160,12 +160,11 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 						onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>', 'selectedIds');"></a>
 						<div id="OPTIONS_<?php echo $row["id"]; ?>"
 							style="display: none" class="popupstyle">
-							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a>							
-							<b>Start: </b><?php echo $row["dateStart"];  ?><br/>
-							<b>End/time (hh:mm:ss): </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?><br/>
-							</p>
-							
-							<?php
+							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a>
+							<p><b>Start: </b><?php echo $row["dateStart"];  ?><br/>
+							<b>End: </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  ?><br/>
+							<b>Time (hh:mm:ss): </b><?php echo $row['time'];  ?><br/>
+							</p><?php
 							include '../secondary/' . $row ["method"] . '/detail_table.php'; ?>
 						</div>
 						<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/secondary/<?php  echo $row ["id"]; ?>/" ><i class="fa fa-folder"></i></a>	

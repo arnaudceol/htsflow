@@ -269,7 +269,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id_pre"]; ?>'); "></a>
 							<p>
 							<b>Start: </b><?php echo $row["dateStart"];  ?><br/>
-							<b>End/time (hh:mm:ss): </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  echo " / " . $row['time'];  ?><br/>
+							<b>End: </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; }; ?><br/>
+							<b>Time (hh:mm:ss): </b><?php echo $row['time'];  ?><br/>
 							</p>
 							<div><b>Options: </b></div>
 							<table style="text-align: left">
