@@ -83,6 +83,12 @@ if (isset($_POST['seqMethod']) && $_POST['seqMethod'] != "") {
 	array_push($concatArray, $querySeqMethod);
 }
 
+if (isset($_POST['description']) && $_POST['description'] != "") {
+    $queryDescription = "UPPER(description) like  '%" .strtoupper($_POST['description']) . "%'";
+    array_push($concatArray, $queryDescription);
+}
+
+
 
 
 if (isset($_POST['status']) && $_POST['status'] != "") {

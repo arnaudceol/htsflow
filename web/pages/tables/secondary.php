@@ -68,6 +68,18 @@ if (isset($_POST['user_id']) && $_POST['user_id'] != "") {
     array_push($concatArray, $user_id);
 }
 
+if (isset($_POST['description']) && $_POST['description'] != "") {
+    $queryDescription = "UPPER(description) like  '%" .strtoupper($_POST['description']) . "%'";
+    array_push($concatArray, $queryDescription);
+}
+
+if (isset($_POST['title']) && $_POST['title'] != "") {
+    $queryTitle = "UPPER(title) like  '%" .strtoupper($_POST['title']) . "%'";
+    array_push($concatArray, $queryTitle);
+}
+
+
+
 if (isset($_POST['status']) && $_POST['status'] != "") {
     if ($_POST['status'] ==  "completed") {
         $status="status='completed'";

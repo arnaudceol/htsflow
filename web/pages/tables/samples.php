@@ -66,6 +66,11 @@ if (isset($selectedSamples) && sizeof($selectedSamples) > 0) {
     array_push($concatArray, $sqlSelection);
 }
 
+if (isset($_POST['description']) && $_POST['description'] != "") {
+    $queryDescription = "id IN (SELECT sample_id FROM sample_description WHERE UPPER(description) like  '%" .strtoupper($_POST['description']) . "%') ";
+    array_push($concatArray, $queryDescription);
+}
+
 
 // Do not show merged in samples
 // array_push($concatArray, " source <> 1 ");

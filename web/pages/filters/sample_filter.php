@@ -22,6 +22,7 @@
         selectable: <?php  if ($selectable) { echo "true"; } else { echo "false"; }?> ,
      	sampleId: $('#<?php echo $tableDiv; ?>Filter').find('#sampleId').val(),
      	sampleName: $('#<?php echo $tableDiv; ?>Filter').find('#sampleName').val(),
+    	description: $('#<?php echo $tableDiv; ?>Filter').find('#description').val(),
     	seq_method: $('#<?php echo $tableDiv; ?>Filter').find('#seq_method').find(":selected").val(),
     	user_id: $('#<?php echo $tableDiv; ?>Filter').find('#user_id').find(":selected").val(),
     	ref_genome: $('#<?php echo $tableDiv; ?>Filter').find('#ref_genome').find(":selected").val(),
@@ -44,6 +45,7 @@
 				<td>
 				Sample id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleId" name="sampleId" size="5" value="<?php if (isset( $_POST ["sampleId"])) { echo  $_POST["sampleId"]; } ?>"/>
 				Sample name: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleName" name="sampleName" size="10" value="<?php if (isset( $_POST ["sampleName"])) { echo  $_POST["sampleName"]; } ?>"/>
+				Description: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/>
 <?php
 $sql = "SELECT DISTINCT seq_method FROM sample WHERE  source <> 1 ORDER BY seq_method ASC;";
 

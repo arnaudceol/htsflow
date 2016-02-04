@@ -23,6 +23,7 @@
         primaryId: $('#<?php echo $tableDiv; ?>Filter').find('#primaryId').val(),
         sampleId: $('#<?php echo $tableDiv; ?>Filter').find('#sampleId').val(),
        	sampleName: $('#<?php echo $tableDiv; ?>Filter').find('#sampleName').val(),
+    	description: $('#<?php echo $tableDiv; ?>Filter').find('#description').val(),
     	seqMethod: $('#<?php echo $tableDiv; ?>Filter').find('#seqMethod').find(":selected").val(),
     	status: $('#<?php echo $tableDiv; ?>Filter').find('#status').find(":selected").val(),
     	user_id: $('#<?php echo $tableDiv; ?>Filter').find('#user_id').find(":selected").val(),
@@ -52,6 +53,7 @@
 					Sample name: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleName" name="sampleName"
 					size="5"
 					value="<?php if (isset( $_POST ["sampleName"])) { echo  $_POST["sampleName"]; } ?>" />
+					Description: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/>
 				
 <?php
 $sql = "SELECT DISTINCT seq_method FROM sample, primary_analysis  WHERE sample_id = sample.id AND source <> 1 ORDER BY seq_method ASC;";
