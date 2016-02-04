@@ -20,6 +20,8 @@ deletePrimary <- function( ID ){
 	COUNT <- paste0( getHTSFlowPath("HTSFLOW_COUNT") ,"/" , ID, '.count' )
 	COUNTsummary <- paste0( getHTSFlowPath("HTSFLOW_COUNT") ,"/" , ID, '.count.summary' )
 	BW <- paste0( getHTSFlowPath("HTSFLOW_PRIMARY"), '/tracks/bw/', ID, '.bw' )
+	QC <- paste0( getHTSFlowPath("HTSFLOW_QC"), '/', ID )
+	QCZIP <- paste0( getHTSFlowPath("HTSFLOW_QC"), '/', ID , ".zip")
 	
 	print( paste0( 'Removing files for ID: ', ID ) )
 	
@@ -37,6 +39,19 @@ deletePrimary <- function( ID ){
 		loginfo(paste0("Delete BW", BW))
 		deleteFile(BW)
 	}
+	
+	if (file.exists(QC)) {
+		loginfo(paste0("Delete QC", QC))
+		deleteFile(QC, recursive=TRUE)
+	}
+	
+	
+	if (file.exists(QCZIP)) {
+		loginfo(paste0("Delete QC zip", QCZIP))
+		deleteFile(QCZIP)
+	}
+	
+	
 	if (file.exists(getPreprocessDir())) {
 		loginfo(paste0("Delete preprocess directory", getPreprocessDir()))
 		deleteFile(getPreprocessDir(), recursive=TRUE)
