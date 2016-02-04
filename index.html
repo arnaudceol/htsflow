@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Htsflow by arnaudceol</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Htsflow</h1>
+        <p></p>
+
+        <p class="view"><a href="https://github.com/arnaudceol/htsflow">View the Project on GitHub <small>arnaudceol/htsflow</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/arnaudceol/htsflow/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/arnaudceol/htsflow/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/arnaudceol/htsflow">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="htsflow" class="anchor" href="#htsflow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>htsflow</h1>
+
+<p>HTS-flow (High-Throughput Sequencing flow) provides a framework for the management and analysis of NGS data.</p>
+
+<p>HTS-flow is based on a combination of a MySQL database, a PHP web interface and several NGS analysis modules. It allows labs generating NGS samples to analyze sequencing data and to manage the increasing size of their data repository. HTS-flow facilitates the reproducibility and traceability of the analyses by avoiding manual, error-prone execution of a set of standard NGS tools.</p>
+
+<p>The core of HTS-flow is a MySQL database with three main “entities”: sample description, primary and secondary analyses..</p>
+
+<ul>
+<li>A primary analysis is performed on each type of raw data: quality controls, filtering, and alignment.</li>
+<li>Higher-level (secondary) analysis can be performed on a group of samples according to the data type and user needs: peak calling, differential peak calling and saturation analysis for ChIP-seq; absolute and differential expression quantification for RNA-seq; determination of absolute and relative methylation levels, and identification of differentially methylated regions for high-throughput DNA methylation data.</li>
+</ul>
+
+<p>The analyses rely on predefined, easily customizable modular scripts to invoke the most common analysis steps:</p>
+
+<ul>
+<li>FastX-toolkits and FastQC tools are used to filter reads and control the quality of all raw data;</li>
+<li>BWA, TopHat and Bismark are the options for the reads alignment of ChIP-seq, RNA-seq and DNA-methylation reads, respectively;</li>
+<li>MACS is used for peak calling and saturation analysis,</li>
+<li>The Bioconductor diffBind is used for differential peak calling of ChIP-seq data;</li>
+<li>Cufflinks and Cuffdiff, or alternatively Bioconductor tools including edgeR and DESeq are available for the absolute and differential quantification of expression;</li>
+<li>The methylPipe R library is used for the analysis of DNA methylation data.</li>
+</ul>
+
+<p>A PHP-based web interface allows the users to run and follow the progression of the primary and secondary analysis. The user can decide which steps of the analysis have to be performed, and directly modify their specific settings, e.g. the maximum number of mismatches allowed in the alignment process.</p>
+
+<p>Information on how to install HTS-flow is available from the wiki at: <a href="https://github.com/arnaudceol/htsflow/wiki">https://github.com/arnaudceol/htsflow/wiki</a></p>
+
+<p>HTS-flow has been developped by Valerio Bianchi - Istituto Italiano di Tecnologia.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/arnaudceol">arnaudceol</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-55459434-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
