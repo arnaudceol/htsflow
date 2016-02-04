@@ -38,36 +38,6 @@ if (isset($_REQUEST['messageYes'])) {
 }
 ?></div>
 
-Keys:
-<table>
-<?php 
-
-
-    foreach ($_POST as $key => $value) {
-        echo "<tr>";
-        echo "<td>Key: ";
-        echo $key;
-        echo "</td>";
-        echo "<td>";
-        echo $value;
-        echo "</td>";
-        echo "</tr>";
-    }
-
-    foreach ($_GET as $key => $value) {
-        echo "<tr>";
-        echo "<td>GET";
-        echo $key;
-        echo "</td>";
-        echo "<td>";
-        echo $value;
-        echo "</td>";
-        echo "</tr>";
-    }
-    
-
-?>
-</table>
 
 <form name="merging" action="" method="post">
 	<div id="tablePrimary"></div>
