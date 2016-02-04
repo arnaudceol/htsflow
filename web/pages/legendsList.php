@@ -49,6 +49,7 @@
 <ul class="fa-ul">
 <li><i class="fa fa-times"></i> Close view.</li>
 <li><i class="fa fa-question"></i> Show this legend.</li>
+<li><img src="images/fastqc_icon.png" width="12"/> Show FastQC report.</li>
 <li><i class="fa fa-folder"></i> Browse data.</li>
 <li><i class="fa fa-download"></i> Download data.</li>
 <li><i class="fa fa-share"></i> See follow up analysis</li>
