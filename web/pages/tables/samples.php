@@ -12,11 +12,12 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License.w
  */
 
 session_start();
 include 'tableCommons.php';
+
 $concatArray = array();
 
 if (isset($_POST['seq_method']) && $_POST['seq_method'] != "") {
@@ -94,7 +95,7 @@ $result = mysqli_query($con, $sql . $pagination);
 // Get available genomes:
 $availableAssemblies= array();
 foreach (scandir(GENOMES_FOLDER) as $assembly) {
-    if ($assembly != "." && $type != "..") {
+    if ($assembly != "." && $assembly != "..") {
         array_push($availableAssemblies, $assembly);
     }
 }
@@ -175,15 +176,13 @@ while ($row = mysqli_fetch_assoc($result)) {
 				} else {
 				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
 				}
-				?>
 				
-				<?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a <?php echo $class; ?>  href='#'
-									onclick='javascript:toggle("REFGEN_<?php echo $row["id"]; ?>")'></a><?php } ?>
-									<div id="REFGEN_<?php echo $row["id"]; ?>"
-										style="display: none; " class="popupstyle">
-										<form action=""
-											name="submitDescription_<?php echo $row["id"]; ?>"
+				if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a <?php echo $class; ?>  href='#'
+									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><?php } ?>
+										<form action="#" style="display: none; " class="popupstyle"
+											id="submitDescription_<?php echo $row["id"]; ?>"
 											method="POST">
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitDescription_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
 											<table>
 												<tbody style="vertical-align: top">
 													<tr>
@@ -191,36 +190,39 @@ while ($row = mysqli_fetch_assoc($result)) {
 																name="description" ><?php echo $sampleDescription; ?></textarea>
 														</td>
 														<td > 
-														<a  class="filtertable" onclick="$('#description_<?php echo $row["id"]; ?>').val(sampleDescriptionTemplate)">fill with template</a>														
+														<a  class="filtertable" onclick="$('#description_<?php echo $row["id"]; ?>').val(sampleDescriptionTemplate);">fill with template</a>														
 														<input type="submit" value="Submit"
-															name="submitDescription" /> <input type="hidden" name="ID"
+															name="submitDescription" 
+															 onclick="$.post('pages/sample/submitDescription.php', $('#submitDescription_<?php echo $row["id"]; ?>').serialize($('#submitDescription_<?php echo $row["id"]; ?>'))); refreshTable(); return false;" />
+															 <input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>"></td>
 													</tr>
 												</tbody>
 											</table>
 										</form>
-									</div>
+									
 				</td>
 				<td><table>
 						<tbody>
 							<tr>
 								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a title="Edit" class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("SAMPLENAME_<?php echo $row["id"]; ?>")'></a><?php  } ?><form action=""
-										name="submitSAMPLENAME_<?php echo $row["id"]; ?>"
-										method="post"><div id="SAMPLENAME_<?php echo $row["id"]; ?>"
-											style="display: none" class="popupstyle"><table>
+									onclick='javascript:toggle("submitSampleName_<?php echo $row["id"]; ?>")'></a><?php  } ?><form action="#"
+										id="submitSampleName_<?php echo $row["id"]; ?>" style="display: none" class="popupstyle"
+										method="post">								
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitSampleName_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
+											<table>
 												<tbody>
 													<tr>
 														<td width="100%"><textarea rows="2" name="TEXTdescription"
 																style="width: 98%;"><?php echo trim($row["sample_name"]); ?></textarea>
 														</td>
 														<td><input type="submit" value="Submit"
-															name="submitSAMPLENAME" /> <input type="hidden" name="ID"
+															onclick="$.post('pages/sample/submitName.php', $('#submitSampleName_<?php echo $row["id"]; ?>').serialize($('#submitSampleName_<?php echo $row["id"]; ?>'))); refreshTable(); return false;"/>
+															<input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>" /></td>
 													</tr>
 												</tbody>
 											</table>
-										</div>
 									</form></td>
 								<td ><?php echo trim($row["sample_name"]) ; ?></td>
 							</tr>
@@ -232,24 +234,23 @@ while ($row = mysqli_fetch_assoc($result)) {
 						<tbody>
 							<tr>
 								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil" href='#'
-									title="Edit"  onclick='javascript:toggle("SEQMETHOD_<?php echo $row["id"]; ?>")'></a> <?php  }?>
-									<form action=""
-										name="submitSEQMETHOD_<?php echo $row["id"]; ?>"
-										method="post">
-										<div id="SEQMETHOD_<?php echo $row["id"]; ?>"
-											style="display: none" class="popupstyle">
+									title="Edit"  onclick='javascript:toggle("submitSeqMethod_<?php echo $row["id"]; ?>")'></a> <?php  }?>
+									<form action="#"
+										id="submitSeqMethod_<?php echo $row["id"]; ?>"
+										method="post" style="display: none" class="popupstyle">
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitSeqMethod_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
 											<table>
 												<tbody>
 													<tr>
 														<td width="100%"><textarea rows="2" name="TEXTdescription"
 																style="width: 98%;"><?php echo $row ["seq_method"]; ?></textarea></td>
 														<td><input type="submit" value="Submit"
-															name="submitSEQMETHOD" /> <input type="hidden" name="ID"
+															onclick="$.post('pages/sample/submitSeqMethod.php', $('#submitSeqMethod_<?php echo $row["id"]; ?>').serialize($('#submitSeqMethod_<?php echo $row["id"]; ?>'))); refreshTable(); return false;" />
+															<input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>"></td>
 													</tr>
 												</tbody>
 											</table>
-										</div>
 									</form></td>
 								<td class="method"><?php echo $row["seq_method"]; ?></td>
 							</tr>
@@ -263,12 +264,11 @@ while ($row = mysqli_fetch_assoc($result)) {
 						<tbody>
 							<tr>
 								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil"  href='#'
-									title="Edit"  onclick='javascript:toggle("REFGEN_<?php echo $row["id"]; ?>")'></a><?php } ?>
-									<div id="REFGEN_<?php echo $row["id"]; ?>"
-										style="display: none" class="popupstyle">
-										<form action=""
-											name="submitREFGENOME_<?php echo $row["id"]; ?>"
+									title="Edit"  onclick='javascript:toggle("submitRefGenome_<?php echo $row["id"]; ?>")'></a><?php } ?>								
+										<form action="#" style="display: none" class="popupstyle"
+											id="submitRefGenome_<?php echo $row["id"]; ?>"
 											method="POST">
+										<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitRefGenome_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
 											<table>
 												<tbody>
 													<tr>
@@ -276,13 +276,14 @@ while ($row = mysqli_fetch_assoc($result)) {
 																name="REFGENOMEdescription" style="width: 98%;"><?php echo $row["ref_genome"]; ?></textarea>
 														</td>
 														<td><input type="submit" value="Submit"
-															name="submitREFGENOME" /> <input type="hidden" name="ID"
+															onclick="$.post('pages/sample/submitRefGenome.php', $('#submitRefGenome_<?php echo $row["id"]; ?>').serialize($('#submitRefGenome_<?php echo $row["id"]; ?>'))); refreshTable(); return false;"  /> 
+															<input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>"></td>
 													</tr>
 												</tbody>
 											</table>
 										</form>
-									</div></td>
+									</td>
 								<td><?php echo $row["ref_genome"]; 
 								    if (! in_array($row["ref_genome"], $availableAssemblies )) {
 								       ?> <i style="color: red" title="This genome is not available in HTS flow." class="fa fa-exclamation-triangle"></i><?php    
@@ -306,6 +307,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				        ?>
 				        <a  href="#" title="See merged samples" class="fa fa-info" onclick="javascript:toggle('MERGE_<?php echo $row["id"]; ?>');"></a>
 				        <div id="MERGE_<?php echo $row["id"]; ?>" style="display: none" class="popupstyle">
+				        <a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('MERGE_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
 				        	<?php
 				        	   $sampleId = $row["id"];
 				        	   include 'mergeDetails.php';

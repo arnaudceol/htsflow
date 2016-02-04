@@ -357,19 +357,22 @@ while ($row = mysqli_fetch_assoc($result)) {
 							</span>		
 							<?php }?>
 					</td>	
-					<td><?php echo $row[description]; ?><?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("description_<?php echo $row["id_pre"]; ?>")'></a><form action=""
-										name="submitDescription_<?php echo $row["id"]; ?>"
-										method="post"><div id="description_<?php echo $row["id_pre"]; ?>"
-											style="display: none" class="popupstyle"><table>
+					<td><span id="description_<?php echo $row["id_pre"]; ?>"><?php echo $row['description']; ?></span><?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
+									onclick='javascript:toggle("submitDescription_<?php echo $row["id_pre"]; ?>")'></a><form action="#"
+										id="submitDescription_<?php echo $row["id_pre"]; ?>"
+										method="post" style="display: none" class="popupstyle"><div id="descriptiond_<?php echo $row["id_pre"]; ?>"
+											>
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitDescription_<?php echo $row["id_pre"]; ?>'); ">close <i  class="fa fa-times"></i></a>
+											<table>
 												<tbody>
 													<tr>
-														<td width="100%"><textarea rows="2" name="TEXTdescription"
+														<td width="100%"><textarea rows="2" name="TEXTdescription" id="TEXTdescription_<?php echo $row["id_pre"]; ?>"
 																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
 														</td>
-														<td><input type="submit" value="Submit"
-															name="submitDescriptionPrimary" /> <input type="hidden" name="ID"
-															value="<?php echo $row["id_pre"]; ?>" /></td>
+														<td><input type="hidden" name="ID"
+															value="<?php echo $row["id_pre"]; ?>" /><input type="submit" value="Submit"
+															name="submitDescriptionPrimary" onclick="$.post('pages/primary/submitDescription.php', $('#submitDescription_<?php echo $row["id_pre"]; ?>').serialize($('#submitDescription_<?php echo $row["id_pre"]; ?>'))); refreshTable(); return false;" />
+														</td>
 													</tr>
 												</tbody>
 											</table>
@@ -396,7 +399,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<td style="text-align: right"><?php echo $row["user_name"];  ?>
 					<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 
 					   echo $row["user_name"];  
-					   if (in_array($row ["id_pre"], $mergedId)) {
+					   if (in_array($row ["id_pre"], $mergedIds)) {
 					       echo '/M';
 					   } else {
 					       echo "/P";
@@ -419,7 +422,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<div id="DELETE_<?php echo $row["id_pre"]; ?>"
 							style="display: none" class="popupstyle">
 							<div style="display: inline" id="DELETE_<?php echo $row["id_pre"]; ?>_FORM"></div>
-							<input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id_pre"]; ?>')"/></div>
+							<input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id_pre"]; ?>'); return false"/></div>
 						<?php  } 
 						if (($_SESSION['grantedAdmin'] == 1 || $row["user_name"] == $_SESSION["hf_user_name"])
 					        && $row['status'] == 'deleted') { ?>				
@@ -428,12 +431,12 @@ while ($row = mysqli_fetch_assoc($result)) {
 							style="display: none" class="popupstyle">
 							<b>Repeat primary analysis: </b><?php echo $row['id_pre']; ?>? <br/>
 							<form style="display: inline" action="pages/primary/submitRepeat.php"
-										name="submitRepeat_<?php echo $row["id"]; ?>"
+										name="submitRepeat_<?php echo $row["id_pre"]; ?>"
 										method="post"><input type="submit" value="Confirm"
 															name="submitRepeatPrimary" /> <input type="hidden" name="ID"
 															value="<?php echo $row["id_pre"]; ?>" />
 
-									</form><input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id_pre"]; ?>')"/>
+									</form><input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id_pre"]; ?>; return false')"/>
 									</div>
 									<?php  }?>					
 					</td>
@@ -445,6 +448,13 @@ $result->close();
 ?>
                 </tbody>
 		</table>
+	
+		
+
+	 
+		<table>
+
+</table>
 	</div>
 </div>
 

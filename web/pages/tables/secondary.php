@@ -159,7 +159,7 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					<td><a id="ICON_<?php echo $row["id"]; ?>" class="fa fa-info"  href='#'
 						onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>', 'selectedIds');"></a>
 						<div id="OPTIONS_<?php echo $row["id"]; ?>"
-							style="display: none" class="popupstyle">
+							style="display: none" class="popupstyle">							
 							<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>');"></a>
 							<p><b>Start: </b><?php echo $row["dateStart"];  ?><br/>
 							<b>End: </b><?php if ($row["dateEnd"] != "") { echo $row["dateEnd"]; } else {echo "-"; };  ?><br/>
@@ -174,22 +174,23 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 						<tbody>
 							<tr>
 								<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><td style="width: 5px"><a class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("title_<?php echo $row["id"]; ?>")'></a><form action=""
-										name="submitTitle_<?php echo $row["id"]; ?>"
-										method="post"><div id="title_<?php echo $row["id"]; ?>"
-											style="display: none" class="popupstyle"><table>
+									onclick='javascript:toggle("submitTitle_<?php echo $row["id"]; ?>")'></a><form action="#"
+										id="submitTitle_<?php echo $row["id"]; ?>"
+										method="post" style="display: none" class="popupstyle">
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitTitle_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
+											<table>											
 												<tbody>
 													<tr>
 														<td width="100%"><textarea rows="2" name="TEXTtitle"
 																style="width: 98%;"><?php echo trim($row["title"]); ?></textarea>
 														</td>
 														<td><input type="submit" value="Submit"
-															name="submitTitle" /> <input type="hidden" name="ID"
+															onclick="$.post('pages/secondary/common/submitTitle.php', $('#submitTitle_<?php echo $row["id"]; ?>').serialize($('#submitTitle_<?php echo $row["id"]; ?>'))); refreshTable(); return false;"   />
+															<input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>" /></td>
 													</tr>
 												</tbody>
 											</table>
-										</div>
 									</form></td><?php  } ?>
 								<td ><?php echo trim($row["title"]) ; ?></td>
 							</tr>
@@ -199,22 +200,23 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					<td class="centered"><?php echo $row["method"]; ?></td>		
 					<td><?php echo $row['description']; ?>
 							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("description_<?php echo $row["id"]; ?>")'></a><form action=""
-										name="submitDescription_<?php echo $row["id"]; ?>"
-										method="post"><div id="description_<?php echo $row["id"]; ?>" 
-											style="display: none" class="popupstyle"><table>
+									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><form action="#"
+										id="submitDescription_<?php echo $row["id"]; ?>"
+										method="post"	style="display: none" class="popupstyle">
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitDescription_<?php echo $row["id"]; ?>'); ">close <i  class="fa fa-times"></i></a>
+											<table>
 												<tbody>
 													<tr>
 														<td width="100%"><textarea rows="2" name="TEXTdescription"
 																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
 														</td>
 														<td><input type="submit" value="Submit"
-															name="submitDescription" /> <input type="hidden" name="ID"
+															onclick="$.post('pages/secondary/common/submitDescription.php', $('#submitDescription_<?php echo $row["id"]; ?>').serialize($('#submitDescription_<?php echo $row["id"]; ?>'))); refreshTable(); return false;"   />
+															 <input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>" /></td>
 													</tr>
 												</tbody>
 											</table>
-										</div>
 									</form><?php  } ?>
 					</td>			
 					<td style="text-align: right"><?php echo $row["user_name"]; ?><a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 
@@ -238,7 +240,7 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 					if ($allowUserDelete || $allowAdminDelete) { ?>
 					<a style="float: right;margin: 4px;<?php if (!$allowUserDelete) { echo "color: red"; } ?>" class="fa fa-eraser" href="#"  onclick="$.post('pages/secondary/common/removeSecondaryForm.php', {id: '<?php echo $row['id']; ?>', }, function(response) { $( '#DELETE_<?php echo $row["id"]; ?>_FORM' ).html(response);});javascript:toggle('DELETE_<?php echo $row["id"]; ?>');"></a>
 					<div id="DELETE_<?php echo $row["id"]; ?>"
-							style="display: none" class="popupstyle">
+							style="display: none" class="popupstyle">							
 							<div style="display: inline" id="DELETE_<?php echo $row["id"]; ?>_FORM"></div>
 							<input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id"]; ?>')"/>
 									</div>

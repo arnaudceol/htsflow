@@ -66,7 +66,10 @@ function browse<?php echo$tableDiv; ?>(tablePhp, tableDiv, offset, limit) {
 
 <script>
 
-function refreshTable() {
+function refreshTable(timeout) {
+	if (typeof(timeout)==='undefined') {
+		timeout=0
+	}
 	 $("#refreshinput").toggleClass('fa-spin');
 	setTimeout(			
 			  function() 
@@ -74,14 +77,14 @@ function refreshTable() {
 				 $("#refreshinput").toggleClass('fa-spin');
 
 					browse<?php echo$tableDiv; ?>('<?php echo $phpTable; ?>', '#<?php echo $tableDiv; ?>', <?php echo $offset; ?>, <?php echo $limit; ?>)
-			  }, 1000);
+			  }, timeout);
 }
 
 </script>
 <?php include '../legends.php';?>
 <span class="fa-stack " >
   <i class="fa  fa-circle-o fa-stack-2x" ></i>
-  <a class="fa fa-refresh fa-stack-1x" id="refreshinput" onclick="refreshTable()" ></a> 
+  <a class="fa fa-refresh fa-stack-1x" id="refreshinput" onclick="refreshTable(1000)" ></a> 
 </span>
 <?php
 $numPages = floor($numRighe / $limit) +1;
