@@ -344,7 +344,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             
             ?><?php if ($row["status"] == "completed") { 
             		if (! in_array($row ["id_pre"], $mergedIds)) { ?>
-							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><i title="Browse FastQC Report" class="fa fa-folder"></i></a>
+							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><img src="images/fastqc_icon.png" width="12" title="Browse FastQC Report"/></a>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a>
 					<?php }
 					if (in_array($row['id_pre'], $inSecondaryIds)) {					
