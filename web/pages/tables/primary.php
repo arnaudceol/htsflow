@@ -176,6 +176,33 @@ while($mergedResult = mysqli_fetch_array($mergedQuery)) {
     $mergedIds[] = $mergedResult[0];
 }
 
+
+// primary id involved in seconadry
+// Is it used?
+$sqlForeignKeys = "SELECT TABLE_NAME, COLUMN_NAME
+FROM
+  information_schema.KEY_COLUMN_USAGE
+WHERE
+  REFERENCED_TABLE_NAME = 'primary_analysis'
+  AND REFERENCED_COLUMN_NAME = 'id';";
+
+$resultFK = mysqli_query($con, $sqlForeignKeys);
+
+
+$queries = array();
+while ($row = mysqli_fetch_assoc($resultFK)) {
+    array_push($queries, "SELECT " . $row['COLUMN_NAME'] . " as id FROM " . $row['TABLE_NAME']);
+}
+
+$inSecondarySql= implode(" UNION ", $queries);
+
+$inSecondaryQuery = mysqli_query($con, $inSecondarySql);
+
+$inSecondaryIds = array();
+while ($inSecondaryResult = mysqli_fetch_array($inSecondaryQuery)) {
+    $inSecondaryIds[] = $inSecondaryResult[0];
+}
+
 ?>
   
 <script>
@@ -319,8 +346,11 @@ while ($row = mysqli_fetch_assoc($result)) {
             		if (! in_array($row ["id_pre"], $mergedIds)) { ?>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><i title="Browse FastQC Report" class="fa fa-folder"></i></a>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a>
-					<?php } ?>
+					<?php }
+					if (in_array($row['id_pre'], $inSecondaryIds)) {					
+					?>
 							<a href="secondary-browse.php?primaryId=<?php  echo $row ["id_pre"]; ?>" ><i  title="Go to secondary analyses" class="fa fa-share"></i></a>
+					<?php }?>
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 

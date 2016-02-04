@@ -100,6 +100,18 @@ foreach (scandir(GENOMES_FOLDER) as $assembly) {
 }
  
 
+
+// Get list of samples with primary analyses
+$sqlInPrimary = "SELECT DISTINCT sample_id FROM primary_analysis;";
+
+$inPrimaryQuery = mysqli_query($con, $sqlInPrimary );
+$inPrimaryIds = array();
+while($inPrimaryResult = mysqli_fetch_array($inPrimaryQuery)) {
+    $inPrimaryIds[] = $inPrimaryResult[0];
+}
+
+
+
 ?>
 <div class="datagrid">
 	<div class="table-container">
@@ -144,8 +156,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 					onclick="updateSelectedIds($(this).is(':checked'), '<?php echo $row["id"]; ?>', 'selectedIds')"
 					<?php if (strpos($selectedIds,"'".$row['id']."'") !== false ) { echo "checked"; } ?> /> <?php  }?></td>				
 				<?php } ?>
-				<td class="centered"><?php echo $row["id"]; ?>
-				<a href="primary-browse.php?sampleId=<?php  echo $row ["id"]; ?>" target="_blank"><i title="Go to primary analyses" class="fa fa-share"></i></a>
+				<td class="centered"><?php echo $row["id"];				
+            		if (in_array($row ["id"], $inPrimaryIds)) { ?>
+					<a href="primary-browse.php?sampleId=<?php  echo $row ["id"]; ?>"><i title="Go to primary analyses" class="fa fa-share"></i></a>
+				<?php  }?>
 				</td>
 				<td><?php 
 				$sampleDescription = "";
