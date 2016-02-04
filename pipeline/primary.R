@@ -282,8 +282,7 @@ fastqSort <- function( f1, f2 ) {
         , f1
         , f2
         )
-    loginfo( execute )
-    return(system( execute ))
+    return(tryOrExit( execute, 'Fastq sorter' ))
 }
 
 fastQCexec <- function( sample ) {
@@ -296,12 +295,12 @@ fastQCexec <- function( sample ) {
         ,' -c '
         ,getHTSFlowPath("HTSFLOW_CONTAMINANTS")
         ,' '
-        ,getHTSFlowPath("HTSFLOW_ALN/")
+        ,getHTSFlowPath("HTSFLOW_ALN")
+		,'/'
         ,primaryId
         ,'.bam'
     )
-    loginfo(execute)
-    return(system(execute))
+    return(tryOrExit(execute, 'FASTQC'))
 }
 
 countReadsNum <- function( sample, flags ){
@@ -319,7 +318,7 @@ countReadsNum <- function( sample, flags ){
 
 doCountFastqReads <- function( fastqFileName ) {
     loginfo ("Count raw reads number")
-    nReads <- as.numeric( unlist( strsplit( system( paste0('wc -l ', fastqFileName), intern=T ), split="[ ]" )[[1]][1] ) )/4
+    nReads <- as.numeric( unlist( strsplit( tryInternOrExit( paste0('wc -l ', fastqFileName), 'count fastq reads'), split="[ ]" )[[1]][1] ) )/4
     loginfo ( nReads )
     return( nReads )
 }
@@ -342,9 +341,8 @@ doFeatureCounts <- function( sample, RefGenomes, flags ) {
                     ,countfile
                     ,bamfile
                     ,sep=" "
-                    )
-        loginfo(cmd)
-        return(system(cmd))
+                    )        
+        return(tryOrExit(cmd, "feature counts"))
     } else {
          cmd <- paste(
                     getHTSFlowPath("featuresCounts")
@@ -355,8 +353,7 @@ doFeatureCounts <- function( sample, RefGenomes, flags ) {
                     ,bamfile
                     ,sep=" "
                     )
-        loginfo(cmd)
-        return(system(cmd))
+        return(tryOrExit(cmd, "feature counts"))
     }
 }
 
@@ -400,8 +397,7 @@ doUniquelyAlignedBam <- function( sample ) {
         ,'_sort'
         ,sep = ""
     )
-    loginfo( execute )
-    result <- system( execute )
+    result <- tryOrExit( execute, 'Create a bam file with only uniquely mapped reads' )
 	if (result > 0) {
 		return(result)
 	}
@@ -413,8 +409,8 @@ doUniquelyAlignedBam <- function( sample ) {
         ,bamFileNoDup
         ,sep = ""
     )
-    loginfo( execute )
-    removed <- tryInternOrExit( execute, "count number of reads")
+    
+    removed <- tryInternOrExit( execute, 'Create a bam file with only uniquely mapped reads')
     ## copy back the bam file to ALN folder
     execute <- paste(
                     "mv"
@@ -432,7 +428,7 @@ doUniquelyAlignedBam <- function( sample ) {
                     ," index "
                     ,bamFileNameIn
                 )
-    result <- system( execute )
+    result <- tryOrExit( execute, "index bam" )
 	if (result > 0) {
 		return(result)
 	}
