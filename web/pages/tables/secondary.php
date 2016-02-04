@@ -224,15 +224,25 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 				    ?>" ><i class="fa fa-newspaper-o"></i></a>
 				    </td>
 				    <td width="10px">
-					<?php if ($_SESSION['grantedAdmin'] == 1 
-					    &&  ($row['status'] == 'completed' || strpos($row['status'], 'Error') === 0)) { ?>
-					<a style="float: right;margin: 4px;" class="fa fa-eraser" href="#"  onclick="$.post('pages/secondary/common/removeSecondaryForm.php', {id: '<?php echo $row['id']; ?>', }, function(response) { $( '#DELETE_<?php echo $row["id"]; ?>_FORM' ).html(response);});javascript:toggle('DELETE_<?php echo $row["id"]; ?>');"></a>
+					<?php
+					$allowUserDelete = false;
+					$allowAdminDelete = false;
+					if ($_SESSION['grantedAdmin'] == 1  && $row['status'] != 'deleted') {
+					    $allowAdminDelete = true;
+					}
+					if ($row["user_name"] == $_SESSION["hf_user_name"] 
+					    &&  ($row['status'] == 'completed' || strpos($row['status'], 'Error') === 0)) {
+					    $allowUserDelete = true;
+					}
+					
+					if ($allowUserDelete || $allowAdminDelete) { ?>
+					<a style="float: right;margin: 4px;<?php if (!$allowUserDelete) { echo "color: red"; } ?>" class="fa fa-eraser" href="#"  onclick="$.post('pages/secondary/common/removeSecondaryForm.php', {id: '<?php echo $row['id']; ?>', }, function(response) { $( '#DELETE_<?php echo $row["id"]; ?>_FORM' ).html(response);});javascript:toggle('DELETE_<?php echo $row["id"]; ?>');"></a>
 					<div id="DELETE_<?php echo $row["id"]; ?>"
 							style="display: none" class="popupstyle">
 							<div style="display: inline" id="DELETE_<?php echo $row["id"]; ?>_FORM"></div>
 							<input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id"]; ?>')"/>
 									</div>
-									<?php  }
+						<?php } 
 						if (($_SESSION['grantedAdmin'] == 1 || $row["user_name"] == $_SESSION["hf_user_name"])
 					        && $row['status'] == 'deleted') { ?>				
 					<a style="float: right;margin: 4px;" class="fa fa-repeat" href="#"  onclick="javascript:toggle('REPEAT_<?php echo $row["id"]; ?>');"></a>
