@@ -16,4 +16,4 @@
  */
 
 // Required variable: primaryId
-$primaryToSecondarySql =  " SELECT footprint_analysis.secondary_id FROM footprint_analysis, peak_calling WHERE peak_id = peak_calling.id AND primary_id = " . $primaryId;
+$primaryToSecondarySql =  " SELECT footprint_analysis.secondary_id FROM footprint_analysis, peak_calling WHERE peak_id = peak_calling.id AND primary_id IN (" . $primaryId . ")";

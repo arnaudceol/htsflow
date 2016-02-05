@@ -21,6 +21,7 @@
         selectable: <?php echo $selectable; ?>,
         secondaryId: $('#<?php echo $tableDiv; ?>Filter').find('#secondaryId').val(),
         primaryId: $('#<?php echo $tableDiv; ?>Filter').find('#primaryId').val(),
+        sampleId: $('#<?php echo $tableDiv; ?>Filter').find('#sampleId').val(),
     	description: $('#<?php echo $tableDiv; ?>Filter').find('#description').val(),
     	title: $('#<?php echo $tableDiv; ?>Filter').find('#title').val(),
     	method: $('#<?php echo $tableDiv; ?>Filter').find('#method').find(":selected").val(),
@@ -46,6 +47,9 @@
 					Primary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="primaryId" name="primaryId"
 					size="4"
 					value="<?php if (isset( $_REQUEST ["primaryId"])) { echo  $_REQUEST["primaryId"]; } ?>" />
+					Sample id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleId" name="sampleId"
+					size="4"
+					value="<?php if (isset( $_REQUEST ["sampleId"])) { echo  $_REQUEST["sampleId"]; } ?>" />
 					Title: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="title" name="title" size="10" value="<?php if (isset( $_POST ["title"])) { echo  $_POST["title"]; } ?>"/>
 					Description: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/>
 <?php

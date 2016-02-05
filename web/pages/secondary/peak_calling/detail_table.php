@@ -35,8 +35,8 @@ $resSpec = mysqli_query($con, $querySpec);
     while ($rowSpec = mysqli_fetch_assoc($resSpec)) {
         ?><tr>
 		<td><?php echo $rowSpec["id"]; ?></td>
-		<td><?php echo $rowSpec["input_id"]; ?><a href="primary-browse.php?primaryId=<?php echo $rowSpec["input_id"]; ?>"><i class="fa fa-reply"></i></a></td>
-		<td><?php echo $rowSpec["primary_id"]; ?><a href="primary-browse.php?primaryId=<?php echo $rowSpec["primary_id"]; ?>"><i class="fa fa-reply"></i></a></td>
+		<td><a href="primary-browse.php?primaryId=<?php echo $rowSpec["input_id"]; ?>"><?php echo $rowSpec["input_id"]; ?></a></td>
+		<td><a href="primary-browse.php?primaryId=<?php echo $rowSpec["primary_id"]; ?>"><?php echo $rowSpec["primary_id"]; ?></a></td>
 		<td><?php echo $rowSpec["label"]; ?></td>
 		<td><?php echo $rowSpec["exp_name"]; ?></td>
 		<td><?php echo $rowSpec["program"]; ?></td>

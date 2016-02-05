@@ -27,32 +27,57 @@ if (isset($_POST["type"])) {
 	$type = $_POST["type"];
 }
 
-
 $concatArray = array();
-
 
 if (isset($_POST['secondaryId']) && $_POST['secondaryId'] != "") {
     $querySecondaryId = " s.id = " . strtoupper($_POST['secondaryId']) ;
     array_push($concatArray, $querySecondaryId);
 }
 
+// Looking for sample ids. 
+// First converti them to primary ids, and let continue to the 
+// search by primary id section
+$primaryIds = array();
+if (isset($_REQUEST['sampleId']) && $_REQUEST['sampleId'] != "") {
+    
+    // there may be more than one sample: split the field
+    $sampleIds = explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['sampleId']))));
+    $querySampleId = "SELECT id FROM primary_analysis WHERE UPPER(sample_id) IN ('" . implode("', '", $sampleIds) . "')";
+    
+    $primaryQuery = mysqli_query($con, $querySampleId );
+    
+    while($primaryResult = mysqli_fetch_array($primaryQuery)) {
+        $primaryIds[] = $primaryResult[0];
+    }
+}
+
+
+if (isset($_REQUEST['primaryId']) && $_REQUEST['primaryId'] != "") {   
+     $primaryIds = array_merge($primaryIds , explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['primaryId'])))));
+}
+
 // Looking for secondary based on a primary one?
-if (isset($_POST['primaryId']) && $_POST['primaryId'] != "") {
-    error_log("primaryId: " . $_POST['primaryId']);
-    $primaryId = $_POST['primaryId'];
-    $primaryIdSql .= " s.id IN ";
+if (sizeof($primaryIds) > 0) {
+    $primaryIdSql = " s.id IN ";
 
     $primaryToSecondaySqls = array();
 
+    $primaryId = implode(", ", $primaryIds);
+    
     foreach (scandir("../secondary/") as $type) {
         if ($type != ".." && $type != "." && $type != 'common') {
-            include '../secondary/'. $type . '/primary_to_secondary.php';
-            error_log("add " . $type . ": " . $primaryToSecondarySql);
-            array_push($primaryToSecondaySqls, $primaryToSecondarySql);
+            if (file_exists('../secondary/'. $type . '/primary_to_secondary.php')) {
+                include '../secondary/'. $type . '/primary_to_secondary.php';
+                array_push($primaryToSecondaySqls, $primaryToSecondarySql);
+            } else {
+                include '../secondary/common/primary_to_secondary.php';
+                array_push($primaryToSecondaySqls, $primaryToSecondarySql);
+            }
         }
     }
 
     $primaryIdSql .= "(" . implode ( " UNION ", $primaryToSecondaySqls ). ")";
+    
     array_push($concatArray, $primaryIdSql);
 }
 
@@ -112,7 +137,6 @@ if (isset($type) && $type == 'running') {
 	$sql = $typeToQuery['all'];
 }
 
-error_log( $sql );
 
 $filtArray = array_filter($concatArray);
 $numOfelements = count($filtArray);
@@ -128,9 +152,6 @@ switch ($numOfelements) {
         //         break;
 }
 
-
-//$sql = "SELECT *, timediff( NOW(), dateStart ) AS elapsed, us.user_name FROM secondary s, users us WHERE status='completed' AND status!='Error' AND us.user_id = s.user_id ORDER BY s.id_sec DESC";
-error_log( "SELECT COUNT(*) FROM (". $sql . ") as g" );
 $result = mysqli_query($con, $sql  );
 $count=$result->num_rows;
 $result->close();

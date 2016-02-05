@@ -45,6 +45,13 @@ if (isset($_POST['sampleId']) && $_POST['sampleId'] != "") {
     array_push($concatArray, $querySampleId);
 }
 
+
+if (isset($_POST['primaryId']) && $_POST['primaryId'] != "") {
+    $primaryIds = explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['primaryId']))));
+    $queryPrimaryId = "id IN (SELECT sample_id FROM primary_analysis WHERE id IN (" . implode(", ", $primaryIds) . "))";
+    array_push($concatArray, $queryPrimaryId);
+}
+
 if (isset($_POST['sampleName']) && $_POST['sampleName'] != "") {
     $querySampleName = "UPPER(sample_name) like \"%" . strtoupper($_POST['sampleName']) . "%\"";
     array_push($concatArray, $querySampleName);
@@ -156,16 +163,13 @@ while ($row = mysqli_fetch_assoc($result)) {
     
     ?><tr>
 				<?php if ($selectable ) {?>
-					<td align="left"><?php if ( in_array($row["ref_genome"],$availableAssemblies )) {?><input type="checkbox"
+					<td align="left"><?php if ( true) {?><input type="checkbox"
 					value="<?php echo $row["id"]; ?>" id="selected_<?php echo $row["id"]; ?>"
 					name="selected_<?php echo $row["id"]; ?>"
 					onclick="updateSelectedIds($(this).is(':checked'), '<?php echo $row["id"]; ?>', 'selectedIds')"
 					<?php if (strpos($selectedIds,"'".$row['id']."'") !== false ) { echo "checked"; } ?> /> <?php  }?></td>				
 				<?php } ?>
-				<td class="centered"><?php echo $row["id"];				
-            		if (in_array($row ["id"], $inPrimaryIds)) { ?>
-					<a href="primary-browse.php?sampleId=<?php  echo $row ["id"]; ?>"><i title="Go to primary analyses" class="fa fa-share"></i></a>
-				<?php  }?>
+				<td class="centered"><?php echo $row["id"]; ?>
 				</td>
 				<td><?php 
 				$sampleDescription = "";

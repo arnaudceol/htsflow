@@ -38,6 +38,35 @@ header('Content-type: text/html; charset=utf-8');
 		<script src="libs/jquery.fileTree-1.01/jqueryFileTree.js" type="text/javascript"></script>
 		<link href="libs/jquery.fileTree-1.01/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
 	
+	<script>
+	function goToPrimary() {                   
+		if ($('#selectedIds').val().trim() == '')) {
+			alert("Select at least one sample.");
+		} else {	
+			$('body').append($('<form/>')
+					  .attr({'action': 'primary-browse.php', 'method': 'post', 'id': 'toPrimaryForm'})
+					  .append($('<input/>')
+					    .attr({'type': 'hidden', 'name': 'sampleId', 'value': $('#selectedIds').val().replace( /\'/g, '')  })
+					  )
+					).find('#toPrimaryForm').submit();
+		 }  
+	}
+
+	function goToSecondary() {                   
+		if ($('#selectedIds').val().trim() == '')) {
+			alert("Select at least one sample.");
+		} else {	
+			$('body').append($('<form/>')
+					  .attr({'action': 'secondary-browse.php', 'method': 'post', 'id': 'toSecondaryForm'})
+					  .append($('<input/>')
+					    .attr({'type': 'hidden', 'name': 'sampleId', 'value': $('#selectedIds').val().replace( /\'/g, '')  })
+					  )
+					).find('#toSecondaryForm').submit();
+		 }  
+	}
+
+
+	</script>
 	
 	<div id="wrapper">
         <?php
@@ -48,28 +77,36 @@ header('Content-type: text/html; charset=utf-8');
 	   		        
            <div style="display: inline-block;">
 	    	<?php
-                $selectable = false;
+                $selectable = true;
                 $editable = true;
                 $tableDiv = "sampleTable";
                 include 'pages/filters/sample_filter.php';
                 ?>
 	   		</div>
-			<div style="float: right;" class="filtertable"
-				onclick="javascript:toggle('external_div')">Add external data</div>
+	   		<div class="filtertable" style="float: right; margin: 10px;"> 
+			<a href="#"   class="fa fa-plus-square fa-2x" 
+				onclick="javascript:toggle('external_div')" title="Add external data" ></a>
+			<a href="#"   class="fa fa-reply fa-2x" 
+				onclick="goToSecondary();return false;" title="Show secondary analysis for selected samples" ></a>
+			<a href="#"   class="fa fa-share fa-2x" 
+				onclick="goToPrimary();" title="Show primary analysis for selected samples" ></a>
+			</div>
+			
 			<div style="clear: both;"></div>
 
 			<div id="sampleTable"></div>
 			<script>
 			$.post("pages/tables/samples.php", {
 				editable: true,
-				selectable: false,
+				selectable: true,
        			<?php if (isset ( $_POST ['seq_method'] )) { echo "seq_method: \"" . $_POST ['seq_method'] ."\",\n"; } ?>
        			<?php if (isset ( $_POST ['user_id'] )) { echo "user_id: \"" . $_POST ['user_id'] ."\",\n" ; } ?>
        			<?php if (isset ( $_POST ['ref_genome'] )) { echo "ref_genome: \"" . $_POST ['ref_genome'] ."\",\n"; } ?>
        			<?php if (isset ( $_POST ['source'] )) { echo "source: \"" . $_POST ['source'] ."\",\n"; } ?>
        			<?php if (isset ( $_POST ['selectedIds'] )) { echo "selectedIds: \"" . $_POST ['selectedIds'] ."\",\n"; } ?> 	
        			<?php if (isset ( $_REQUEST ['sampleId'] )) { echo "sampleId:  \"" . $_REQUEST['sampleId']."\",\n"; } ?>
-       			<?php if (isset ( $_POST ['sampleName'] )) { echo "sampleName:  \"" . $_POST['sampleName']."\",\n"; } ?>  		 						
+       			<?php if (isset ( $_POST ['sampleName'] )) { echo "sampleName:  \"" . $_POST['sampleName']."\",\n"; } ?>  	
+       			<?php if (isset ( $_POST ['primaryId'] )) { echo "primaryId:  \"" . $_POST['primaryId']."\",\n"; } ?>  	 						
 			}, function(response) {
 			    // Log the response to the console
       		    console.log("Response: <?php if (isset ( $_POST ['sampleId'] )) { echo $_POST['sampleId'];} ?>"+response);	          		   

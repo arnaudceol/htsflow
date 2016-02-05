@@ -24,9 +24,8 @@ $editable = false;
 include 'pages/filters/sample_filter.php';
 ?>
 </div>
-<div style="float: right; width: 150px; text-align: center"
-	class="filtertable"
-	onclick="loadSubmitTable();">Settings</div>
+<input type="submit" style="float: right; margin: 15px; text-align: center"	
+	onclick="loadSubmitTable();" value="Settings"/>
 <div style="clear: both;"></div>
 <script>
 	function loadSubmitTable() {  

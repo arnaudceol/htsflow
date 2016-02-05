@@ -51,11 +51,11 @@ header('Content-type: text/html; charset=utf-8');
 <?php
 include ("pages/menu.php"); // import of menu
 ?><div id="content">
-			<div style="float: right;">
-				<div style="width: 250px; text-align: center" class="filtertable"
-					onclick="window.location.href='secondary-new.php'">New secondary
-					analyses</div>
-			</div>
+
+			<div class="filtertable" style="float: right; margin: 10px;"> 
+<a href="#"   class="fa fa-plus-square fa-2x"
+	onclick="window.location.href='secondary-new.php'"  title="New secondary analyses" ></a>
+	</div>
 <?php
 
 $tableDiv = "tableSecondary";
@@ -81,18 +81,13 @@ if (isset($_REQUEST['messageNo'])) {
 			<script>
 					$.post("pages/tables/secondary.php", {
             			selectable: false,	
-            			<?php
-            
-if (isset($_REQUEST['primaryId'])) {
-                ?>            		primaryId: "<?php echo $_REQUEST['primaryId']; ?>",<?php
-            }
-            ?>
-            			<?php
-            
-if (isset($_REQUEST['secondaryId'])) {
-                ?>            		secondaryId: "<?php echo $_REQUEST['secondaryId']; ?>",<?php
-            }
-            ?>
+            			<?php   if (isset($_REQUEST['primaryId'])) {
+            			?>primaryId: "<?php echo $_REQUEST['primaryId']; ?>",<?php }
+            			if (isset($_REQUEST['sampleId'])) {
+            			?> sampleId: "<?php echo $_REQUEST['sampleId']; ?>",
+            			<?php    }            			 
+                        if (isset($_REQUEST['secondaryId'])) {
+                        ?> secondaryId: "<?php echo $_REQUEST['secondaryId']; ?>",<?php }  ?>
 					}, function(response) {
 					    // 	Log the response to the console
 	          		    //console.log("Response: "+response);

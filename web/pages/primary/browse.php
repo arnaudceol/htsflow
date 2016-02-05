@@ -25,10 +25,49 @@ include 'pages/run/functions.php';
 include 'pages/primary/editFunctions.php';
 ?>
 </div>
-<div style="float: right; margin: 4px;" class="filtertable"
-	onclick="loadMergeTable();">Merge selected samples</div>
-<div style="float: right; margin: 4px;" class="filtertable"
-	onclick="window.location.href='primary-new.php'">New primary analyses</div>
+
+	<script>
+	function goToSample() {                   
+		if ($('#selectedIds').val().trim() == '') {
+			alert("Select at least one samples.");
+		} else {	
+			$('body').append($('<form/>')
+					  .attr({'action': 'samples.php', 'method': 'post', 'id': 'toPrimaryForm'})
+					  .append($('<input/>')
+					    .attr({'type': 'hidden', 'name': 'primaryId', 'value': $('#selectedIds').val().replace( /\'/g, '')  })
+					  )
+					).find('#toPrimaryForm').submit();
+		 }  
+	}
+
+	function goToSecondary() {     
+		if ($('#selectedIds').val().trim() == '') {
+			alert("Select at least one analysis.");
+		} else {	
+			$('body').append($('<form/>')
+					  .attr({'action': 'secondary-browse.php', 'method': 'post', 'id': 'toSecondaryForm'})
+					  .append($('<input/>')
+					    .attr({'type': 'hidden', 'name': 'primaryId', 'value': $('#selectedIds').val().replace( /\'/g, '')  })
+					  )
+					).find('#toSecondaryForm').submit();
+		 }  
+	}
+
+
+	</script>
+
+			<div class="filtertable" style="float: right; margin: 10px;"> 
+<a href="#"   class="fa fa-plus-square fa-2x"
+	onclick="window.location.href='primary-new.php'"  title="New primary analyses" ></a>
+<a href="#"   class="fa fa-object-group  fa-2x" 
+	onclick="loadMergeTable(); return false;" title="Merge selected samples" ></a>
+<a href="#"   class="fa fa-reply fa-2x" 
+	onclick="goToSample();return false;"  title="Show samples for selected samples" ></a>
+<a href="#"   class="fa fa-share fa-2x" 
+	onclick="goToSecondary();return false;"  title="Show secondary analysis for selected samples" ></a>
+	</div>
+	
+	
 <div style="clear: both;"></div>
 <div id="messages"><?php 
 if (isset($_REQUEST['messageYes'])) {

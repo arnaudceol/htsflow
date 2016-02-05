@@ -14,5 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Required variable: primaryId
-$primaryToSecondarySql =  " SELECT secondary_id FROM differential_gene_expression WHERE primary_id = " . $primaryId;
+// Required variable: primaryId and type (of analyses)
+$primaryToSecondarySql =  " SELECT secondary_id FROM " . $type . " WHERE primary_id IN (" . $primaryId . ")";
+

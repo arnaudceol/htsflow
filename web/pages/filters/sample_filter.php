@@ -21,6 +21,7 @@
     	editable: <?php  if ($editable) { echo "true"; } else { echo "false"; }?> ,
         selectable: <?php  if ($selectable) { echo "true"; } else { echo "false"; }?> ,
      	sampleId: $('#<?php echo $tableDiv; ?>Filter').find('#sampleId').val(),
+     	primaryId: $('#<?php echo $tableDiv; ?>Filter').find('#primaryId').val(),
      	sampleName: $('#<?php echo $tableDiv; ?>Filter').find('#sampleName').val(),
     	description: $('#<?php echo $tableDiv; ?>Filter').find('#description').val(),
     	seq_method: $('#<?php echo $tableDiv; ?>Filter').find('#seq_method').find(":selected").val(),
@@ -44,6 +45,7 @@
 <!-- 				<th><b>Refine your searche:</b></th> -->
 				<td>
 				Sample id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleId" name="sampleId" size="5" value="<?php if (isset( $_POST ["sampleId"])) { echo  $_POST["sampleId"]; } ?>"/>
+				Primary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="primaryId" name="primaryId" size="5" value="<?php if (isset( $_POST ["primaryId"])) { echo  $_POST["primaryId"]; } ?>"/>
 				Sample name: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleName" name="sampleName" size="10" value="<?php if (isset( $_POST ["sampleName"])) { echo  $_POST["sampleName"]; } ?>"/>
 				Description: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/>
 <?php

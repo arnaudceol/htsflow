@@ -16,5 +16,5 @@
  */
 
 // Required variable: primaryId
-$primaryToSecondarySql =  " SELECT secondary_id FROM peak_calling WHERE primary_id = " . $primaryId
-. " UNION SELECT secondary_id FROM peak_calling WHERE input_id = " . $primaryId;
+$primaryToSecondarySql =  " SELECT secondary_id FROM peak_calling WHERE primary_id IN (" . $primaryId . ")"
+. " UNION SELECT secondary_id FROM peak_calling WHERE input_id IN (" . $primaryId . ")";

@@ -69,8 +69,10 @@ if (isset($_POST['primaryId']) && $_POST['primaryId'] != "") {
 }
 
 if (isset($_REQUEST['sampleId']) && $_REQUEST['sampleId'] != "") {
-    $querySampleId = "UPPER(sample_id) = '" . strtoupper($_REQUEST['sampleId']) . "'";
-    array_push($concatArray, $querySampleId);
+    // there may be more than one sample: split the field
+    $sampleIds = explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['sampleId']))));    
+    $querySampleId = "UPPER(sample_id) IN ('" . implode("', '", $sampleIds) . "')";
+    array_push($concatArray, $querySampleId);    
 }
 
 if (isset($_POST['sampleName']) && $_POST['sampleName'] != "") {
@@ -87,8 +89,6 @@ if (isset($_POST['description']) && $_POST['description'] != "") {
     $queryDescription = "UPPER(description) like  '%" .strtoupper($_POST['description']) . "%'";
     array_push($concatArray, $queryDescription);
 }
-
-
 
 
 if (isset($_POST['status']) && $_POST['status'] != "") {
@@ -352,11 +352,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             		if (! in_array($row ["id_pre"], $mergedIds)) { ?>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><img src="images/fastqc_icon.png" width="12" title="Browse FastQC Report"/></a>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a>
-					<?php }
-					if (in_array($row['id_pre'], $inSecondaryIds)) {					
-					?>
-							<a href="secondary-browse.php?primaryId=<?php  echo $row ["id_pre"]; ?>" ><i  title="Go to secondary analyses" class="fa fa-share"></i></a>
-					<?php }?>
+					<?php } ?>
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
@@ -384,7 +380,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 											</table>
 										</div>
 									</form><?php  } ?>	</td>			
-					<td class="centered"><?php echo $row["id_sample_fk"]; ?><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><i title="Go to sample" class="fa fa-reply"></i></a></td>
+					<td class="centered"><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><?php echo $row["id_sample_fk"]; ?></a></td>
 					<td><?php echo $row["sample_name"]; ?></td>
 					<td class="centered"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); ?></td>
 								<td class="centered"><?php echo $row["ref_genome"]; ?></td>
