@@ -20,7 +20,6 @@
 $tableDiv = "tablePrimary";
 $selectable = true;
 
-include 'pages/filters/primary_table_filter.php';
 include 'pages/run/functions.php';
 include 'pages/primary/editFunctions.php';
 ?>
@@ -55,19 +54,28 @@ include 'pages/primary/editFunctions.php';
 
 
 	</script>
+	<div style="display: inline-block;">
+<?php 
+include 'pages/filters/primary_table_filter.php';
+?>
+</div>
+<div style="float: right;">
+	<fieldset class="filtertable">
+		<legend>Actions</legend>
+		<a href="#" class="fa fa-plus-square fa-2x"
+			onclick="window.location.href='primary-new.php'"
+			title="New primary analyses"></a> <a href="#"
+			class="fa fa-object-group  fa-2x"
+			onclick="loadMergeTable(); return false;"
+			title="Merge selected samples"></a> <a href="#"
+			class="fa fa-reply fa-2x" onclick="goToSample();return false;"
+			title="Show samples for selected samples"></a> <a href="#"
+			class="fa fa-share fa-2x" onclick="goToSecondary();return false;"
+			title="Show secondary analysis for selected samples"></a>
+	</fieldset>
+</div>
 
-			<div class="filtertable" style="float: right; margin: 10px;"> 
-<a href="#"   class="fa fa-plus-square fa-2x"
-	onclick="window.location.href='primary-new.php'"  title="New primary analyses" ></a>
-<a href="#"   class="fa fa-object-group  fa-2x" 
-	onclick="loadMergeTable(); return false;" title="Merge selected samples" ></a>
-<a href="#"   class="fa fa-reply fa-2x" 
-	onclick="goToSample();return false;"  title="Show samples for selected samples" ></a>
-<a href="#"   class="fa fa-share fa-2x" 
-	onclick="goToSecondary();return false;"  title="Show secondary analysis for selected samples" ></a>
-	</div>
-	
-	
+
 <div style="clear: both;"></div>
 <div id="messages"><?php 
 if (isset($_REQUEST['messageYes'])) {

@@ -39,18 +39,14 @@
 
 <form id="<?php echo $tableDiv; ?>Filter" name="CONTROL">
 	<!--	    // FILTERING OPTIONS-->
-		<fieldset class="filtertable">
+	<fieldset class="filtertable">
     <legend >Filter table</legend>	
-	<table>
-		<tbody>
-			<tr>
-<!-- 				<th><b>Refine your searche:</b></th> -->
-				<td>
-				Sample id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleId" name="sampleId" size="5" value="<?php if (isset( $_POST ["sampleId"])) { echo  $_POST["sampleId"]; } ?>"/>
-				Primary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="primaryId" name="primaryId" size="5" value="<?php if (isset( $_POST ["primaryId"])) { echo  $_POST["primaryId"]; } ?>"/>
-				Sample name: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleName" name="sampleName" size="10" value="<?php if (isset( $_POST ["sampleName"])) { echo  $_POST["sampleName"]; } ?>"/>
-				Description: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/>
-<?php
+
+<div class="group"><label>Sample id</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleId" name="sampleId" size="5" value="<?php if (isset( $_POST ["sampleId"])) { echo  $_POST["sampleId"]; } ?>"/></div>
+<div class="group"><label>Primary id</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="primaryId" name="primaryId" size="5" value="<?php if (isset( $_POST ["primaryId"])) { echo  $_POST["primaryId"]; } ?>"/></div>
+<div class="group"><label>Sample name</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleName" name="sampleName" size="10" value="<?php if (isset( $_POST ["sampleName"])) { echo  $_POST["sampleName"]; } ?>"/></div>
+<div class="group"><label>Description</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/></div>
+<div class="group"><label>Sequencing method</label><br/><?php
 $sql = "SELECT DISTINCT seq_method FROM sample WHERE  source <> 1 ORDER BY seq_method ASC;";
 
 $result = mysqli_query($con, $sql);
@@ -62,14 +58,12 @@ $result = mysqli_query($con, $sql);
 							<?php if (isset ( $_POST ['seq_method'] ) && $_POST ['seq_method'] == $row["seq_method"]) { echo "selected"; }?>><?php echo $row["seq_method"]; ?></option><?php
     }
     ?>
-                        </select>
-
-				</td>
-				<td><?php
+                        </select></div>
+<?php
     $sql = "SELECT DISTINCT sample.user_id, user_name FROM sample, users WHERE users.user_id = sample.user_id AND source <> 1 ORDER BY user_name ASC;";
     $result = mysqli_query($con, $sql);
     ?>
-                        <select id="user_id" name="user_id">
+<div class="group"><label>User</label><br/><select id="user_id" name="user_id">
 						<option value="" selected>All user</option>
 						<?php
     while ($row = mysqli_fetch_assoc($result)) {
@@ -77,12 +71,12 @@ $result = mysqli_query($con, $sql);
 							<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
     }
     ?>
-                        </select></td>
-				<td><?php
+                        </select></div>
+				<?php
     $sql = "SELECT DISTINCT ref_genome FROM sample WHERE  source <> 1 AND ref_genome <> '' ORDER BY ref_genome ASC;";
     $result = mysqli_query($con, $sql);
     ?>
-                        <select id="ref_genome" name="ref_genome">
+<div class="group"><label>Reference genome</label><br/><select id="ref_genome" name="ref_genome">
 						<option value="" selected>All reference genomes</option>
 						<?php
     while ($row = mysqli_fetch_assoc($result)) {
@@ -90,12 +84,12 @@ $result = mysqli_query($con, $sql);
 							<?php if (isset ( $_POST ['ref_genome'] ) && $_POST ['ref_genome'] == $row["ref_genome"]) { echo "selected"; }?>><?php echo $row["ref_genome"]; ?></option><?php
     }
     ?>
-                        </select></td>
-				<td><?php
+                        </select></div>
+			<?php
     $sql = "SELECT DISTINCT source FROM sample  ORDER BY source ASC;";
     $result = mysqli_query($con, $sql);
     ?>
-                        <select id="source" name="source">
+<div class="group"><label>Source</label><br/><select id="source" name="source">
 						<option value="" selected>Source</option><?php
     $mergeOptions = array(
         0 => "<span>lims</span>",
@@ -107,12 +101,9 @@ $result = mysqli_query($con, $sql);
 							<?php if (isset ( $_POST ['source'] ) && $_POST ['source'] == $row["source"]) { echo "selected"; }?>><?php echo $mergeOptions[$row["source"]]; ?></option><?php
     }
     ?>
-                        </select></td>
-				<td><input type="button" value="FILTER"
-					onclick="load<?php echo $tableDiv; ?>()" /></td>
-			</tr>
-		</tbody>
-	</table>
+                        </select></div>
+                <input type="button" value="FILTER"
+					onclick="load<?php echo $tableDiv; ?>()" />
 	</fieldset>
 </form>
 

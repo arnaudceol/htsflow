@@ -17,6 +17,14 @@
 
 ?>
 
+<b>Actions:</b>
+<ul class="fa-ul">
+<li><i class="fa fa-plus-square"></i> Add new sample (external data) / Start new analysis.</li>
+<li><i class="fa fa-object-group"></i> Merge analysis.</li>
+<li><i class="fa fa-share"></i> See follow up analysis.</li>
+<li><i class="fa fa-reply"></i> See source sample/analysis.</li>
+</ul>
+
 <b>Analyses:</b>
 <ul class="fa-ul">
 <li><i class="fa fa-thumbs-up"></i> Completed analysis.</li>
@@ -52,8 +60,6 @@
 <li><img src="images/fastqc_icon.png" width="12"/> Show FastQC report.</li>
 <li><i class="fa fa-folder"></i> Browse data.</li>
 <li><i class="fa fa-download"></i> Download data.</li>
-<li><i class="fa fa-share"></i> See follow up analysis</li>
-<li><i class="fa fa-reply"></i> See source sample/analysis</li>
 <li><i class="fa fa-newspaper-o"></i> See logs and output.</li>
 <li><img src="images/igb.jpg" width="18"/> Import in the Integrated Genome Browser (IGB). IGB should be installed and running (<a href="http://bioviz.org/igb/index.html">http://bioviz.org/igb/index.html</a>). </li>
 </ul>

@@ -51,11 +51,7 @@ header('Content-type: text/html; charset=utf-8');
 <?php
 include ("pages/menu.php"); // import of menu
 ?><div id="content">
-
-			<div class="filtertable" style="float: right; margin: 10px;"> 
-<a href="#"   class="fa fa-plus-square fa-2x"
-	onclick="window.location.href='secondary-new.php'"  title="New secondary analyses" ></a>
-	</div>
+<div style="display: inline-block;">
 <?php
 
 $tableDiv = "tableSecondary";
@@ -63,7 +59,17 @@ $selectable = "false";
 
 include 'pages/filters/secondary_filter.php';
 
-
+?>
+</div>
+			<div style="float: right;">
+				<fieldset class="filtertable">
+					<legend>Actions</legend>
+					<a href="#" class="fa fa-plus-square fa-2x"
+						onclick="window.location.href='secondary-new.php'"
+						title="New secondary analyses"></a>
+				</fieldset>
+			</div>
+			<?php 
 
 if (isset($_REQUEST['messageYes'])) {
     ?><div class="message">

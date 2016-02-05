@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  * Copyright 2015-2016 Fondazione Istituto Italiano di Tecnologia.
  *
@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,66 +39,63 @@
 <form id="<?php echo $tableDiv; ?>Filter" name="CONTROL">
 	<!--	    // FILTERING OPTIONS-->
 	<fieldset class="filtertable">
-      <legend >Filter table</legend>
-		<table >
-		<tbody>
-			<tr>
-				<td>Secondary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="secondaryId"
-					name="secondaryId" size="4"
-					value="<?php if (isset( $_POST ["secondaryId"])) { echo  $_POST["secondaryId"]; } ?>" />
-					Primary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="primaryId" name="primaryId"
-					size="4"
-					value="<?php if (isset( $_REQUEST ["primaryId"])) { echo  $_REQUEST["primaryId"]; } ?>" />
-					Sample id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="sampleId" name="sampleId"
-					size="4"
-					value="<?php if (isset( $_REQUEST ["sampleId"])) { echo  $_REQUEST["sampleId"]; } ?>" />
-					Title: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="title" name="title" size="10" value="<?php if (isset( $_POST ["title"])) { echo  $_POST["title"]; } ?>"/>
-					Description: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="description" name="description" size="10" value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>"/>
+		<legend>Filter table</legend>
+<div class="group"><label>Secondary id</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey"
+						type="text" id="secondaryId" name="secondaryId" size="8"
+						value="<?php if (isset( $_POST ["secondaryId"])) { echo  $_POST["secondaryId"]; } ?>" /></div>
+<div class="group"><label>Primary id</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey"
+						type="text" id="primaryId" name="primaryId" size="8"
+						value="<?php if (isset( $_REQUEST ["primaryId"])) { echo  $_REQUEST["primaryId"]; } ?>" /></div>
+<div class="group"><label>Sample id</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey"
+						type="text" id="sampleId" name="sampleId" size="8"
+						value="<?php if (isset( $_REQUEST ["sampleId"])) { echo  $_REQUEST["sampleId"]; } ?>" /></div>
+<div class="group"><label>Title</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey"
+						type="text" id="title" name="title" size="8"
+						value="<?php if (isset( $_POST ["title"])) { echo  $_POST["title"]; } ?>" /></div>
+<div class="group"><label>Description</label><br/><input class="<?php echo $tableDiv; ?>SubmitKey"
+						type="text" id="description" name="description" size="15"
+						value="<?php if (isset( $_POST ["description"])) { echo  $_POST["description"]; } ?>" /></div>
+						
 <?php
 $sql = "SELECT DISTINCT method FROM secondary_analysis ORDER BY method ASC;";
 
 $result = mysqli_query($con, $sql);
-?><select id="method" name="method">
-						<option value="" selected>All analyses</option>
+?><div class="group"><label>Analysis</label><br /> <select id="method" name="method">
+							<option value="" selected>All analyses</option>
 						<?php
     while ($row = mysqli_fetch_assoc($result)) {
         ?><option value="<?php echo $row["method"]; ?>"
-							<?php if (isset ( $_POST ['method'] ) && $_POST ['method'] == $row["method"]) { echo "selected"; }?>><?php echo $row["method"]; ?></option><?php
+								<?php if (isset ( $_POST ['method'] ) && $_POST ['method'] == $row["method"]) { echo "selected"; }?>><?php echo $row["method"]; ?></option><?php
     }
     ?>
-                        </select>
-
-				</td>
-				<td><?php
+</select></div>
+<?php
     $sql = "SELECT DISTINCT users.user_id, user_name FROM primary_analysis, users WHERE users.user_id = primary_analysis.user_id ORDER BY user_name ASC;";
     $result = mysqli_query($con, $sql);
     ?>
-                        <select id="user_id" name="user_id">
-						<option value="" selected>All user</option>
+ <div class="group"><label>User</label><br /> <select id="user_id" name="user_id">
+							<option value="" selected>All user</option>
 						<?php
     while ($row = mysqli_fetch_assoc($result)) {
         ?><option value="<?php echo $row["user_id"]; ?>"
-							<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
+								<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
     }
     ?>
-                        </select></td>
-				<td><select id="status" name="status">
-						<option value="" selected>All status</option>
-						<option value="completed"
-							<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "completed") { echo "selected"; }?>>completed</option>
-						<option value="running"
-							<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "running") { echo "selected"; }?>>running</option>
-						<option value="error"
-							<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "error") { echo "selected"; }?>>error</option>
-						<option value="deleted"
-							<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "error") { echo "selected"; }?>>deleted</option>
-				</select></td>
+                        </select></div>
+<div class="group"><label>Status</label><br /><select id="status" name="status">
+							<option value="" selected>All status</option>
+							<option value="completed"
+								<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "completed") { echo "selected"; }?>>completed</option>
+							<option value="running"
+								<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "running") { echo "selected"; }?>>running</option>
+							<option value="error"
+								<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "error") { echo "selected"; }?>>error</option>
+							<option value="deleted"
+								<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "error") { echo "selected"; }?>>deleted</option>
+					</select></div>
 
-				<td><input type="button" value="FILTER"
-					onclick="load<?php echo $tableDiv; ?>()" /></td>
-			</tr>
-		</tbody>
-	</table>
+					<input type="button" value="FILTER"
+						onclick="load<?php echo $tableDiv; ?>()" />
 	</fieldset>
 </form>
 
@@ -107,10 +104,8 @@ $result = mysqli_query($con, $sql);
 <?php include 'submitOnEnter.php'; ?>
 
 
-<!-- Fast links -->
-<div style="display: inline">
 
-<script>
+	<script>
  function loadMy<?php echo $tableDiv; ?>() {                  		
      $.post("pages/tables/secondary.php", {    	
         selectable: <?php echo $selectable; ?>,        
@@ -146,14 +141,18 @@ $result = mysqli_query($con, $sql);
 	});        
 	}
  </script>
- 
- <fieldset class="filtertable">
-      <legend >My analyses shortcuts</legend>
-	<input type="submit" value="All" onclick="loadMy<?php echo $tableDiv; ?>()"/>
-	<input type="submit" value="Completed" onclick="loadMyCompleted<?php echo $tableDiv; ?>()"/>
-	<input type="submit" value="Running" onclick="loadMyRunning<?php echo $tableDiv; ?>()"/>
-	<input type="submit" value="Download (csv format)" onclick="window.location='download.php'" />
-</fieldset>
 
-
-</div>
+	<div style="float: left;">
+		<fieldset class="filtertable">
+			<legend>My analyses shortcuts</legend>
+			<input type="submit" value="All"
+				onclick="loadMy<?php echo $tableDiv; ?>()" /> <input type="submit"
+				value="Completed"
+				onclick="loadMyCompleted<?php echo $tableDiv; ?>()" /> <input
+				type="submit" value="Running"
+				onclick="loadMyRunning<?php echo $tableDiv; ?>()" /> <input
+				type="submit" value="Download (csv format)"
+				onclick="window.location='download.php'" />
+		</fieldset>
+	</div>
+	
