@@ -38,7 +38,9 @@
 
 <form id="<?php echo $tableDiv; ?>Filter" name="CONTROL">
 	<!--	    // FILTERING OPTIONS-->
-	<table class="filtertable">
+	<fieldset class="filtertable">
+      <legend >Filter table</legend>
+		<table >
 		<tbody>
 			<tr>
 				<td>Secondary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="secondaryId"
@@ -97,6 +99,7 @@ $result = mysqli_query($con, $sql);
 			</tr>
 		</tbody>
 	</table>
+	</fieldset>
 </form>
 
 
@@ -143,9 +146,14 @@ $result = mysqli_query($con, $sql);
 	});        
 	}
  </script>
-<input type="submit" value="My analysis" onclick="loadMy<?php echo $tableDiv; ?>()"/>
-<input type="submit" value="My completed analysis" onclick="loadMyCompleted<?php echo $tableDiv; ?>()"/>
-<input type="submit" value="My running analysis" onclick="loadMyRunning<?php echo $tableDiv; ?>()"/>
+ 
+ <fieldset class="filtertable">
+      <legend >My analyses shortcuts</legend>
+	<input type="submit" value="All" onclick="loadMy<?php echo $tableDiv; ?>()"/>
+	<input type="submit" value="Completed" onclick="loadMyCompleted<?php echo $tableDiv; ?>()"/>
+	<input type="submit" value="Running" onclick="loadMyRunning<?php echo $tableDiv; ?>()"/>
+	<input type="submit" value="Download (csv format)" onclick="window.location='download.php'" />
+</fieldset>
 
 
 </div>

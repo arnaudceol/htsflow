@@ -18,6 +18,7 @@ html, body {
 
 a {
 	outline: 0;
+	color: #004466;
 }
 
 .centered {
@@ -398,12 +399,17 @@ hr {
 	margin-bottom: 20px;
 	padding-left: 10px;
 	padding-right: 10px;
-	padding-top: 2px;
-	padding-bottom: 2px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
 
+.filtertable legend {
+	color: #FFCBA4;
+	font-weight: bold;
+	
+}
 .filtertable select {
 	/* background-color: #b2cecf; 0288AD; */
 	color: #0288AD;

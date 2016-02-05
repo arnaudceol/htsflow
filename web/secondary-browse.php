@@ -63,6 +63,8 @@ $selectable = "false";
 
 include 'pages/filters/secondary_filter.php';
 
+
+
 if (isset($_REQUEST['messageYes'])) {
     ?><div class="message">
 				<i class="fa fa-thumbs-o-up" style="color: green"></i><?php echo $_REQUEST['messageYes']; ?></div><?php

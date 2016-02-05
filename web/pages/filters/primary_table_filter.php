@@ -41,7 +41,9 @@
 
 <form id="<?php echo $tableDiv; ?>Filter" name="CONTROL" >
 	<!--	    // FILTERING OPTIONS-->
-	<table class="filtertable">
+	<fieldset class="filtertable">
+    <legend >Filter table</legend>	
+	<table>
 		<tbody>
 			<tr>
 				<td>Primary id: <input class="<?php echo $tableDiv; ?>SubmitKey" type="text" id="primaryId" name="primaryId"
@@ -148,6 +150,7 @@ echo $row["user_id"];
 			</tr>
 		</tbody>
 	</table>
+	</fieldset>
 </form>
 
 <?php include 'submitOnEnter.php'; ?>
@@ -191,9 +194,14 @@ echo $row["user_id"];
 	});        
 	}
  </script>
-<input type="submit" value="My analysis" onclick="loadMy<?php echo $tableDiv; ?>()"/>
-<input type="submit" value="My completed analysis" onclick="loadMyCompleted<?php echo $tableDiv; ?>()"/>
-<input type="submit" value="My running analysis" onclick="loadMyRunning<?php echo $tableDiv; ?>()"/>
+ 
+ 
+ <fieldset class="filtertable">
+ <legend >My analyses shortcuts</legend>
+<input type="submit" value="All" onclick="loadMy<?php echo $tableDiv; ?>()"/>
+<input type="submit" value="Completed" onclick="loadMyCompleted<?php echo $tableDiv; ?>()"/>
+<input type="submit" value="Running" onclick="loadMyRunning<?php echo $tableDiv; ?>()"/>
+</fieldset>
 
 </div>
 

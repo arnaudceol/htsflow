@@ -34,7 +34,7 @@
 			<li><a href="samples.php">samples</a></li>
 			<li><a href="primary-browse.php">primary</a></li>
 			<li><a href="secondary-browse.php">secondary</a></li>
-			<li><a href="analyses.php">My flow</a></li> 
+			<!-- <li><a href="analyses.php">My flow</a></li>  -->
 			<li><a href="usage.php">help</a></li>
 			<li><a href="users.php">admin</a></li>
 			<!-- <li><a href="#">contact</a></li> -->

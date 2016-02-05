@@ -39,7 +39,9 @@
 
 <form id="<?php echo $tableDiv; ?>Filter" name="CONTROL">
 	<!--	    // FILTERING OPTIONS-->
-	<table class="filtertable">
+		<fieldset class="filtertable">
+    <legend >Filter table</legend>	
+	<table>
 		<tbody>
 			<tr>
 <!-- 				<th><b>Refine your searche:</b></th> -->
@@ -111,6 +113,7 @@ $result = mysqli_query($con, $sql);
 			</tr>
 		</tbody>
 	</table>
+	</fieldset>
 </form>
 
 
