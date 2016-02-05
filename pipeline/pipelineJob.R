@@ -151,7 +151,6 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	                     print(e)
 	                     loginfo("Session information: ")
 	                     sessionInfo()
-	                     loginfo(sessionInfo())
 	                     setError( "Primary analysis pipeline exited with errors." )
 	                     stop()
 	                 }
@@ -166,7 +165,6 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	                     print(e)
 	                     loginfo("Session information: ")
 	                     sessionInfo()
-	                     loginfo(sessionInfo())
 	                     setError( "Delete secondary analysis pipeline exited with errors." )
 	                     stop()
 	                 }
@@ -182,7 +180,6 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	                     print(e)
 	                     loginfo("Session information: ")
 	                     sessionInfo()
-	                     loginfo(sessionInfo())
 	                     setError("Secondary analysis pipeline exited with errors." )
 	                     stop()
 	                 }
@@ -202,7 +199,6 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	                 print(e)
 	                 loginfo("Session information: ")
 	                 sessionInfo()
-	                 loginfo(sessionInfo())
 	                 setError( "Merging pipeline exited with errors." )
 	                 stop()
 	             }
