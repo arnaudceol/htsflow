@@ -132,6 +132,14 @@ make altinstall prefix=$deploydir/python2.7 exec-prefix=$deploydir/python2.7
 
 cd $deploydir/python2.7
 ./bin/python2.7 -m ensurepip
+
+./bin/pip install virtualenv
+
+./bin/virtualenv $deploydir/virtualenv
+cd $deploydir/bin/virtualenv
+
+source bin/activate
+
 ./bin/pip2.7   install --upgrade pip
 ./bin/pip2.7  install numpy
 ./bin/pip2.7  install configparser
@@ -148,8 +156,12 @@ cd $tmpdir
 wget   https://github.com/taoliu/MACS/archive/v2.0.9.tar.gz
 tar xf  v2.0.9.tar.gz
 cd MACS-2.0.9
-export PYTHONPATH=$deploydir/python2.7/
-$deploydir/python2.7/bin/python2.7 setup.py install --prefix $deploydir/python2.7/
+#export PYTHONPATH=$deploydir/python2.7/
+#$deploydir/python2.7/bin/python2.7 setup.py install --prefix $deploydir/python2.7/
+
+# we are in virtual env
+python setup.py install 
+
 cd ..
 rm -rf MACS-2.0.9
 
