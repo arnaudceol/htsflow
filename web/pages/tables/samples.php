@@ -106,12 +106,27 @@ $result = mysqli_query($con, $sql . $pagination);
 
 // Get available genomes:
 $availableAssemblies= array();
+// BS need a different assembly
+$availableAssembliesBs= array();
+
 foreach (scandir(GENOMES_FOLDER) as $assembly) {
-    if ($assembly != "." && $assembly != "..") {
-        array_push($availableAssemblies, $assembly);
+    if ($assembly[0] != ".") {
+    	if (strrpos($assembly, "_bs") > 0) {
+    		$assemblyName = explode("_", $assembly) [0];
+    		array_push($availableAssembliesBs, $assemblyName );
+    	} else {
+        	array_push($availableAssemblies, $assembly);
+    	}
     }
 }
  
+// get available data types
+$availableDataTypes = array();
+$resultDataType = mysqli_query($con, "SELECT cv_term from controlled_vocabulary WHERE cv_type= 'data_type'");
+while($dataTypeResult = mysqli_fetch_array($resultDataType)) {
+	$availableDataTypes[] = $dataTypeResult[0];
+}
+mysqli_free_result($resultDataType);
 
 
 // Get list of samples with primary analyses
@@ -122,7 +137,7 @@ $inPrimaryIds = array();
 while($inPrimaryResult = mysqli_fetch_array($inPrimaryQuery)) {
     $inPrimaryIds[] = $inPrimaryResult[0];
 }
-
+mysqli_free_result($inPrimaryQuery);
 
 
 ?>
@@ -251,17 +266,25 @@ while ($row = mysqli_fetch_assoc($result)) {
 											<table>
 												<tbody>
 													<tr>
-														<td width="100%"><textarea rows="2" name="TEXTdescription"
-																style="width: 98%;"><?php echo $row ["seq_method"]; ?></textarea></td>
+														<td width="100%">
+														<select name="TEXTdescription">
+														<?php foreach ($availableDataTypes as $dataType) {
+															echo "<option value=\"". $dataType ."\">".$dataType."</option>";
+														}?>
+														</select></td>
 														<td><input type="submit" value="Submit"
 															onclick="$.post('pages/sample/submitSeqMethod.php', $('#submitSeqMethod_<?php echo $row["id"]; ?>').serialize($('#submitSeqMethod_<?php echo $row["id"]; ?>'))); refreshTable(); return false;" />
 															<input type="hidden" name="ID"
-															value="<?php echo $row["id"]; ?>"></td>
+															value="<?php echo $row["id"]; ?>"/>						
+															</td>
 													</tr>
 												</tbody>
 											</table>
 									</form></td>
-								<td class="method"><?php echo $row["seq_method"]; ?></td>
+								<td class="method"><?php echo $row["seq_method"]; ?></td><td><?php 
+								    if (! in_array($row["seq_method"], $availableDataTypes )) {
+								       ?> <i style="color: red" title="This data type is not available in HTS flow." class="fa fa-exclamation-triangle"></i><?php    
+								    }?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -281,8 +304,18 @@ while ($row = mysqli_fetch_assoc($result)) {
 											<table>
 												<tbody>
 													<tr>
-														<td width="100%"><textarea rows="2"
-																name="REFGENOMEdescription" style="width: 98%;"><?php echo $row["ref_genome"]; ?></textarea>
+														<td width="100%"><select name="TEXTdescription">
+														<?php 
+														if ($row["seq_method"] == 'BS-Seq') {
+															$selectedAssemblies = $availableAssembliesBs;
+														} else {
+															$selectedAssemblies = $availableAssemblies;
+														}
+															
+														foreach ($selectedAssemblies as $genome) {
+															echo "<option value=\"". $genome ."\">".$genome."</option>";
+														}?>
+														</select>
 														</td>
 														<td><input type="submit" value="Submit"
 															onclick="$.post('pages/sample/submitRefGenome.php', $('#submitRefGenome_<?php echo $row["id"]; ?>').serialize($('#submitRefGenome_<?php echo $row["id"]; ?>'))); refreshTable(); return false;"  /> 
@@ -294,8 +327,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 										</form>
 									</td>
 								<td><?php echo $row["ref_genome"]; 
-								    if (! in_array($row["ref_genome"], $availableAssemblies )) {
-								       ?> <i style="color: red" title="This genome is not available in HTS flow." class="fa fa-exclamation-triangle"></i><?php    
+								    if (! in_array($row["ref_genome"], $selectedAssemblies )) {
+								       ?> <i style="color: red" title="This genome is not available in HTS flow for this data type." class="fa fa-exclamation-triangle"></i><?php    
 								    }
 								?></td>
 							</tr>
