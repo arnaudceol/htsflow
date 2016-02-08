@@ -40,7 +40,7 @@ header('Content-type: text/html; charset=utf-8');
 	
 	<script>
 	function goToPrimary() {                   
-		if ($('#selectedIds').val().trim() == '')) {
+		if ($('#selectedIds').val().trim() == '') {
 			alert("Select at least one sample.");
 		} else {	
 			$('body').append($('<form/>')
@@ -53,7 +53,7 @@ header('Content-type: text/html; charset=utf-8');
 	}
 
 	function goToSecondary() {                   
-		if ($('#selectedIds').val().trim() == '')) {
+		if ($('#selectedIds').val().trim() == '') {
 			alert("Select at least one sample.");
 		} else {	
 			$('body').append($('<form/>')
@@ -88,11 +88,12 @@ header('Content-type: text/html; charset=utf-8');
 			<legend>Actions</legend>
 			<a href="#"   class="fa fa-plus-square fa-2x" 
 				onclick="javascript:toggle('external_div')" title="Add external data" ></a>
-			<a href="#"   class="fa fa-reply fa-2x" 
-				onclick="goToSecondary();return false;" title="Show secondary analysis for selected samples" ></a>
 			<a href="#"   class="fa fa-share fa-2x" 
 				onclick="goToPrimary();" title="Show primary analysis for selected samples" ></a>
+			<a href="#"   class="fa fa-reply-all fa-flip-horizontal fa-2x" 
+				onclick="goToSecondary();return false;" title="Show secondary analysis for selected samples" ></a>
 				</fieldset>
+				
 			</div>
 			
 			<div style="clear: both;"></div>
