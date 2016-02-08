@@ -186,7 +186,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
 				}
 				
-				if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a <?php echo $class; ?>  href='#'
+				if ($editable) { ?><a <?php echo $class; ?>  href='#'
 									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><?php } ?>
 										<form action="#" style="display: none; " class="popupstyle"
 											id="submitDescription_<?php echo $row["id"]; ?>"
@@ -214,7 +214,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				<td><table>
 						<tbody>
 							<tr>
-								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a title="Edit" class="fa fa-pencil" href='#'
+								<td style="width: 10px"><?php if ($editable) { ?><a title="Edit" class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("submitSampleName_<?php echo $row["id"]; ?>")'></a><?php  } ?><form action="#"
 										id="submitSampleName_<?php echo $row["id"]; ?>" style="display: none" class="popupstyle"
 										method="post">								
@@ -242,7 +242,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<table>
 						<tbody>
 							<tr>
-								<td style="width: 10px"><?php if ($editable && ($_SESSION['grantedAdmin'] == 1  || $row["user_name"] == $_SESSION["hf_user_name"])) { ?><a  class="fa fa-pencil" href='#'
+								<td style="width: 10px"><?php if ($editable) { ?><a  class="fa fa-pencil" href='#'
 									title="Edit"  onclick='javascript:toggle("submitSeqMethod_<?php echo $row["id"]; ?>")'></a> <?php  }?>
 									<form action="#"
 										id="submitSeqMethod_<?php echo $row["id"]; ?>"
