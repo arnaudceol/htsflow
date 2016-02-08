@@ -48,7 +48,7 @@ footprintAnalysis <- function( IDsec ){
 	names(bamFiles) <- NULL
 	bedFiles <- sapply( 1:dim(flags)[1], function(x)
 				if ( flags[x,]$program == 'MACSnarrow' ) {
-					paste0( getHTSFlowPath("HTSFLOW_SECONDARY"), flags[x,]$secondary_id, "/NARROW/", folder, flags[x,]$label, '_peaks.bed' )
+					paste0( getHTSFlowPath("HTSFLOW_SECONDARY"), flags[x,]$secondary_id, "/NARROW/", flags[x,]$label, '_peaks.bed' )
 				} else {
 					paste0(  getHTSFlowPath("HTSFLOW_SECONDARY"), flags[x,]$secondary_id, "/BROAD/", flags[x,]$label, '_broad_peaks.bed' )
 				}
@@ -121,9 +121,16 @@ footprintAnalysis <- function( IDsec ){
 		cmd <-  paste0( getHTSFlowPath("python"), " ", getHTSFlowPath("wellington"), " ", BEDtmp2, " ", BAMtmp, " ", FOOT, " ", PVALUE, " ", TYPEOFANALYSIS )
 		tryOrExit(cmd,  "Wellington")
 		
-		GR <- createGR( FOOT )
-		#system( 'rm -R ', FOOT )
-		saveRDS( GR, file = FOOTRDS )
+		tryCatch(
+				GR <- createGR( FOOT ),						
+				error = function(e)
+				{	
+					setError("Cannot create GR from footprint output")
+					loginfo(e)
+				}
+		)	
+				
+		saveRDS( GR, file = FOOTRDS )	
 		
 		#### remove bed temporary files
 		loginfo ( 'removing temporary files' )
