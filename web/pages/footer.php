@@ -16,4 +16,4 @@
  */
 
 ?>
-<div id="footer" class="centered" style="height: 35px">Copyright 2015-2016 Fondazione Istituto Italiano di Tecnologia.</div>
+<div id="footer" class="centered" style="margin-top: 100px;  height: 35px">Copyright 2015-2016 Fondazione Istituto Italiano di Tecnologia.</div>
