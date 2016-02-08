@@ -382,7 +382,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 									</form><?php  } ?>	</td>			
 					<td class="centered"><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><?php echo $row["id_sample_fk"]; ?></a></td>
 					<td><?php echo $row["sample_name"]; ?></td>
-					<td class="centered"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); ?></td>
+					<td class="centered"><span <?php if (isset($row["reads_num"]) && intval($row["reads_num"]) > 200000000) { echo "style=\"color: #CC9900\" title=\"High definition sample: > 200,000,000 aligned reads\"";} ?>"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); if (isset($row["reads_num"]) && intval($row["reads_num"]) > 200000000) { echo " (hd)"; }?></span></td>
 								<td class="centered"><?php echo $row["ref_genome"]; ?></td>
 					<td class="centered method"><?php echo $row["seq_method"]; ?></td>
 					<td class="centered"><?php echo $mergArr[$row["SOURCE"]]; 

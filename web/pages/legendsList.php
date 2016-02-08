@@ -32,6 +32,7 @@
 <li><i class="fa fa-cog"></i> Running analysis.</li>
 <li><i class="fa fa-times" style="color: grey"></i> Deleted analyses.</li>
 <li><i class="fa fa-clock-o" style="color: grey"></i> Queued/Waiting to start.</li>
+<li><span style="color: #CC9900">hd:</span> high definition sample (> 200,000,000 aligned reads).</li>
 </ul>
 
 <b>Table navigation:</b>

@@ -200,7 +200,7 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 							</p><?php
 							include '../secondary/' . $row ["method"] . '/detail_table.php'; ?>
 						</div>
-						<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/secondary/<?php  echo $row ["id"]; ?>/" ><i class="fa fa-folder"></i></a>	
+						<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/secondary/<?php  echo $row ["id"]; ?>/" ><i class="fa fa-folder"></i></a>
 					</td>
 					<td>
 					<table>
