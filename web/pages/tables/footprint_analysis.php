@@ -63,7 +63,7 @@ if (isset($_POST['status']) && $_POST['status'] != "") {
 $sql = "SELECT tc.user_id, user_name, paired, tc.id as primary_id, sample.id as  sample_id, SOURCE, ref_genome, 
     seq_method, pk.id as peak_id, pk.label, s.method, s.description, s.id as secondary_id, tc.reads_num  
     FROM primary_analysis tc, secondary_analysis s, peak_calling pk, users, pa_options, sample
-    WHERE (seq_method = 'DNaseI-Seq' OR seq_method='ChIP-seq') and s.id = pk.secondary_id and pk.primary_id = tc.id 
+    WHERE (seq_method = 'DNase-Seq' OR seq_method='ChIP-seq') and s.id = pk.secondary_id and pk.primary_id = tc.id 
     AND users.user_id = tc.user_id AND options_id  = pa_options.id AND sample_id = sample.id ";
 
 if (isset($selectedSamples) && sizeof($selectedSamples) > 0) {
@@ -90,7 +90,6 @@ switch ($numOfelements) {
         $sql = $sql . " AND " . implode(" AND ", $filtArray);
         break;
 }
-
 
 error_log($sql);
 $result = mysqli_query($con, "SELECT COUNT(*) FROM (" . $sql . ") as g");
@@ -139,7 +138,7 @@ while ($line = mysqli_fetch_assoc($result)) {
 				<td class="centered"><input type="checkbox"
 					name="selected_<?php echo $line["peak_id"]; ?>"  id="selected_<?php echo $line["peak_id"]; ?>"
 					value="<?php echo $line["peak_id"]; ?>" 
-					onclick="updateSelectedIds($(this).is(':checked'), '<?php echo $line["peak_id"]; ?>', 'selectedIds'); <?php if ($lowDefinitionSample) { ?>if(!$(this).is(':not(:checked)')) (alert('Warning: this is a low definition sample \(< 200.000.000 aligned reads\)'))<?php } ?>" 
+					onclick="updateSelectedIds($(this).is(':checked'), '<?php echo $line["peak_id"]; ?>', 'selectedIds'); <?php if ($lowDefinitionSample) { ?>if(!$(this).is(':not(:checked)')) (alert('Warning: this is a low definition sample \(<?php echo number_format($line["reads_num"]); ?> aligned reads < 200,000,000\)'))<?php } ?>" 
 					<?php if (strpos($selectedIds,"'".$line["peak_id"]."'") !== false ) { echo "checked"; } ?>
 					/></td>
 				<?php } ?>
@@ -153,17 +152,16 @@ while ($line = mysqli_fetch_assoc($result)) {
         $resSpec = mysqli_query($con, $querySpec);
         $lineSpec = mysqli_fetch_assoc($resSpec);
         ?>
-				<td class="centered"><?php echo $lineSpec["input_id"]; ?></td>
+				<td class="centered"><a href="primary-browse.php?primaryId=<?php echo $lineSpec["input_id"]; ?>"><?php echo $lineSpec["input_id"]; ?></a></td>
 				<td class="centered"><span <?php
 				if (isset($line["reads_num"]) && intval($line["reads_num"]) > 200000000) { 
 				    echo "style=\"color: #CC9900\" title=\"High definition sample: > 200,000,000 aligned reads\"";}
-				?>><?php
-				    echo $lineSpec["primary_id"];
+				?>><a href="primary-browse.php?primaryId=<?php echo $lineSpec["primary_id"]; ?>"><?php echo $lineSpec["primary_id"]; ?></a><?php 
 				    if (! $lowDefinitionSample ) { 
 				        echo " (hd)"; 
 				    } else {
 				        // Warning: low definition sample
-				        ?> <i style="color: red" title="Low definition sample, < 200.000.000 aligned reads." class="fa fa-exclamation-triangle"></i><?php 
+				        ?> <i style="color: red" title="Low definition sample, < 200,000,000 aligned reads." class="fa fa-exclamation-triangle"></i><?php 
 				    }				     
 				?></span></td>
 				<td class="centered"><?php echo $lineSpec["exp_name"]; ?></td>
