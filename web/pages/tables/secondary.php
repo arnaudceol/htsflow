@@ -157,7 +157,48 @@ $count=$result->num_rows;
 $result->close();
 $numRighe= $count;
 $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
+
+
+
+$pageURL = 'http';
+if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+$pageURL .= "://";
+if ($_SERVER["SERVER_PORT"] != "80") {
+	$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+} else {
+	$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+}
+
+
+// Go to root of website: remove pages/tables/
+$igbScript = str_replace("pages/tables", "", dirname($pageURL));
 ?>
+
+  
+<script>
+function igbLoad(id, type) {
+	//alert( id + "/" + type);
+	url = "http://localhost:7085/UnibrowControl?scriptfile=<?php echo $igbScript; ?>/igb.php?id%3d" + id + "/" + type + ".igb";
+// 	alert(url);
+	toggle("igbLoadIcon"+id);
+	var jqxhr = $.get( url, function() {
+		toggle("igbLoadIcon"+id);
+		}).fail(function() {
+			toggle('igbDialog');
+			toggle("igbLoadIcon"+id);
+		 })
+		;
+}
+</script>
+
+
+
+<div id="igbDialog" title="IGB dialog" style="display: none; vertical-align: middle" class="popupstyle">
+  <img src="images/igb.jpg"/> Please lauch IGB before to click this link. IGB can be downloaded at <a href="http://bioviz.org/igb/index.html">http://bioviz.org/igb/index.html</a>.
+  <a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('igbDialog'); "></a>
+</div>
+
+
 
 <div class="datagrid">
 	<div class="table-container">
@@ -201,6 +242,10 @@ $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 							include '../secondary/' . $row ["method"] . '/detail_table.php'; ?>
 						</div>
 						<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/secondary/<?php  echo $row ["id"]; ?>/" ><i class="fa fa-folder"></i></a>
+						<?php if ($row ["method"] == 'peak_calling') {?><span class="fa-stack " >  
+								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id"] . "', '" .  $row ["method"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
+  								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id"]; ?>" style="display: none;"></a> 
+						</span>	<?php }?>
 					</td>
 					<td>
 					<table>
