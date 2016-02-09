@@ -17,9 +17,9 @@ CREATE TABLE `controlled_vocabulary` (
 
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'ChIP-Seq', 'chip-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'RNA-Seq', 'rna-seq', true);
-INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'DNase-seq', 'dnase-seq', true);
-INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'DNA-seq', 'dna-seq', false);
-INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'BS-Seq', 'bs-Seq', true);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'DNase-Seq', 'dnase-seq', true);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'DNA-Seq', 'dna-seq', false);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'BS-Seq', 'bs-seq', true);
 
 --
 -- Table structure for table `differential_gene_expression`
