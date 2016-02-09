@@ -7,17 +7,19 @@ DROP TABLE IF EXISTS `controlled_vocabulary`;
 CREATE TABLE `controlled_vocabulary` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `cv_term` varchar(30) NOT NULL,
+  `display_term` varchar(30) NOT NULL,
   `cv_type` varchar(30) NOT NULL,
+  `available` boolean NOT NULL DEFAULT true,
   `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1399 DEFAULT CHARSET=latin1;
-delete from controlled_vocabulary;
-INSERT INTO `controlled_vocabulary` (cv_type, cv_term) VALUES ('data_type', 'ChIP-Seq');
-INSERT INTO `controlled_vocabulary` (cv_type, cv_term) VALUES ('data_type', 'RNA-Seq');
-INSERT INTO `controlled_vocabulary` (cv_type, cv_term) VALUES ('data_type', 'DNase-Seq');
-INSERT INTO `controlled_vocabulary` (cv_type, cv_term) VALUES ('data_type', 'DNA-Seq');
-INSERT INTO `controlled_vocabulary` (cv_type, cv_term) VALUES ('data_type', 'BS-Seq');
+
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'ChIP-Seq', 'chip-seq', true);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'RNA-Seq', 'rna-seq', true);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'DNase-seq', 'dnase-seq', true);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'DNA-seq', 'dna-seq', false);
+INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('data_type', 'BS-Seq', 'bs-Seq', true);
 
 --
 -- Table structure for table `differential_gene_expression`

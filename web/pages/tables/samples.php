@@ -122,9 +122,14 @@ foreach (scandir(GENOMES_FOLDER) as $assembly) {
  
 // get available data types
 $availableDataTypes = array();
-$resultDataType = mysqli_query($con, "SELECT cv_term from controlled_vocabulary WHERE cv_type= 'data_type'");
+$displayDataTypes = array();
+$resultDataType = mysqli_query($con, "SELECT cv_term, display_term, available from controlled_vocabulary WHERE cv_type= 'data_type'");
 while($dataTypeResult = mysqli_fetch_array($resultDataType)) {
-	$availableDataTypes[] = $dataTypeResult[0];
+    $term =  $dataTypeResult[0];
+    $display =  $dataTypeResult[1];
+    $isAvailable =  $dataTypeResult[2];
+    $availableDataTypes[$term] = $isAvailable;
+    $displayDataTypes[$term] = $display;
 }
 mysqli_free_result($resultDataType);
 
@@ -256,8 +261,18 @@ while ($row = mysqli_fetch_assoc($result)) {
 				<td>
 					<table>
 						<tbody>
-							<tr>
-								<td style="width: 10px"><?php if ($editable) { ?><a  class="fa fa-pencil" href='#'
+							<tr><?php 
+							$nonAvailableMessage = "";
+							if (array_key_exists ($row["seq_method"], $displayDataTypes)) {
+    							 $displayDataType = $displayDataTypes[$row["seq_method"]];
+    							 if ( $availableDataTypes[$row["seq_method"]]  != 1) {
+    							     $nonAvailableMessage = "<i title=\"Data type non available in HTS flow.\" class=\"fa fa-exclamation-triangle\"></i>";
+    							 }
+							} else {
+							    $displayDataType = $row["seq_method"];
+    							$nonAvailableMessage = "<i style=\"color: red\" title=\"Unknown data type, either it is not available in HTS-flow or it you should edit it.\" class=\"fa fa-exclamation-triangle\"></i>";
+							}
+							?><td style="width: 10px"><?php if ($editable) { ?><a  class="fa fa-pencil" href='#'
 									title="Edit"  onclick='javascript:toggle("submitSeqMethod_<?php echo $row["id"]; ?>")'></a> <?php  }?>
 									<form action="#"
 										id="submitSeqMethod_<?php echo $row["id"]; ?>"
@@ -268,8 +283,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 													<tr>
 														<td width="100%">
 														<select name="TEXTdescription">
-														<?php foreach ($availableDataTypes as $dataType) {
-															echo "<option value=\"". $dataType ."\">".$dataType."</option>";
+														<?php foreach ($displayDataTypes as $dataTypeOption => $displayDataTypeOption) {
+															echo "<option value=\"". $dataTypeOption ."\">".$displayDataTypeOption."</option>";
 														}?>
 														</select></td>
 														<td><input type="submit" value="Submit"
@@ -281,10 +296,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 												</tbody>
 											</table>
 									</form></td>
-								<td class="method"><?php echo $row["seq_method"]; ?></td><td><?php 
-								    if (! in_array($row["seq_method"], $availableDataTypes )) {
-								       ?> <i style="color: red" title="This data type is not available in HTS flow." class="fa fa-exclamation-triangle"></i><?php    
-								    }?></td>
+								<td class="method"><?php echo $displayDataType; ?></td><td><?php 
+								echo $nonAvailableMessage;?></td>
 							</tr>
 						</tbody>
 					</table>
