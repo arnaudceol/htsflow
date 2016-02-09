@@ -270,7 +270,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     							 }
 							} else {
 							    $displayDataType = $row["seq_method"];
-    							$nonAvailableMessage = "<i style=\"color: red\" title=\"Unknown data type, either it is not available in HTS-flow or it you should edit it.\" class=\"fa fa-exclamation-triangle\"></i>";
+    							$nonAvailableMessage = "<i style=\"color: red\" title=\"Unknown data type, either it is not available in HTS-flow or it should be edited.\" class=\"fa fa-exclamation-triangle\"></i>";
 							}
 							?><td style="width: 10px"><?php if ($editable) { ?><a  class="fa fa-pencil" href='#'
 									title="Edit"  onclick='javascript:toggle("submitSeqMethod_<?php echo $row["id"]; ?>")'></a> <?php  }?>
