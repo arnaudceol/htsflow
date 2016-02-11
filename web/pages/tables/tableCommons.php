@@ -40,15 +40,15 @@ $mergArr = array(
 
 function printStatus($status) {
     if ($status == 'completed') {
-         echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-up"></i>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-up" style="cursor:default"></i>'; 
     } else  if ($status == 'deleted') {
-         echo '<a href="#" title="' . $status . '" class="fa fa-times" style="color: grey"></a>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-times" style="color: grey; cursor:default"></a>'; 
     } else  if (strpos($status, 'Error') === 0) {
-         echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-down" style="color: red"></a>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-thumbs-down" style="color: red; cursor:default"></a>'; 
     } else if (strpos($status, 'wait') === 0 || $status == 'queue' || $status == 'queued'|| $status == 'scheduled') {
-         echo '<a href="#" title="' . $status . '" class="fa fa-clock-o" style="color: grey"></a>'; 
+         echo '<a href="#" title="' . $status . '" class="fa fa-clock-o" style="color: grey; cursor:default"></a>'; 
     } else  {
-    	echo '<a href="#" title="' . $status . '" style="color: grey" class="fa fa-gear"></a>'; 
+    	echo '<a href="#" title="' . $status . '" style="color: grey; cursor:default" class="fa fa-gear"></a>'; 
     } 
 }
 

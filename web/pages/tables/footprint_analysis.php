@@ -161,7 +161,7 @@ while ($line = mysqli_fetch_assoc($result)) {
 				        echo " (hd)"; 
 				    } else {
 				        // Warning: low definition sample
-				        ?> <i style="color: red" title="Low definition sample, < 200,000,000 aligned reads." class="fa fa-exclamation-triangle"></i><?php 
+				        ?> <i style="color: red; cursor:default" title="Low definition sample, < 200,000,000 aligned reads." class="fa fa-exclamation-triangle"></i><?php 
 				    }				     
 				?></span></td>
 				<td class="centered"><?php echo $lineSpec["exp_name"]; ?></td>

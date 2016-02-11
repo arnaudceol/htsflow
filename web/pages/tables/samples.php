@@ -266,11 +266,11 @@ while ($row = mysqli_fetch_assoc($result)) {
 							if (array_key_exists ($row["seq_method"], $displayDataTypes)) {
     							 $displayDataType = $displayDataTypes[$row["seq_method"]];
     							 if ( $availableDataTypes[$row["seq_method"]]  != 1) {
-    							     $nonAvailableMessage = "<i title=\"Data type non available in HTS flow.\" class=\"fa fa-exclamation-triangle\"></i>";
+    							     $nonAvailableMessage = "<i title=\"Data type non available in HTS flow.\" class=\"fa fa-exclamation-triangle\"  style=\"cursor:default\"></i>";
     							 }
 							} else {
 							    $displayDataType = $row["seq_method"];
-    							$nonAvailableMessage = "<i style=\"color: red\" title=\"Unknown data type, either it is not available in HTS-flow or it should be edited.\" class=\"fa fa-exclamation-triangle\"></i>";
+    							$nonAvailableMessage = "<i style=\"color: red; cursor:default\" title=\"Unknown data type, either it is not available in HTS-flow or it should be edited.\" class=\"fa fa-exclamation-triangle\"></i>";
 							}
 							?><td style="width: 10px"><?php if ($editable) { ?><a  class="fa fa-pencil" href='#'
 									title="Edit"  onclick='javascript:toggle("submitSeqMethod_<?php echo $row["id"]; ?>")'></a> <?php  }?>
@@ -341,7 +341,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 									</td>
 								<td><?php echo $row["ref_genome"]; 
 								    if (! in_array($row["ref_genome"], $selectedAssemblies )) {
-								       ?> <i style="color: red" title="This genome is not available in HTS flow for this data type." class="fa fa-exclamation-triangle"></i><?php    
+								       ?> <i style="color: red; cursor:default" title="This genome is not available in HTS flow for this data type." class="fa fa-exclamation-triangle"></i><?php    
 								    }
 								?></td>
 							</tr>
