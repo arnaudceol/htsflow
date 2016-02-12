@@ -123,7 +123,7 @@ foreach (scandir(GENOMES_FOLDER) as $assembly) {
 // get available data types
 $availableDataTypes = array();
 $displayDataTypes = array();
-$resultDataType = mysqli_query($con, "SELECT cv_term, display_term, available from controlled_vocabulary WHERE cv_type= 'data_type'");
+$resultDataType = mysqli_query($con, "SELECT cv_term, display_term, available from controlled_vocabulary WHERE cv_type= 'sequencing_type'");
 while($dataTypeResult = mysqli_fetch_array($resultDataType)) {
     $term =  $dataTypeResult[0];
     $display =  $dataTypeResult[1];

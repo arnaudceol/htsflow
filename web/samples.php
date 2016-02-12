@@ -161,13 +161,16 @@ header('Content-type: text/html; charset=utf-8');
 					<tbody>
 						<tr>
 							<th align="right">Sequencing method</th>
-							<td><input type="hidden" name="submitform" value="external" /> <input
-								type="radio" name="seq_method" value="RNA-Seq" />RNA-Seq
-								&nbsp;&nbsp; <input type="radio" name="seq_method"
-								value="ChIP-Seq" />ChIP-Seq &nbsp;&nbsp; <input type="radio"
-								name="seq_method" value="DNaseI-Seq" />DNaseI-Seq &nbsp;&nbsp; <input
-								type="radio" name="seq_method" value="BS-Seq" />BS-Seq
-								&nbsp;&nbsp;</td>
+							<td><input type="hidden" name="submitform" value="external" />
+							<?php 
+							$resultDataType = mysqli_query($con, "SELECT cv_term, display_term from controlled_vocabulary WHERE cv_type= 'sequencing_type' AND available");
+							while($dataTypeResult = mysqli_fetch_array($resultDataType)) {
+							    $term =  $dataTypeResult[0];
+							    $display =  $dataTypeResult[1];
+							    ?><input type="radio" name="seq_method" value="<?php echo $term; ?>" /><?php echo $display; ?><?php 
+							}
+							mysqli_free_result($resultDataType);							
+							?></td>
 						</tr>
 
 						<tr>
