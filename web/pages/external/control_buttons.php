@@ -19,9 +19,11 @@
 global $con;
 $user_id = $_SESSION["hf_user_id"];
 
+echo "Start adding sample";
+
 if (isset($_POST['submitExt'])) {
     /* print "SUBMITTING!!!"; */
-    
+	echo "Submit Ext";    
     $seq_method = $_POST['seq_method'];
     $reads_length = $_POST['reads_length'];
     $reads_mode = $_POST['reads_mode'];
@@ -61,28 +63,36 @@ if (isset($_POST['submitExt'])) {
     if (count($Value) == 5) {
         $finalPath = Array();
         
-        foreach (explode("\n", $Value[4]) as $path) {
+        foreach (explode("\n", trim($Value[4])) as $path) {
+        	
             $path = trim($path);
-            if (trim($path) != "") {
+
+            if ($path != "" && is_dir($path)) {
                 if (substr($path, - 1) != "/") {
                     $path = $path . "/";
                 }
-                array_push($finalPath, $path);
             }
+            array_push($finalPath, $path);
         }
+        
+        
         
         // now we check the existance of each path.
         for ($i = 0; $i < count($finalPath); $i ++) {
+        	
             if (file_exists(trim($finalPath[$i]))) {
                 // first let's check that this sample has not yet been inserted.
                 $externalSampleId = getNewId();
                 // get sample name from directory
                 $output = explode("/", $finalPath[$i]);
-                $sampleName = $output[count($output) - 2];
-
-                $Query = "INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) SELECT 'X" . $externalSampleId . "', '" . $sampleName . "','" . $seq_method . "','" . $reads_length . "','" . $reads_mode . "','" . $ref_genome . "','" . $finalPath[$i] . "', user_id, 2, '".date('Y-m-d H:i:s')."' FROM users WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
-
-                $stmt = mysqli_prepare($con, $Query);
+                if (is_dir($finalPath[$i])) {
+                	$sampleName = $output[count($output) - 2];
+                } else {
+                	$sampleName = $output[count($output) - 2];
+                }
+                $query = "INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) SELECT 'X" . $externalSampleId . "', '" . $sampleName . "','" . $seq_method . "','" . $reads_length . "','" . $reads_mode . "','" . $ref_genome . "','" . $finalPath[$i] . "', user_id, 2, '".date('Y-m-d H:i:s')."' FROM users WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
+				
+                $stmt = mysqli_prepare($con, $query);
                 if ($stmt) {
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_store_result($stmt);
@@ -93,6 +103,8 @@ if (isset($_POST['submitExt'])) {
                 echo $finalPath[$i] . " does not exists or is not accessible.<br />";
             }
         }
+    } else {
+    	echo "Somethig is missing.<br />";
     }
     echo "</div>";
 }
