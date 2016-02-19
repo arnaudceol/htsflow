@@ -31,6 +31,7 @@ if (strpos($_GET['id'], 'primary')) {
 	$files[] = "/primary/tracks/bw/" .  $analysisId . ".bw";
 	$resGenome = mysqli_query($con, $queryGenome);
 	$htsFlowGenome =  mysqli_fetch_assoc($resGenome)["ref_genome"];	
+	mysqli_free_result($resGenome);
 } else {
 	preg_match('/([0-9]+)\/([a-z\_]+)\.igb/',$_GET['id'],$m);
 	$analysisId = $m[1];
@@ -42,6 +43,7 @@ if (strpos($_GET['id'], 'primary')) {
 		$htsFlowGenome = $igbResult["ref_genome"];	
 		$files[] = "/secondary/" .  $analysisId . "/bed/" . $igbResult["label"] . "_peaks.bb";
 	}
+	mysqli_free_result($igbQuery);
 }
 // get info from primary 
 // Read synonyms:

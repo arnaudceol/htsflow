@@ -57,6 +57,7 @@ $result = mysqli_query($con, $sql);
         ?><option value="<?php echo $row["seq_method"]; ?>"
 							<?php if (isset ( $_POST ['seq_method'] ) && $_POST ['seq_method'] == $row["seq_method"]) { echo "selected"; }?>><?php echo $row["seq_method"]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
                         </select></div>
 <?php
@@ -70,6 +71,7 @@ $result = mysqli_query($con, $sql);
         ?><option value="<?php echo $row["user_id"]; ?>"
 							<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
                         </select></div>
 				<?php
@@ -83,6 +85,7 @@ $result = mysqli_query($con, $sql);
         ?><option value="<?php echo $row["ref_genome"]; ?>"
 							<?php if (isset ( $_POST ['ref_genome'] ) && $_POST ['ref_genome'] == $row["ref_genome"]) { echo "selected"; }?>><?php echo $row["ref_genome"]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
                         </select></div>
 			<?php
@@ -100,6 +103,7 @@ $result = mysqli_query($con, $sql);
         ?><option value="<?php echo $row["source"]; ?>"
 							<?php if (isset ( $_POST ['source'] ) && $_POST ['source'] == $row["source"]) { echo "selected"; }?>><?php echo $mergeOptions[$row["source"]]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
                         </select></div>
                 <input type="button" value="FILTER"

@@ -67,6 +67,7 @@ $result = mysqli_query($con, $sql);
         ?><option value="<?php echo $row["method"]; ?>"
 								<?php if (isset ( $_POST ['method'] ) && $_POST ['method'] == $row["method"]) { echo "selected"; }?>><?php echo $row["method"]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
 </select></div>
 <?php
@@ -80,6 +81,7 @@ $result = mysqli_query($con, $sql);
         ?><option value="<?php echo $row["user_id"]; ?>"
 								<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
                         </select></div>
 <div class="group"><label>Status</label><br /><select id="status" name="status">

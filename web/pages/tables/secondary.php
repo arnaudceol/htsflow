@@ -49,6 +49,7 @@ if (isset($_REQUEST['sampleId']) && $_REQUEST['sampleId'] != "") {
     while($primaryResult = mysqli_fetch_array($primaryQuery)) {
         $primaryIds[] = $primaryResult[0];
     }
+    mysqli_free_result($primaryQuery);
 }
 
 
@@ -155,6 +156,7 @@ switch ($numOfelements) {
 $result = mysqli_query($con, $sql  );
 $count=$result->num_rows;
 $result->close();
+mysqli_free_result($result);
 $numRighe= $count;
 $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 
@@ -344,6 +346,7 @@ function igbLoad(id, type) {
 				</tr>           <?php
 						}
 					$result->close();
+					mysqli_free_result($result);
 				} else {
 					?><tr>
 					<td>-</td>

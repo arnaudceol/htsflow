@@ -59,6 +59,7 @@
         ?><option value="<?php echo $row["user_id"]; ?>"
 							<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
     }
+    mysqli_free_result($result);
     ?>
                         </select></td>
 				<td><input type="button" value="FILTER" onclick="load<?php echo $tableDiv; ?>()"/></td>

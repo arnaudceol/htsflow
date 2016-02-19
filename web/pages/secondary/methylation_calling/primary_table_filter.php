@@ -57,6 +57,7 @@
 							?><option value="<?php echo $row["user_id"]; ?>"
 							<?php if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] == $row["user_id"]) { echo "selected"; }?>><?php echo $row["user_name"]; ?></option><?php
 						}
+						mysqli_free_result($result);
 						?>
                         </select></td>
 				<td><?php
@@ -70,6 +71,7 @@
 							?><option value="<?php echo $row["ref_genome"]; ?>"
 							<?php if (isset ( $_POST ['ref_genome'] ) && $_POST ['ref_genome'] == $row["ref_genome"]) { echo "selected"; }?>><?php echo $row["ref_genome"]; ?></option><?php
 						}
+						mysqli_free_result($result);
 						?>
                         </select></td>
 				<td><?php
@@ -88,6 +90,7 @@
 							?><option value="<?php echo $row["source"]; ?>"
 							<?php if (isset ( $_POST ['source'] ) && $_POST ['source'] == $row["source"]) { echo "selected"; }?>><?php echo $mergArr[$row["source"]]; ?></option><?php
 						}
+						mysqli_free_result($result);
 						?>
                         </select></td>
 				<td><input type="button" value="FILTER"

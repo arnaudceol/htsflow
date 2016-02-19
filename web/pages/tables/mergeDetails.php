@@ -28,6 +28,7 @@ if (isset($mergedPrimaryId)) {
         $queryPrimaryId = mysqli_fetch_assoc($resultMerge)['id'];
     }
     $resultMerge->close();
+    mysqli_free_result($resultMerge);
     
 }
 
@@ -68,6 +69,7 @@ if (isset($queryPrimaryId)) {
         }
     }
     $resultMerge->close();
+    mysqli_free_result($resultMerge);
     ?>
                 </tbody>
 	</table>

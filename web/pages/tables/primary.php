@@ -181,7 +181,7 @@ $mergedIds = array();
 while($mergedResult = mysqli_fetch_array($mergedQuery)) {
     $mergedIds[] = $mergedResult[0];
 }
-
+mysqli_free_result($mergedQuery);
 
 // primary id involved in seconadry
 // Is it used?
@@ -194,11 +194,13 @@ WHERE
 
 $resultFK = mysqli_query($con, $sqlForeignKeys);
 
-
 $queries = array();
 while ($row = mysqli_fetch_assoc($resultFK)) {
     array_push($queries, "SELECT " . $row['COLUMN_NAME'] . " as id FROM " . $row['TABLE_NAME']);
 }
+
+mysqli_free_result($resultFK);
+
 
 $inSecondarySql= implode(" UNION ", $queries);
 
@@ -208,7 +210,7 @@ $inSecondaryIds = array();
 while ($inSecondaryResult = mysqli_fetch_array($inSecondaryQuery)) {
     $inSecondaryIds[] = $inSecondaryResult[0];
 }
-
+mysqli_free_result($inSecondaryQuery);
 ?>
   
 <script>
@@ -344,6 +346,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 							</table>
 						</div><?php
             }
+            mysqli_free_result($res);
+            
             // Merge info
             
             
@@ -447,6 +451,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     
 }
 $result->close();
+mysqli_free_result($result);
 ?>
                 </tbody>
 		</table>

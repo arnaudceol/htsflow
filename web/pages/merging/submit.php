@@ -40,6 +40,7 @@ function RecoverIDoptMerge($rm_dup = 0)
     } else {
         return intval($line["id"]);
     }
+    mysqli_free_result($res);
 }
 
 
@@ -69,6 +70,7 @@ foreach ($MergeData["sample"] as $key => $value) {
         $readsMode = $line["reads_mode"];
         $readsLength = $line["reads_length"];
     }
+    mysqli_free_result($res);
 }
 
 

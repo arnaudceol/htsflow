@@ -49,7 +49,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         array_push($methods, $row['seq_method']);
     }
 }
-
+mysqli_free_result($result);
 $errors = FALSE;
 
 $numMethods = sizeof($methods);

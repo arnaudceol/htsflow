@@ -60,5 +60,5 @@ fputcsv($fp, explode("\t", "Secondary ID\tAnalysis type\tTitle\tStatus\tLabel\tP
 while ($row =  mysqli_fetch_assoc($result)) {    
     fputcsv($fp, $row);
 }
-$result->close();
+mysqli_free_result($result);
 fclose($fp);

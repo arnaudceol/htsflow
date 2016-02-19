@@ -101,6 +101,8 @@ $result = mysqli_query($con, "SELECT COUNT(*) FROM (" . $sql . ") as g");
 error_log($sql);
 $count = $result->fetch_row();
 $result->close();
+mysqli_free_result($result);
+
 $numRighe = $count[0];
 $result = mysqli_query($con, $sql . $pagination);
 
@@ -205,7 +207,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				} else {
 				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
 				}
-				
+				mysqli_free_result($resDescription);
 				if ($editable) { ?><a <?php echo $class; ?>  href='#'
 									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><?php } ?>
 										<form action="#" style="display: none; " class="popupstyle"
@@ -374,6 +376,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				<td class="centered"><?php echo $row["user_name"]; ?></td>
 			</tr><?php
 }
+mysqli_free_result($result);
 ?></tbody>
 		</table>
 	</div>
