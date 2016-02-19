@@ -153,11 +153,13 @@ switch ($numOfelements) {
         //         break;
 }
 
-$result = mysqli_query($con, $sql  );
+if ($result = mysqli_query($con, $sql  )) {
 $count=$result->num_rows;
-$result->close();
+
 mysqli_free_result($result);
+}
 $numRighe= $count;
+
 $result = mysqli_query($con, $sql . " ORDER BY dateStart DESC". $pagination);
 
 
@@ -345,7 +347,6 @@ function igbLoad(id, type) {
 
 				</tr>           <?php
 						}
-					$result->close();
 					mysqli_free_result($result);
 				} else {
 					?><tr>

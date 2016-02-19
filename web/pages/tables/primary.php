@@ -25,7 +25,7 @@ include 'tableCommons.php';
 // $result = mysqli_query ( $con, $sql );
 // $numRighe = $result->num_rows;
 
-$baseQuery = "SELECT  description, dateStart, dateEnd, CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart )  ELSE timediff( NOW(), dateStart ) END AS time, options_id, primary_analysis.id as id_pre, sample_id as id_sample_fk, reads_num, raw_reads_num, primary_analysis.status, ref_genome, users.user_name, sample_user.user_name as sample_owner,seq_method, origin AS SOURCE, sample_name, reads_mode, raw_data_path FROM primary_analysis, pa_options, users, sample, users sample_user WHERE sample.id = primary_analysis.sample_id AND pa_options.id = primary_analysis.options_id and primary_analysis.user_id = users.user_id  and sample_user.user_id = sample.user_id" ;
+$baseQuery = "SELECT  description, dateStart, dateEnd, CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart )  ELSE timediff( NOW(), dateStart ) END AS time, options_id, primary_analysis.id as id_pre, sample_id as id_sample_fk, reads_num, raw_reads_num, primary_analysis.status, ref_genome, users.user_name, sample_owner.user_name as sample_owner,seq_method, origin AS SOURCE, sample_name, reads_mode, raw_data_path FROM primary_analysis, pa_options, users, sample, users sample_owner WHERE sample.id = primary_analysis.sample_id AND pa_options.id = primary_analysis.options_id and primary_analysis.user_id = users.user_id  and sample_owner.user_id = sample.user_id" ;
 
 $typeToQuery = array(
     'completed' => $baseQuery . " AND primary_analysis.status='completed'",
@@ -54,7 +54,7 @@ if (isset($_POST['user_id']) && $_POST['user_id'] != "") {
 } 
 
 if (isset($_POST['sample_owner']) && $_POST['sample_owner'] != "") {
-    $user_id = " sample_user.user_id=" . $_POST['sample_owner'] . "";
+    $user_id = " sample_owner.user_id=" . $_POST['sample_owner'] . "";
     array_push($concatArray, $user_id);
 }
 
@@ -450,7 +450,6 @@ while ($row = mysqli_fetch_assoc($result)) {
 				</tr> <?php
     
 }
-$result->close();
 mysqli_free_result($result);
 ?>
                 </tbody>

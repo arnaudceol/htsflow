@@ -100,7 +100,6 @@ switch ($numOfelements) {
 $result = mysqli_query($con, "SELECT COUNT(*) FROM (" . $sql . ") as g");
 error_log($sql);
 $count = $result->fetch_row();
-$result->close();
 mysqli_free_result($result);
 
 $numRighe = $count[0];
@@ -125,7 +124,7 @@ foreach (scandir(GENOMES_FOLDER) as $assembly) {
 // get available data types
 $availableDataTypes = array();
 $displayDataTypes = array();
-$resultDataType = mysqli_query($con, "SELECT cv_term, display_term, available from controlled_vocabulary WHERE cv_type= 'sequencing_type'");
+if ($resultDataType = mysqli_query($con, "SELECT cv_term, display_term, available from controlled_vocabulary WHERE cv_type= 'sequencing_type'")) {
 while($dataTypeResult = mysqli_fetch_array($resultDataType)) {
     $term =  $dataTypeResult[0];
     $display =  $dataTypeResult[1];
@@ -134,18 +133,19 @@ while($dataTypeResult = mysqli_fetch_array($resultDataType)) {
     $displayDataTypes[$term] = $display;
 }
 mysqli_free_result($resultDataType);
+}
 
 
 // Get list of samples with primary analyses
 $sqlInPrimary = "SELECT DISTINCT sample_id FROM primary_analysis;";
 
-$inPrimaryQuery = mysqli_query($con, $sqlInPrimary );
+if ($inPrimaryQuery = mysqli_query($con, $sqlInPrimary )) {
 $inPrimaryIds = array();
 while($inPrimaryResult = mysqli_fetch_array($inPrimaryQuery)) {
     $inPrimaryIds[] = $inPrimaryResult[0];
 }
 mysqli_free_result($inPrimaryQuery);
-
+}
 
 ?>
 <div class="datagrid">
@@ -195,8 +195,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 				</td>
 				<td><?php 
 				$sampleDescription = "";
-				$queryDescription = sprintf("SELECT description FROM sample_description WHERE sample_id = '%s'", $row["id"]);				
-				$resDescription = mysqli_query($con, $queryDescription);
+				$queryDescription = sprintf("SELECT description FROM sample_description WHERE sample_id = '%s'", $row["id"]);		
+				
+				$class ="";
+				if ($resDescription = mysqli_query($con, $queryDescription)) {
 				if (mysqli_num_rows($resDescription) >= 1) {
 				    $sampleDescription =  mysqli_fetch_assoc($resDescription)["description"];
 				    if ($sampleDescription != '') {
@@ -208,6 +210,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
 				}
 				mysqli_free_result($resDescription);
+				}
 				if ($editable) { ?><a <?php echo $class; ?>  href='#'
 									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><?php } ?>
 										<form action="#" style="display: none; " class="popupstyle"

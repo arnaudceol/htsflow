@@ -21,21 +21,17 @@ if (isset($mergedPrimaryId)) {
 } else {
     // Get from sample id
     $sqlPrimary = "SELECT id FROM primary_analysis WHERE sample_id = '" . $sampleId . "'";
-    $resultMerge = mysqli_query($con, $sqlPrimary);
+    if ($resultMerge = mysqli_query($con, $sqlPrimary)) {
     $count = $resultMerge->num_rows;
     
     if ($count > 0) {
         $queryPrimaryId = mysqli_fetch_assoc($resultMerge)['id'];
     }
-    $resultMerge->close();
     mysqli_free_result($resultMerge);
-    
+    }
 }
 
 if (isset($queryPrimaryId)) {
-    $sqlMerge = "SELECT source_primary_id, sample_id, sample_name, raw_reads_num, reads_num, user_name FROM merged_primary, sample, primary_analysis, users WHERE sample_id = sample.id AND primary_analysis.id = source_primary_id AND users.user_id = sample.user_id AND result_primary_id = " . $queryPrimaryId;
-    $resultMerge = mysqli_query($con, $sqlMerge);
-    $count = $resultMerge->num_rows;
 ?><div class="table-container">
 <?php
     $tableDiv = "tableSecondary";
@@ -53,11 +49,13 @@ if (isset($queryPrimaryId)) {
 		</thead>
 		<tbody>
     <?php
-    $numRighe = $result->num_rows;
-    
+    $sqlMerge = "SELECT source_primary_id, sample_id, sample_name, raw_reads_num, reads_num, user_name FROM merged_primary, sample, primary_analysis, users WHERE sample_id = sample.id AND primary_analysis.id = source_primary_id AND users.user_id = sample.user_id AND result_primary_id = " . $queryPrimaryId;
+    if ($resultMerge = mysqli_query($con, $sqlMerge)) {
+    $count = $resultMerge->num_rows;
+        
     // if the number of rows returned from the DB is 0, we have no
     // results, so we print only dashes. Values otherwise.
-    if ($numRighe != 0) {
+    if ($count != 0) {
         while ($rowMerge = mysqli_fetch_assoc($resultMerge)) {
             ?> <tr>
 				<td class="centered"><?php   echo $rowMerge["source_primary_id"]; ?></td>
@@ -68,8 +66,9 @@ if (isset($queryPrimaryId)) {
 			</tr> <?php
         }
     }
-    $resultMerge->close();
+
     mysqli_free_result($resultMerge);
+    }
     ?>
                 </tbody>
 	</table>

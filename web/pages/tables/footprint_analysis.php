@@ -91,10 +91,8 @@ switch ($numOfelements) {
         break;
 }
 
-error_log($sql);
 $result = mysqli_query($con, "SELECT COUNT(*) FROM (" . $sql . ") as g");
 $count = $result->fetch_row();
-$result->close();
 mysqli_free_result($result);
 $numRighe = $count[0];
 $result = mysqli_query($con, $sql .  " ORDER BY s.dateStart desc" . $pagination );
@@ -150,9 +148,10 @@ while ($line = mysqli_fetch_assoc($result)) {
 				<?php
     if ($line["method"] == "peak_calling") { 
         $querySpec = "SELECT * FROM peak_calling WHERE id=" . $line["peak_id"];
-        $resSpec = mysqli_query($con, $querySpec);
-        $lineSpec = mysqli_fetch_assoc($resSpec);
-        mysqli_free_result($lineSpec);
+        if ($resSpec = mysqli_query($con, $querySpec)) {
+        	$lineSpec = mysqli_fetch_assoc($resSpec);
+        	mysqli_free_result($resSpec);
+        }
         ?>
 				<td class="centered"><a href="primary-browse.php?primaryId=<?php echo $lineSpec["input_id"]; ?>"><?php echo $lineSpec["input_id"]; ?></a></td>
 				<td class="centered"><span <?php
@@ -180,8 +179,6 @@ while ($line = mysqli_fetch_assoc($result)) {
 			</tr>  
 <?php
 }
-
-$result->close();
 mysqli_free_result($result);
 ?>
 		</tbody>
