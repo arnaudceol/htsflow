@@ -14,22 +14,39 @@ import MySQLdb
 import commands
 import configparser
 import datetime
+import re
 
-def main(dbConf):
+def main(configFile):
 	
 	config = configparser.ConfigParser()
-	config.read(dbConf)
+	config.read(configFile)
 
-	database = config.get('database', 'dbname')
-	host =  config.get('database', 'hostname')
-	user = config.get('database', 'username')
-	password = config.get('database', 'pass')
+	dbConfFile = config.get('htsflow', 'DB_CONF')
+
+	# User name of the PIs to import from the LIMS
+	pisQuery = ""
+	if config.has_option('lims', 'PI') and config.get('lims', 'PI').strip() != '' :
+		pis = re.split(" *\, *", config.get('lims', 'PI').strip()) 
+		print("import from LIMS: PIS in %s", ",".join(pis))
+		pisQuery = " AND pi.login IN ('%s')" % "', '".join(pis); 
+	
+
+	fastqLimsDir = config.get('lims', 'FASTQ_LIMS_DIR')
+	
+	
+	dbConfig = configparser.ConfigParser()
+	dbConfig.read(dbConfFile)
+
+	database = dbConfig.get('database', 'dbname')
+	host =  dbConfig.get('database', 'hostname')
+	user = dbConfig.get('database', 'username')
+	password = dbConfig.get('database', 'pass')
 
 		
-	databaseLIMS = config.get('lims', 'dbname')
-	hostLIMS =  config.get('lims', 'hostname')
-	userLIMS = config.get('lims', 'username')
-	passwordLIMS = config.get('lims', 'pass')
+	databaseLIMS = dbConfig.get('lims', 'dbname')
+	hostLIMS =  dbConfig.get('lims', 'hostname')
+	userLIMS = dbConfig.get('lims', 'username')
+	passwordLIMS = dbConfig.get('lims', 'pass')
 
 	print("Updating database %s on %s" % (database, host))   
 	print("LIMS database %s on %s" % (databaseLIMS, hostLIMS))   
@@ -44,7 +61,14 @@ def main(dbConf):
 
 	########################
 	# selection of the first scheduled element
-	stringa1 = "select c.sampleID,c.sampleName,s.FCID,c.readLength,c.readMode,c.depth,s.sample_project,c.userName,c.userEmail,s.sampleRef,c.application,s.date from chipseq c, samplesheet s where (c.PI = \"BA\" or c.PI = \"STC\" )  and c.sampleID = s.counter order by s.date DESC"
+	stringa1 = "SELECT sample.sam_id, sample.name, samplerun.flowcell, application.readlength, application.readmode,application.depth,  user.login, user.username, user.mailadress, organism,  \
+application.applicationname, pi.login, runfolder \
+FROM sample, samplerun, application, user, user as pi \
+WHERE application.application_id = sample.application_id AND samplerun.sam_id = sample.sam_id \
+AND sample.requester_user_id = user.user_id AND pi.user_id = user.pi \
+AND status = 'analyzed' %s \
+order by requestdate DESC;" % pisQuery;
+	print(stringa1)
 	cLims.execute(stringa1)
 	limsEntries = cLims.fetchall()
 
@@ -58,8 +82,8 @@ def main(dbConf):
 	samples = cHTSflow.fetchall()
 
 	HTSsamples = []
-	for elem in samples:
-		HTSsamples.append(str(elem[0]))
+	#for elem in samples:
+	#	HTSsamples.append(str(elem[0]))
 
 	LIMSlista = []
 	# we checked all the data if it not already inserted in the DB.
@@ -91,7 +115,7 @@ def main(dbConf):
 			# insert
 			queryAddUser = "INSERT INTO users(user_name) VALUES ('%s')" % user_name
 			print("Add user %s: %s" % (user_name, queryAddUser))
-			cHTSflow.execute(queryAddUser)
+			#cHTSflow.execute(queryAddUser)
 			# add to list 
 			htsFlowUsers.append(user_name)
 
@@ -110,33 +134,41 @@ def main(dbConf):
 			readmode = elem[4]
 			depth= elem[5]
 			# in the LIMS, the user name is in the column sample_project
-			sampleProject = elem[6]
-			user = elem[7]
+			user = elem[6]
+			userName = elem[7]
 			usermail = elem[8]
 			refgen = elem[9]
-			app = elem[10] # seq_method			
-			pieces = commands.getstatusoutput( "find /Illumina/PublicData/Amati/ . -name *%s*  |grep '/FASTQ/'"%(sample_name) )[1].split("\n")[0]
-			FOLD = pieces
-			print "%s not in HTS-flow. Checking for directory.. "%id_sample
-			if not os.path.exists(FOLD):
+			app = elem[10] # seq_method	
+			pi = elem[11]
+			runFolder = elem[12]
+			print("runfolder: %s" % runFolder)
+			runId = runFolder.split("_")[0]		
+
+			print("runId: %s" % runId)
+			#pieces = commands.getstatusoutput( "find /Illumina/PublicData/Amati/ . -name *%s*  |grep '/FASTQ/'"%(sample_name) )[1].split("\n")[0]
+			#FOLD = pieces
+			FOLD = "%s/%s/FASTQ/%s/%s" % (fastqLimsDir, user, runId, sample_name)
+			print "%s not in HTS-flow. Checking for directory.. " % (id_sample)
+			if 0: #not os.path.exists(FOLD):
 				print ".. directory %s does not exist"%FOLD
 				print id_sample, sample_name,FCID,readL,readmode,depth,sampleProject,user,usermail,refgen,app
 				#find /Illumina/PublicData/Amati/ . -name *S_0h_wt_myc_S8675* -exec ls {} \;
 				#FOLD = "/Illumina/PublicData/Amati/%s/FASTQ/%s/Sample_%s/"%(sampleProject,FCID,sample_name)
 				FOLD = "-"
 			if FOLD != "-":
-				updateTime = datetime.datetime.fromtimestamp(os.path.getmtime(FOLD))
+				updateTime = 0 #datetime.datetime.fromtimestamp(os.path.getmtime(FOLD))
 				print ".. directory %s found. Writing the MYSQL code."%FOLD
-				stringa = "INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) SELECT \"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\", users.user_id, 0, '%s' FROM users WHERE users.user_name = '%s';" % (id_sample, sample_name, app, readL, readmode, refgen, FOLD, updateTime, sampleProject)
-				cHTSflow.execute(stringa)
+				stringa = "INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) SELECT \"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\", users.user_id, 0, '%s' FROM users WHERE users.user_name = '%s';" % (id_sample, sample_name, app, readL, readmode, refgen, FOLD, updateTime, user)
+				#cHTSflow.execute(stringa)
+				print("SQL: %s" %stringa)
 
 	# fix integrity of seq_method to match RNA-Seq and ChIP-Seq signature.
 	stringaRNA = "UPDATE sample SET seq_method=\"RNA-Seq\" where seq_method LIKE \"%RNA%\";"
 	stringaChIP = "UPDATE sample SET seq_method=\"ChIP-Seq\" where seq_method LIKE \"%ChIP%\";"
 	stringaDNA = "UPDATE sample SET seq_method=\"DNA-Seq\" where seq_method LIKE \"%DNA-Seq%\";"
-	cHTSflow.execute(stringaRNA)
-	cHTSflow.execute(stringaChIP)
-	cHTSflow.execute(stringaDNA)	
+	#cHTSflow.execute(stringaRNA)
+	#cHTSflow.execute(stringaChIP)
+	#cHTSflow.execute(stringaDNA)	
 	
 
 	############# OUTPUT MESSAGE #############
