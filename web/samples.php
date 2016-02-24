@@ -150,7 +150,12 @@ header('Content-type: text/html; charset=utf-8');
 
 </script>
 
-		<div id="external_div" style="display: none" class="over-form">			
+		<div id="external_div" style="display: none" class="over-form">		
+		
+		<?php 
+			$externalPaths = explode(",", $HTSFLOW_PATHS['HTSFLOW_UPLOAD_DIR']);
+			$numPaths = sizeof($externalPaths);		
+		?>	
 			<div
 				style="text-align: right; margin: 20px; font-style: italic; font-weight: bold"
 				onclick="javascript:toggle('external_div')">close</div>
@@ -204,7 +209,10 @@ header('Content-type: text/html; charset=utf-8');
 					</tbody>
 				</table>
 				</td>
-				<td style="padding-right: 25px;"><div>Single click to browse, double click to add a file/folder:</div><div id="treepath">here</div></td>
+				<td style="padding-right: 25px;"><div>Single click to browse, double click to add a file/folder:</div><?php for ($i = 0; $i < $numPaths; $i++) {
+				?>
+				<h4>In <?php echo $externalPaths[$i];?>:</h4>
+				<div id="treepath<?php echo $i; ?>"></div><?php }?></td>
 				<td><div id="pathsContent" style="float: right; width: 550px"></div></td>
 				</tr></table>
 			</form>
@@ -213,14 +221,19 @@ header('Content-type: text/html; charset=utf-8');
 		<script type="text/javascript">
 			
 		$(document).ready( function() {
-		    $('#treepath').fileTree({  script: 'libs/jquery.fileTree-1.01/connectors/jqueryFileTree.php', root: '<?php echo $HTSFLOW_PATHS['HTSFLOW_UPLOAD_DIR']; ?>', folderEvent: 'click', expandSpeed: 750, collapseSpeed: 750, multiFolder: false }, function(file) { 
+			<?php 
+				for ($i = 0; $i < $numPaths; $i++) {
+					$externalPath = $externalPaths[$i];
+				?>
+		    $('#treepath<?php echo $i;?>').fileTree({  script: 'libs/jquery.fileTree-1.01/connectors/jqueryFileTree.php', root: '<?php echo $externalPath; ?>', folderEvent: 'click', expandSpeed: 750, collapseSpeed: 750, multiFolder: false }, function(file) { 
 					alert(file);
 				});
+			<?php } ?>
 		});	
+
 		    
         </script>
-    
-     </div>
+	</div>
      <?php include ("pages/footer.php");    ?>
 </body>
 </html>

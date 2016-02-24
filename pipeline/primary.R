@@ -39,7 +39,7 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
     tmpFold <- getHTSFlowPath("HTSFLOW_TMP")
 
 	loginfo(paste("Start primary, primary id: ", primaryId, ", BAM file: ", bamFileName, ", Pre-process directory: ", outPath, ", tmp directory: ", tmpFold))
-	print(paste("Start primary, primary id: ", primaryId, ", BAM file: ", bamFileName, ", Pre-process directory: ", outPath, ", tmp directory: ", tmpFold))
+	
     ## update the DB with dateStart and status 'running'
     SQL <-
         paste(
@@ -137,8 +137,8 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
     primaryId <- names(sample)
     ## the code is divided for working separately paired end and single end data.
     if( as.numeric( flags$paired ) ) {
-        tag1 <- '_R1'
-        tag2 <- '_R2'
+        tag1 <- " -not -iname  '*_R2*'"
+        tag2 <- " -iname  '*_R2*'"
         fastqFileNameR1 <- paste0(
             outPath
             ,'/'
@@ -195,8 +195,8 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
         ## updates the number of raw_reads in primary_analysis
         SQL <- paste0( "UPDATE primary_analysis SET raw_reads_num='",totReads,"' WHERE id=", primaryId )
         res <- updateInfoOnDB( SQL )
-    } else {
-        tag1 <- '_R1'
+    } else {		
+		tag1 <- " -not -iname  '*_R2*'"
         fastqFileNameR1 <- paste0(
             outPath
             ,'/'
@@ -241,10 +241,9 @@ getExtractFastqCommand <- function ( sample, tag ) {
     execute <- paste0(
             "find "
             ,DirToProcess
-            ," -iname '*.gz'"
-            ," -iname '*"
+            ," \\( -iname '*.fastq.gz' -o  -iname '*.fq.gz' \\) "
             ,tag
-            ,"*' | sort | xargs -I {} pigz -cd {} "
+            ," | sort | xargs -I {} pigz -cd {} "
             )
     return( execute )
 }
