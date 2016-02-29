@@ -63,6 +63,42 @@ if (isset($_POST['source']) && $_POST['source'] != "") {
     array_push($concatArray, $source);
 } 
 
+
+
+// Looking for secondary based on a primary one?
+$secondaryIds = array();
+
+if (isset($_REQUEST['secondaryId']) && $_REQUEST['secondaryId'] != "") {
+	$secondaryIds = array_merge($secondaryIds , explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['secondaryId'])))));
+}
+
+if (sizeof($secondaryIds) > 0) {
+	$secondaryIdSql = " primary_analysis.id IN ";
+
+	$secondaryToPrimarySqls = array();
+
+	$secondaryId = implode(", ", $secondaryIds);
+
+	foreach (scandir("../secondary/") as $type_secondary) {
+		if ($type_secondary != ".." && $type_secondary != "." && $type_secondary != 'common') {
+			if (file_exists('../secondary/'. $type_secondary . '/secondary_to_primary.php')) {
+				include '../secondary/'. $type_secondary . '/secondary_to_primary.php';
+				array_push($secondaryToPrimarySqls, $secondaryToPrimarySql);
+			} else {
+				include '../secondary/common/secondary_to_primary.php';
+				array_push($secondaryToPrimarySqls, $secondaryToPrimarySql);
+			}
+		}
+	}
+
+	$secondaryIdSql .= "(" . implode ( " UNION ", $secondaryToPrimarySqls ). ")";
+
+	array_push($concatArray, $secondaryIdSql);
+}
+
+
+
+
 if (isset($_POST['primaryId']) && $_POST['primaryId'] != "") {
     $querySampleId = "UPPER(primary_analysis.id) ='" . strtoupper($_POST['primaryId']) . "'";
     array_push($concatArray, $querySampleId);

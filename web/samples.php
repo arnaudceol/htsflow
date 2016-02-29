@@ -110,7 +110,8 @@ header('Content-type: text/html; charset=utf-8');
        			<?php if (isset ( $_POST ['selectedIds'] )) { echo "selectedIds: \"" . $_POST ['selectedIds'] ."\",\n"; } ?> 	
        			<?php if (isset ( $_REQUEST ['sampleId'] )) { echo "sampleId:  \"" . $_REQUEST['sampleId']."\",\n"; } ?>
        			<?php if (isset ( $_POST ['sampleName'] )) { echo "sampleName:  \"" . $_POST['sampleName']."\",\n"; } ?>  	
-       			<?php if (isset ( $_POST ['primaryId'] )) { echo "primaryId:  \"" . $_POST['primaryId']."\",\n"; } ?>  	 						
+       			<?php if (isset ( $_POST ['primaryId'] )) { echo "primaryId:  \"" . $_POST['primaryId']."\",\n"; } ?>  	  	
+       			<?php if (isset ( $_POST ['secondaryId'] )) { echo "secondaryId:  \"" . $_POST['secondaryId']."\",\n"; } ?> 						
 			}, function(response) {
 			    // Log the response to the console
       		    console.log("Response: <?php if (isset ( $_POST ['sampleId'] )) { echo $_POST['sampleId'];} ?>"+response);	          		   
@@ -162,7 +163,7 @@ header('Content-type: text/html; charset=utf-8');
 			<div class="title">Add external data: (<a href="http://localhost:3030/usage.php#title4">see how to prepare data</a>).</div>
 			<div><ul><li>Select files or directories. If a directory is selected, all the files it contains will be merged as 
 			a single sample.</li>
-			<li>The files should be in FASTQ format and gzipped. They should have either the suffix .fastq.gz or fq.gz (either in upper case or lowe case).</li>
+			<li>The files should be in FASTQ format and gzipped. They should have either the suffix .fastq.gz or fq.gz (either in upper case or lower case).</li>
 			<li>In case of paired-end samples, the files should contain the R1 and R2 suffix (e.g. sample_R1.fastq.gz and sample_R2.fastq.gz).</li>
 			<li>Each file or directory selected will be added as a different sample (the name of the sample will be the nae of the containing directory by 
 			default, it can be edited later).</li></ul>			

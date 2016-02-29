@@ -54,14 +54,14 @@ include ("pages/menu.php"); // import of menu
 				style="margin-bottom: 20px">
 				<b>Secondary analyses:</b> 
 			<?php
-    foreach (scandir("pages/secondary/") as $type) {
-        if ($type != "." && $type != ".."&& $type != "common") {
+    foreach (scandir("pages/secondary/") as $typeSecondary) {
+        if ($typeSecondary != "." && $typeSecondary != ".."&& $typeSecondary != "common") {
         
             // Create a good looking title, with space and first letter uppercase
-            $title = ucwords(str_replace("_", " ",$type));
+            $title = ucwords(str_replace("_", " ",$typeSecondary));
         
             $selected = false;
-            if (isset($_POST['type']) && $_POST['type'] == $type) {
+            if (isset($_POST['type']) && $_POST['type'] == $typeSecondary) {
                 $selected = true;
             }
             

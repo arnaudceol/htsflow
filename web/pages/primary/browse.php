@@ -64,14 +64,17 @@ include 'pages/filters/primary_table_filter.php';
 		<legend>Actions</legend>
 		<a href="#" class="fa fa-plus-square fa-2x"
 			onclick="window.location.href='primary-new.php'"
-			title="New primary analyses"></a> <a href="#"
+			title="New primary analyses"></a> 
+		<a href="#"
 			class="fa fa-object-group  fa-2x"
 			onclick="loadMergeTable(); return false;"
-			title="Merge selected samples"></a> <a href="#"
+			title="Merge selected samples"></a> 
+		<a href="#"
 			class="fa fa-reply fa-2x" onclick="goToSample();return false;"
-			title="Show samples for selected samples"></a> <a href="#"
+			title="Show samples for selected analyses"></a> 
+		<a href="#"
 			class="fa fa-share fa-2x" onclick="goToSecondary();return false;"
-			title="Show secondary analysis for selected samples"></a>
+			title="Show secondary analysis for selected primary analyses"></a>
 	</fieldset>
 </div>
 
@@ -92,13 +95,17 @@ if (isset($_REQUEST['messageYes'])) {
 					$.post("pages/tables/primary.php", {
             			selectable: "true",
             			<?php
-            
-if (isset($_REQUEST['sampleId'])) {
+            	
+			if (isset($_REQUEST['sampleId'])) {
                 ?>            		sampleId: "<?php echo $_REQUEST['sampleId']; ?>"<?php
             }
             if (isset($_REQUEST['primaryId'])) {
                 ?>            		primaryId: "<?php echo $_REQUEST['primaryId']; ?>"<?php
-                        }
+           }
+
+           if (isset($_REQUEST['secondaryId'])) {
+                ?>            		secondaryId: "<?php echo $_REQUEST['secondaryId']; ?>"<?php
+            }
             ?>
 					}, function(response) {
 					    // 	Log the response to the console

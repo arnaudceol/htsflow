@@ -213,7 +213,9 @@ function igbLoad(id, type) {
 	?>
 		<table class="mytable filterable" id="sf2" style="width: 100%;">
 			<thead>
-				<tr>
+				<tr><?php if ($selectable) { ?>
+					<th></th>
+					<?php } ?>
 					<th>SECONDARY ID</th>
 					<th style="width:0%;"></th>
 					<th style="width: 100px; text-align:left" >TITLE</th>
@@ -233,6 +235,14 @@ function igbLoad(id, type) {
 					while ( $row = mysqli_fetch_assoc ( $result ) ) {
 					
 							?> <tr  <?php if ($row['status'] == "deleted") { echo " style=\"color: grey\""; }?>>
+							<?php if ($selectable) { ?>
+				<td style="text-align: left"> 
+				<input type="checkbox" id="selected_<?php echo $row["id"]; ?>"
+						name="selected_<?php echo $row["id"]; ?>"
+						onclick="updateSelectedIds($(this).is(':checked'), '<?php echo $row["id"]; ?>', 'selectedIds')"
+						value="<?php echo $row["id"]; ?>"
+						 <?php if (strpos($selectedIds,"'".$row["id"]."'") !== false ) { echo "checked"; } ?>/>
+				</td><?php }?>
 					<td class="centered"><?php echo $row["id"]; ?> <?php printStatus($row['status']); ?></td>
 					<td><a id="ICON_<?php echo $row["id"]; ?>" class="fa fa-info"  href='#'
 						onclick="javascript:toggle('OPTIONS_<?php echo $row["id"]; ?>', 'selectedIds');"></a>

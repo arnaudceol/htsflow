@@ -141,7 +141,6 @@ header('Content-type: text/html; charset=utf-8');
  -->
 
 
-
 				<h2>Overview</h2>
 				<div>
 
@@ -242,16 +241,12 @@ header('Content-type: text/html; charset=utf-8');
 					<div>Each sample must be stored in HTS-flow’s external_data folder
 						(defined in the configuration file), or a folder accessible from
 						the web server.</div>
-					<div>
-						In this folder, it is recommended to create a subfolder with the
-						user’s name and, within this, a subfolder for each sample, in
-						which corresponding FASTQ file(s) should be zipped and stored. The
-						name of the FASTQ file(s) must follow the following pattern:
-						<ul>
-							<li>single end samples: sample_name_R1.extension (single end)</li>
-							<li>paired end: sample_name_R1.extension and
-								sample_name_R2.extension</li>
-						</ul>
+					<div><ul><li>You can select either files or directories. If a directory is selected, all the files it contains will be merged as 
+						a single sample.</li>
+						<li>The	files should be in FASTQ format and gzipped. They should have either the suffix .fastq.gz or fq.gz (either in upper case or lower case).</li>
+						<li>In case of paired-end samples, the files should contain the R1 and R2 suffix (e.g. sample_R1.fastq.gz and sample_R2.fastq.gz).</li>
+						<li>Each file or directory selected will be added as a different sample (the name of the sample will be the nae of the containing directory by 
+						default, it can be edited later).</li></ul>								
 					</div>
 					<div>
 						To add a new sample, got to the sample page and press the “add

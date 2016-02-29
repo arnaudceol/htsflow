@@ -46,8 +46,49 @@ if (isset($_POST['sampleId']) && $_POST['sampleId'] != "") {
 }
 
 
+// Looking for secondary based on a primary one?
+$secondaryIds = array();
+
+if (isset($_REQUEST['secondaryId']) && $_REQUEST['secondaryId'] != "") {
+	$secondaryIds = array_merge($secondaryIds , explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['secondaryId'])))));
+}
+$primaryIds= array();
+if (sizeof($secondaryIds) > 0) {
+	$secondaryToPrimarySqls = array();
+
+	$secondaryId = implode(", ", $secondaryIds);
+
+	foreach (scandir("../secondary/") as $type_secondary) {
+		if ($type_secondary != ".." && $type_secondary != "." && $type_secondary != 'common') {
+			if (file_exists('../secondary/'. $type_secondary . '/secondary_to_primary.php')) {
+				include '../secondary/'. $type_secondary . '/secondary_to_primary.php';
+				array_push($secondaryToPrimarySqls, $secondaryToPrimarySql);
+			} else {
+				include '../secondary/common/secondary_to_primary.php';
+				array_push($secondaryToPrimarySqls, $secondaryToPrimarySql);
+			}
+		}
+	}
+
+	$primaryIdSql =  implode ( " UNION ", $secondaryToPrimarySqls );
+	
+	$primaryIdQuery = mysqli_query($con, $primaryIdSql );
+	
+	while($primaryResult = mysqli_fetch_array($primaryIdQuery)) {
+		$primaryIds[] = $primaryResult[0];
+	}
+	mysqli_free_result($primaryIdQuery);
+	
+}
+
+
+
+
 if (isset($_POST['primaryId']) && $_POST['primaryId'] != "") {
     $primaryIds = explode(" ", preg_replace('/\s+/', ' ',trim(strtoupper($_REQUEST['primaryId']))));
+}
+
+if (sizeof($primaryIds) > 0) {
     $queryPrimaryId = "id IN (SELECT sample_id FROM primary_analysis WHERE id IN (" . implode(", ", $primaryIds) . "))";
     array_push($concatArray, $queryPrimaryId);
 }

@@ -55,18 +55,57 @@ include ("pages/menu.php"); // import of menu
 <?php
 
 $tableDiv = "tableSecondary";
-$selectable = "false";
+$selectable = "true";
 
 include 'pages/filters/secondary_filter.php';
 
 ?>
 </div>
+	
+	
+	<script>
+	function goToSample() {                   
+		if ($('#selectedIds').val().trim() == '') {
+			alert("Select at least one samples.");
+		} else {	
+			$('body').append($('<form/>')
+					  .attr({'action': 'samples.php', 'method': 'post', 'id': 'toPrimaryForm'})
+					  .append($('<input/>')
+					    .attr({'type': 'hidden', 'name': 'secondaryId', 'value': $('#selectedIds').val().replace( /\'/g, '')  })
+					  )
+					).find('#toPrimaryForm').submit();
+		 }  
+	}
+
+	function goToPrimary() {                   
+		if ($('#selectedIds').val().trim() == '') {
+			alert("Select at least one sample.");
+		} else {	
+			$('body').append($('<form/>')
+					  .attr({'action': 'primary-browse.php', 'method': 'post', 'id': 'toPrimaryForm'})
+					  .append($('<input/>')
+					    .attr({'type': 'hidden', 'name': 'secondaryId', 'value': $('#selectedIds').val().replace( /\'/g, '')  })
+					  )
+					).find('#toPrimaryForm').submit();
+		 }  
+	}
+
+</script>
+	
+	
+	
 			<div style="float: right;">
 				<fieldset class="filtertable">
 					<legend>Actions</legend>
 					<a href="#" class="fa fa-plus-square fa-2x"
 						onclick="window.location.href='secondary-new.php'"
 						title="New secondary analyses"></a>
+						<a href="#"
+							class="fa fa-reply-all fa-2x" onclick="goToSample();return false;"
+							title="Show samples for selected analyses"></a> 
+					<a href="#"   class="fa fa-reply fa-2x" 
+				onclick="goToPrimary();return false;" title="Show primary analysis for selected secondary" ></a>
+			
 				</fieldset>
 			</div>
 			<?php 
@@ -88,7 +127,7 @@ if (isset($_REQUEST['messageNo'])) {
 			<div id="tableSecondary"></div>
 			<script>
 					$.post("pages/tables/secondary.php", {
-            			selectable: false,	
+            			selectable: true,	
             			<?php   if (isset($_REQUEST['primaryId'])) {
             			?>primaryId: "<?php echo $_REQUEST['primaryId']; ?>",<?php }
             			if (isset($_REQUEST['sampleId'])) {
