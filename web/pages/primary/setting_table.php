@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-$tophat_options = "-r 170 -p 8 --no-novel-juncs --no-novel-indels --library-type fr-unstranded";
-$bwa_options = "-t 16";
-$bismarck_options = "-q --phred33-quals --non_directional";
-
 $selectedIds = $_POST["selectedIds"];
 
 require_once ("../../config.php");
@@ -34,8 +30,6 @@ foreach ($values as $selectedId) {
 }
 
 // Check number of methods/genomes
-
-
 global $con;
 
 $sql = "SELECT DISTINCT ref_genome, seq_method, reads_mode FROM sample WHERE  id in ('" . implode("', '", $selectedSamples). "')";
@@ -85,7 +79,41 @@ if ($errors) {
 
 $method = $methods[0];
 	
+
+$defaultOptions = parse_ini_file("../../conf/primary_default.ini", true);
+
+if (array_key_exists( $method,  $defaultOptions)) {
+	$typeOfDefault = $method;
+} else {
+	error_log("Method " . $method . " is not configure in config file, use defaults.");
+	$typeOfDefault = "default";
+}
+
+$programs = array();
+
+foreach ($defaultOptions['options'] as $key => $value) {
+	$programs[] = $key; 
+}
+
+$defaultProgram = $defaultOptions[$typeOfDefault]["program"];
 ?>
+
+<script>
+								function updateOptions() {
+									program = document.getElementById('aln_prog').value;
+									options = "";
+									<?php 
+									foreach ($programs as $program) {
+										?>if (program == '<?php echo $program;?>') {
+											options = '<?php echo $defaultOptions['options'][$program];?>';
+										}
+										<?php 	
+									}
+									?>
+									document.getElementById('aln_options').value = options;
+								}
+								</script>
+								
 <table>
 	<tr>
 		<th colspan="2" align="center">SETTINGS</th>
@@ -128,51 +156,28 @@ $method = $methods[0];
 							</tr>
 							<tr>
 								<td>Program</td>
-								<td><select name="aln_prog"
-									onchange="if (this.options[1].selected) {
-                                                    document.getElementById('aln_options').value = '<?php echo $bwa_options; ?>';
-                                                } else {
-                                                    document.getElementById('aln_options').value = '<?php echo $tophat_options; ?>';
-                                                }">
+								<td><select name="aln_prog" id="aln_prog"
+									onchange="updateOptions()">
                                                     <?php
                                                     
-                                                    if ($method == "ChIP-Seq" || $method == "DNaseI-Seq") {
-                                                        ?> <option
-											value="bwa" selected>bwa</option><?php
-                                                    } else 
-                                                        if ($method == "BS-Seq") {
-                                                            ?> <option
-											value="bismark" selected>bismark</option><?php
-                                                        } else {
-                                                            ?><option
-											value="tophat" selected>tophat</option>
-										<option value="bwa">bwa</option><?php
-                                                        }
+                                                    foreach ($programs as $program) {
+                                                    	$selected = "";
+                                                    	if ($defaultProgram == $program) {
+                                                    		$selected = "selected";
+                                                    	}
+                                                    	echo "<option value=\"" . $program ."\" " .$selected . ">". $program . "</option>\n";
+                                                    }
                                                     ?>
                                         </select></td>
-							</tr><?php
-    if ($method == "ChIP-Seq" || $method == "DNaseI-Seq") {
-        ?><tr>
+							</tr>
+    						<tr>
 								<td>Alignment options</td>
 								<td><input type="text" name="aln_options" id="aln_options"
-									size="55" value="<?php echo $bwa_options; ?>" /></td>
-							</tr><?php
-    } else 
-        if ($method == "BS-Seq") {
-            ?><tr>
-								<td>Alignment options</td>
-								<td><input type="text" name="aln_options" id="aln_options"
-									size="55" value="<?php echo $bismarck_options; ?>" /></td>
-							</tr><?php
-        } else {
-            ?><tr>
-								<td>Alignment options</td>
-								<td><input type="text" name="aln_options" id="aln_options"
-									size="55" value="<?php echo $tophat_options; ?>" /></td>
-
-							</tr><?php
-        }
-    ?>
+									size="55" value="<?php 
+										echo $defaultOptions['options'][$defaultProgram]; 
+									?>" /></td>
+							</tr>
+							
                                                                              </table></td>
 				</tr>
 				<tr>
@@ -196,22 +201,14 @@ $method = $methods[0];
 											selected>TRUE</option>
 										<option value="FALSE">FALSE</option></select></td>
 							</tr><?php
-    if ($method == "DNaseI-Seq") {
-        ?><tr>
+							$defaultRemoveDuplicates = $defaultOptions[$typeOfDefault]["remove-duplicates"];
+   							?><tr>
 								<td>Remove Duplicates</td>
-								<td><select name="removeDuplicates"><option value="TRUE">TRUE</option>
-										<option value="FALSE" selected>FALSE</option></select></td>
-							</tr><?php
-    } else {
-        ?><tr>
-								<td>Remove Duplicates</td>
-								<td><select name="removeDuplicates"><option value="TRUE"
-											selected>TRUE</option>
-										<option value="FALSE">FALSE</option></select></td>
-							</tr><?php
-    }
-    ?>
-                                        </table></td>
+								<td><select name="removeDuplicates">
+								<option value="TRUE" <?php if ($defaultRemoveDuplicates == TRUE) { echo "selected"; } ?>>TRUE</option>
+								<option value="FALSE" <?php if ($defaultRemoveDuplicates == FALSE) { echo "selected"; } ?>>FALSE</option></select></td>
+							</tr>
+                        </table></td>
 			
 			</table></td>
 		<td>
