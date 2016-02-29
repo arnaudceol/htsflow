@@ -133,9 +133,11 @@ include ("pages/menu.php"); // import of menu
         }
         ?>
 			</div>
-			<div style="float: right; width: 150px; text-align: center"
+			<div style="padding-top: 20px; padding-bottom: 20px">Select one or more samples and press the Settings button: 
+			<span style="width: 150px; text-align: center"
 				class="filtertable"
-				onclick="loadSubmitTable();">Settings</div>
+				onclick="loadSubmitTable();">Settings</span>
+				</div>
 			<div style="clear: both;"></div>
 			<form name="<?php echo $type; ?>" action="" method="post">
 				<div id="tablePrimary"></div>

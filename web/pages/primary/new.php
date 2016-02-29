@@ -24,8 +24,6 @@ $editable = false;
 include 'pages/filters/sample_filter.php';
 ?>
 </div>
-<input type="submit" style="float: right; margin: 15px; text-align: center"	
-	onclick="loadSubmitTable();" value="Settings"/>
 <div style="clear: both;"></div>
 <script>
 	function loadSubmitTable() {  
@@ -58,7 +56,12 @@ include 'pages/filters/sample_filter.php';
         }   
 	}
 </script>
-
+<div style="padding-top: 20px; padding-bottom: 20px">
+Select one or more samples and press the Settings button:
+<span style="width: 150px; text-align: center"
+				class="filtertable"	
+	onclick="loadSubmitTable();" >Settings</span>
+</div>
 <form name="<?php echo $form_name; ?>"
 	action="pages/primary/submit.php" method="post">
 	<div id="sampleTable"></div>
