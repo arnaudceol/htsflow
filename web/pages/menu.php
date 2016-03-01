@@ -27,7 +27,6 @@
 // ///////////////////////////////////////////////////////////////
 ?>
 <div  class="menu" id="linkmenu-wrapper" >
-	<div style="float: left;font-size: -1; color: orange; margin-left:20px">test version 2.0</div>	
 	<div id="linkmenu"  class="menu">
 		<ul class="menu">
 			<li><a href="index.php">home</a></li>

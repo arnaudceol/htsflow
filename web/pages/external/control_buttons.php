@@ -19,8 +19,6 @@
 global $con;
 $user_id = $_SESSION["hf_user_id"];
 
-echo "Start adding sample";
-
 if (isset($_POST['submitExt'])) {
     /* print "SUBMITTING!!!"; */
 	echo "Submit Ext";    

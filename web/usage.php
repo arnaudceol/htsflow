@@ -217,7 +217,7 @@ header('Content-type: text/html; charset=utf-8');
 
 				<h2>Samples</h2>
 
-				<img width="100%" src="images/samples.png"/>
+				<img style="display: block; margin: 0 auto;"  src="images/samples-legends.png"/>
 				<div id="samples">
 					<p>The sample page provides information about all the samples
 						imported from the LIMS (if configured) or imported as external
@@ -268,7 +268,7 @@ header('Content-type: text/html; charset=utf-8');
 				</div>
 
 				<h2>Primary Analysis</h2>
-				<img width="100%" src="images/primaries.png"/>
+				<img style="display: block; margin: 0 auto;" src="images/primaries-legends.png"/>
 				<h3>New primary analysis</h3>
 				<div>
 					Primary analyses can be submitted on a sample or on a group of
@@ -348,7 +348,7 @@ header('Content-type: text/html; charset=utf-8');
 
 
 				<h2>Secondary analysis</h2>
-				<img width="100%"  src="images/secondaries.png"/>
+				<img style="display: block; margin: 0 auto;"  src="images/secondaries-legends.png"/>
 				<div>
 					Secondary Analyses are datatype-specific. HTS-flow supports:
 					<ul>
