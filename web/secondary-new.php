@@ -54,19 +54,19 @@ include ("pages/menu.php"); // import of menu
 				style="margin-bottom: 20px">
 				<b>Secondary analyses:</b> 
 			<?php
-    foreach (scandir("pages/secondary/") as $typeSecondary) {
-        if ($typeSecondary != "." && $typeSecondary != ".."&& $typeSecondary != "common") {
+    foreach (scandir("pages/secondary/") as $typeOfSecondary) {
+        if ($typeOfSecondary != "." && $typeOfSecondary != ".."&& $typeOfSecondary != "common") {
         
             // Create a good looking title, with space and first letter uppercase
-            $title = ucwords(str_replace("_", " ",$typeSecondary));
+            $title = ucwords(str_replace("_", " ",$typeOfSecondary));
         
             $selected = false;
-            if (isset($_POST['type']) && $_POST['type'] == $typeSecondary) {
+            if (isset($_POST['type']) && $_POST['type'] == $typeOfSecondary) {
                 $selected = true;
             }
             
             ?><input onclick='this.form.submit()' type="radio" name="type"
-					value="<?php echo $type; ?>"
+					value="<?php echo $typeOfSecondary; ?>"
 					<?php if ($selected) { echo "checked"; }?> /><?php
             
             if ($selected) {
