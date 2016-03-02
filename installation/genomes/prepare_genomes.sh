@@ -22,4 +22,3 @@ bowtie2-build $version.fa $version
 
 done < genomes.txt
 
-ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Drosophila_melanogaster/UCSC/dm6/Drosophila_melanogaster_UCSC_dm6.tar.gz
