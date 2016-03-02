@@ -1,0 +1,7 @@
+Mus_musculus UCSC mm10
+Mus_musculus UCSC mm9
+Homo_sapiens UCSC hg38
+Homo_sapiens UCSC hg19
+Homo_sapiens UCSC hg18
+Drosophila_melanogaster UCSC dm6
+Rattus_norvegicus UCSC rn6
