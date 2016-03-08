@@ -15,10 +15,17 @@ cp $species/$host/$version/Sequence/Bowtie2Index/* .
 cp $species/$host/$version/Sequence/BWAIndex/* .
 cp $species/$host/$version/Sequence/WholeGenomeFasta/genome.fa* .
 
-rename genome $version *
+# rename genome $version *
+
+for file in genome.*; do
+ mv "$file" "${file//genome/$version}"
+done
+
 
 bwa index $version.fa 
 bowtie2-build $version.fa $version
+
+rm -rf $species $igenomeFile.tar.gz
 
 done < genomes.txt
 

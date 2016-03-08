@@ -156,6 +156,24 @@ header('Content-type: text/html; charset=utf-8');
 		<?php 
 			$externalPaths = explode(",", $HTSFLOW_PATHS['HTSFLOW_UPLOAD_DIR']);
 			$numPaths = sizeof($externalPaths);		
+			
+			// Get available genomes:
+			$availableAssemblies= array();
+			// BS need a different assembly
+			$availableAssembliesBs= array();
+			
+			foreach (scandir(GENOMES_FOLDER) as $assembly) {
+				if ($assembly[0] != ".") {
+					if (strrpos($assembly, "_bs") > 0) {
+						$assemblyName = explode("_", $assembly) [0];
+						array_push($availableAssembliesBs, $assemblyName );
+					} else {
+						array_push($availableAssemblies, $assembly);
+					}
+				}
+			}
+			
+			
 		?>	
 			<div
 				style="text-align: right; margin: 20px; font-style: italic; font-weight: bold"
@@ -200,13 +218,9 @@ header('Content-type: text/html; charset=utf-8');
 
 						<tr>
 							<th align="right">Reference Genome</th>
-							<td><input type="radio" name="ref_genome" value="mm9" />mm9
-								&nbsp;&nbsp; <input type="radio" name="ref_genome" value="mm10" />mm10
-								&nbsp;&nbsp; <input type="radio" name="ref_genome" value="hg18" />hg18
-								&nbsp;&nbsp; <input type="radio" name="ref_genome" value="hg19" />hg19
-								&nbsp;&nbsp; <input type="radio" name="ref_genome" value="rn5" />rn5
-								&nbsp;&nbsp; <input type="radio" name="ref_genome" value="dm6" />dm6
-								&nbsp;&nbsp;</td>
+							<td><?php  foreach ($availableAssemblies as $availableAssembly) {?><input type="radio" name="ref_genome" value="<?php  echo $availableAssembly; ?>" /><?php  echo $availableAssembly; ?>
+								&nbsp;&nbsp;<?php } ?>
+							</td>
 						</tr>
 						<tr ><th align="right">Path(s)</th>						
 							<td ><textarea name="paths" id="paths" rows="6" cols="50"></textarea><br/>
