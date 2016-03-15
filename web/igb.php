@@ -93,7 +93,7 @@ while ( !feof($fp) )
 genome <?php echo $igbGenome . "\n"; ?>
 # Add a new data set
 <?php  foreach ($files as $file) { 
-echo "load " .$pageURL ."/" . $HTSFLOW_PATHS["HTSFLOW_WEB_OUTPUT"] . $file . "\n";
+echo "load " .$pageURL ."/" . $HTSFLOW_PATHS["HTSFLOW_WEB_TRACKS"] . $file . "\n";
 }
 ?>
 

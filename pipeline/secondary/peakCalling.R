@@ -60,8 +60,8 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 	fileBEDnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
 	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_broad_peaks.bed" )
 	
-	GenomeBrowserFolder <- paste0( IDsec_FOLDER, '/bed/' )
-	createDir(GenomeBrowserFolder,  recursive =  TRUE)		
+	bedFolder <- paste0(getHTSFlowPath("HTSFLOW_BED"), '/', IDsec, '/bed/' )
+	createDir(bedFolder,  recursive =  TRUE)		
 	
 	###### peakcaller function #######
 	if ( peak_calling ) {
@@ -105,17 +105,17 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 			}
 			
 			
-			makeBigBedFile( fileBEDnarrow, genomePaths, GenomeBrowserFolder )
-			makeBigBedFile( fileBEDbroad, genomePaths, GenomeBrowserFolder )
+			makeBigBedFile( fileBEDnarrow, genomePaths, bedFolder )
+			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
 			
 		} else if ( typeOfpeakCalling == "MACSnarrow" ) {
 			macsOUT <- paste0( IDsec_FOLDER, 'NARROW/' )
 			peakcaller( INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
-			makeBigBedFile( fileBEDnarrow, genomePaths, GenomeBrowserFolder )			
+			makeBigBedFile( fileBEDnarrow, genomePaths, bedFolder )			
 		} else if ( typeOfpeakCalling == "MACSbroad" ) {
 			macsOUT <- paste0( IDsec_FOLDER, 'BROAD/' )
 			peakcaller( INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
-			makeBigBedFile( fileBEDbroad, genomePaths, GenomeBrowserFolder )
+			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
 		}
 	}
 	###### annotation function #######
