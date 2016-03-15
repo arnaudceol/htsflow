@@ -34,4 +34,4 @@ $res = mysqli_query($con, $sqlQuery);
 
 $message = "Primary analysis " . $id . " will restart.";
 
-header("Location: ../../primary-browse.php?userId=" . $user_id . "&messageYes=" . $message);
+header("Location: ../../primary-browse.php?primaryId=" . $id . "&messageYes=" . $message);

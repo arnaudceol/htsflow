@@ -35,4 +35,4 @@ $res = mysqli_query($con, $sqlQuery);
 
 $message = "Secondary analysis " . $id . " will be deleted.";
 
-header("Location: ../../../secondary-browse.php?userId=" . $user_id . "&messageYes=" . $message);
+header("Location: ../../../secondary-browse.php?secondaryId=" . $id . "&messageYes=" . $message);
