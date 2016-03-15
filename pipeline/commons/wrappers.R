@@ -51,7 +51,7 @@ tryInternOrExit <- function( command, label ) {
 # File commands
 deleteFile <- function(filename, recursive=FALSE) {
 	if (recursive) {
-		loginfo(paste("rm -f ", filename))
+		loginfo(paste("rm -r ", filename))
 	} else {
 		loginfo(paste("rm ", filename))
 	}

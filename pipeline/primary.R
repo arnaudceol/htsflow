@@ -533,9 +533,10 @@ doTophatAlignment <- function( sample , outFolder, RefGenomes, reference, flags 
                     ,primaryId
                     ,".bam.bai"
                 )
-	tryOrExit(execute, "Tophat Alignment")
+	result <- tryOrExit(execute, "Tophat Alignment")
 	
-	result <- deleteFile(dirname, recursive=TRUE)
+	# It will be remove latter
+	#result <- deleteFile(dirname, recursive=TRUE)
 	
     loginfo('Alignment completed')
 	return(result)
