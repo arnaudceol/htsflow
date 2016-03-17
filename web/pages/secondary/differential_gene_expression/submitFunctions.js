@@ -157,21 +157,27 @@ function degAddLine(){
     new_div3.style.cssFloat = "left";
     new_div3.style.minHeight = "50px";
     boxes.appendChild(new_div3);
-    var input1 = document.createElement('select');
+//    var input1 = document.createElement('select');
+//    var NAME = "mix"+String(num)
+//    input1.setAttribute("id", NAME);
+//    new_div3.appendChild(input1);
+//    var x = document.getElementById(NAME);
+//    var option = document.createElement("option");
+//    option.text = "";
+//    x.add(option);
+//    var option = document.createElement("option");
+//    option.text = "1";
+//    x.add(option);
+//    var option = document.createElement("option");
+//    option.text = "2";
+//    x.add(option);
+    var input1 = document.createElement('input');
     var NAME = "mix"+String(num)
     input1.setAttribute("id", NAME);
+    input1.setAttribute("type", "hidden");
+    input1.setAttribute("value", "");
     new_div3.appendChild(input1);
-    var x = document.getElementById(NAME);
-    var option = document.createElement("option");
-    option.text = "";
-    x.add(option);
-    var option = document.createElement("option");
-    option.text = "1";
-    x.add(option);
-    var option = document.createElement("option");
-    option.text = "2";
-    x.add(option);
-
+        
     var new_div4 = document.createElement('div');
     new_div4.style.clear = "both";
     boxes.appendChild(new_div4);    

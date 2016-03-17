@@ -48,17 +48,17 @@
 			<input type="text" id="condition1">
 		</p>
 	</div>
-
-	<div id="riquadro" style="float: left;">
-		<p style="color: #00557F; font-weight: normal;">MIX</p>
-		<p id="mix">
-			<select id="mix1">
-				<option value=""></option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-			</select>
-		</p>
-	</div>
+	<input type="hidden" id="mix1" value=""/>
+<!--	<div id="riquadro" style="float: left;"> -->
+<!--		<p style="color: #00557F; font-weight: normal;">MIX</p> -->
+<!-- 		<p id="mix"> -->
+<!-- 			<select id="mix1"> -->
+<!-- 				<option value=""></option> -->
+<!-- 				<option value="1">1</option> -->
+<!-- 				<option value="2">2</option> -->
+<!-- 			</select> -->
+<!-- 		</p> -->
+<!-- 	</div> -->
 	<div style="clear: both;"></div>
 </div>
 
