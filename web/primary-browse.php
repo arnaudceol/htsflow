@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 session_start();
-ini_set('display_errors', 'On');
-error_reporting(E_ALL ^ E_WARNING);
+// ini_set('display_errors', 'On');
+// error_reporting(E_ALL ^ E_WARNING);
 require_once ("config.php");
 require ('pages/dbaccess.php');
 
-$require_permission= "primary";
+$require_permission= "secondary";
 include 'pages/check_login.php';
 
 header('Content-type: text/html; charset=utf-8');
