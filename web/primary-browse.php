@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 session_start();
-// ini_set('display_errors', 'On');
-// error_reporting(E_ALL ^ E_WARNING);
+
 require_once ("config.php");
 require ('pages/dbaccess.php');
 

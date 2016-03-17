@@ -14,13 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-session_start ();
-ini_set ( 'display_errors', 'On' );
-error_reporting ( E_ALL ^ E_WARNING );
-error_reporting ( E_ALL );
-// I don't know if you need to wrap the 1 inside of double quotes.
-ini_set ( "display_startup_errors", 1 );
-ini_set ( "display_errors", 1 );
+session_start();
 
 require_once ("config.php");
 

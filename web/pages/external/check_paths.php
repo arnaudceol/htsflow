@@ -15,11 +15,7 @@
  * limitations under the License.
  */
 session_start();
-ini_set('display_errors', 'On');
-error_reporting(E_ALL ^ E_WARNING);
-error_reporting(E_ALL);
-ini_set("display_startup_errors", 1);
-ini_set("display_errors", 1);
+
 ?>
 <html>
 <body>

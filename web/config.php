@@ -14,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// ini_set('display_errors', 'On');
+// error_reporting(E_ALL ^ E_WARNING);
+// ini_set("display_startup_errors", 1);
+// ini_set("display_errors", 1);
+
 $conf= "/home/aceol/workspace45/htsflow2/conf/htsflow-local.ini";
 
 $HTSFLOW_PATHS=array();
