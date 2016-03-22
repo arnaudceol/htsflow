@@ -118,6 +118,11 @@ wget https://ccb.jhu.edu/software/tophat/downloads/tophat-2.0.8.Linux_x86_64.tar
 tar xzf tophat-2.0.8.Linux_x86_64.tar.gz
 mv tophat-2.0.8.Linux_x86_64  $deploydir
 
+# SRA toolkit (to import fastq from GEO)
+wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.7/sratoolkit.2.5.7-ubuntu64.tar.gz
+tar xvf http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.7/sratoolkit.2.5.7-ubuntu64.tar.gz
+cp sratoolkit.2.5.7/bin/fastq-dump $deploydir
+
 
 tmpdir=`pwd`
 

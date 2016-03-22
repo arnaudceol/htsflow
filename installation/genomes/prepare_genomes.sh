@@ -1,3 +1,6 @@
+HTSFLOW_BIN=/data/BA/htsflow2/bin/
+
+
 while IFS=$'\ ' read -r -r species host version
 do
 
@@ -22,10 +25,20 @@ for file in genome.*; do
 done
 
 
-bwa index $version.fa 
-bowtie2-build $version.fa $version
+$HTSFLOW_BIN/bwa index $version.fa 
+$HTSFLOW_BIN/bowtie2-2.1.0/bowtie2-build $version.fa $version
 
 rm -rf $species $igenomeFile.tar.gz
+
+cd ../
+
+# BS
+mkdir `echo $version`_bs
+cp `echo $version`/`echo $version`.fa  `echo $version`_bs/
+cd `echo $version`_bs/
+$HTSFLOW_BIN/bismark_v0.14.0/bismark_genome_preparation --path_to_bowtie $HTSFLOW_BIN/bowtie-1.1.1/ .
+cd ..
+
 
 done < genomes.txt
 
