@@ -37,6 +37,8 @@
 							<?php if (isset ( $_POST ['level'] ) && $_POST ['level'] == "primary") { echo "selected"; }?>>primary</option>
 						<option value="secondary"
 							<?php if (isset ( $_POST ['level'] ) && $_POST ['level'] == "secondary") { echo "selected"; }?>>secondary</option>
+						<option value="other"
+							<?php if (isset ( $_POST ['level'] ) && $_POST ['level'] == "other") { echo "selected"; }?>>others (GEO)</option>
 				</select></td>
 				<td><?php
     

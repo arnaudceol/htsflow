@@ -81,6 +81,7 @@ if (length(jobs$id) > 0) {
 		reg <- addRegistrySourceFiles(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/secondary.R"))
 		reg <- addRegistrySourceFiles(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/deleteSecondary.R"))
 		reg <- addRegistrySourceFiles(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/merging.R"))
+		reg <- addRegistrySourceFiles(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/geoDownload.R"))
 		reg <- addRegistryPackages(reg, "logging")
 		
 		ids <- batchMap(reg, use.names = TRUE, fun=pipeline, analysisId, type, action)

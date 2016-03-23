@@ -19,6 +19,39 @@
 global $con;
 $user_id = $_SESSION["hf_user_id"];
 
+if (isset($_POST['submitGeo'])) {
+	$geoIds = $_POST['geoIds'];
+	
+	$analysisId = getNewId();
+	
+	$query = "INSERT INTO other_analysis (id, type, description, user_id) SELECT $analysisId, 'geo', '" . $geoIds . "', user_id FROM users WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
+	
+	$stmt = mysqli_prepare($con, $query);
+	if ($stmt) {
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_store_result($stmt);
+		mysqli_stmt_close($stmt);
+		
+		$jobs = Array();
+		array_push($jobs, "other\t". $analysisId);
+		$checkFileUser = putInUserFile($jobs);
+		error_log("Insert job: " . $checkFileUser);
+		
+		$messageYes =  "GEO Download: " . $geoIds . " has been put in the queued. The downloaded samples will be available in the sample page once the download will be finished. " . $analysisId;
+	} else {
+		$messageNo = "Problem to insert GEO Download: " . $geoIds;
+	}
+	
+
+	if ($messageYes != '') {
+		header("Location: samples.php?userId=".$user_id."&messageYes=" . $messageYes);
+	}  else {
+		header("Location: samples.php?userId=".$user_id."&messageNo=" . $messageNo);
+	}
+	
+	
+}
+
 if (isset($_POST['submitExt'])) {
     /* print "SUBMITTING!!!"; */
 	echo "Submit Ext";    
@@ -102,7 +135,7 @@ if (isset($_POST['submitExt'])) {
             }
         }
     } else {
-    	echo "Somethig is missing.<br />";
+    	echo "Something is missing.<br />";
     }
     echo "</div>";
 }

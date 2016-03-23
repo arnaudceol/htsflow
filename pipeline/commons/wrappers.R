@@ -74,7 +74,7 @@ createDir <- function(filename, recursive=FALSE) {
 	if (! file.exists(filename)) {
 		
 		if (recursive) {
-			loginfo(paste("mkdir -p ", filename))
+			loginfo(paste("mkdir -p ", filename))	
 		} else {
 			loginfo(paste("mkdir ", filename))
 		}
@@ -103,13 +103,16 @@ createDir <- function(filename, recursive=FALSE) {
 # Add common source dir and library to a registry
 makeHtsflowRegistry <- function(regName) {
 	reg <- makeRegistry(regName)
-	reg<-addRegistrySourceDirs(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/commons/"))
-	reg<-addRegistrySourceDirs(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/secondary/"))
 	reg<-addRegistryPackages(reg, "logging")
 	reg<-addRegistryPackages(reg, "BatchJobs")
 	reg<-addRegistryPackages(reg, "GenomicRanges")
 	reg<-addRegistryPackages(reg, "compEpiTools")
 	reg<-addRegistryPackages(reg, "methylPipe")
+	reg<-addRegistryPackages(reg, "GEOmetadb")
+	reg<-addRegistryPackages(reg, "SRAdb")
+	reg<-addRegistryPackages(reg, "R.utils")
+	reg<-addRegistrySourceDirs(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/commons/"))
+	reg<-addRegistrySourceDirs(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/secondary/"))	
 	return(reg)
 }
 

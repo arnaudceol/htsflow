@@ -18,6 +18,7 @@ session_start();
 
 require_once ("config.php");
 require ('pages/dbaccess.php');
+require ('pages/run/functions.php');
 
 
 $require_permission= "browse";
@@ -73,6 +74,14 @@ header('Content-type: text/html; charset=utf-8');
         ?><div id="content"><?php
                 include ("pages/external/control_buttons.php");
                 ?>
+	   		        
+	   		        <div id="messages"><?php 
+if (isset($_REQUEST['messageYes'])) {
+    ?><div class="message"><i class="fa fa-thumbs-o-up" style="color:green"></i><?php echo $_REQUEST['messageYes']; ?></div><?php 
+} if (isset($_REQUEST['messageNo'])) {
+    ?><div class="message"><i class="fa fa-thumbs-o-down" style="color:red"></i><?php echo $_REQUEST['messageNo']; ?></div><?php 
+}
+?></div>
 	   		        
            <div style="display: inline-block;">
 	    	<?php
@@ -145,12 +154,18 @@ header('Content-type: text/html; charset=utf-8');
 			    $( '#pathsContent' ).html(response);
 			});
 		}
-		
-
-
-</script>
+		</script>
 
 		<div id="external_div" style="display: none" class="over-form">		
+		
+		<!-- GEO download -->
+		<form action="samples.php" method="post">
+		Add samples from GEO: insert a GSE or one or more GSM ids (separated by ;):
+		<input type="text" name="geoIds" id="geoIds"></input>
+		<input type="submit" id="submitGeo" name="submitGeo"/>		
+
+		
+		</form>
 		
 		<?php 
 			$externalPaths = explode(",", $HTSFLOW_PATHS['HTSFLOW_UPLOAD_DIR']);
@@ -242,6 +257,15 @@ header('Content-type: text/html; charset=utf-8');
 		<script type="text/javascript">
 			
 		$(document).ready( function() {
+
+			$('#submitGeo').click(function (e) {
+				regex = "^((GSE[0-9]+)|(GSM[0-9]+(;GSM[0-9]+)*))$";
+				if(! $('#geoIds').val().match(regex)){ 
+					alert("Please check IDs");
+					return false;
+				}
+			});
+			
 			<?php 
 				for ($i = 0; $i < $numPaths; $i++) {
 					$externalPath = $externalPaths[$i];

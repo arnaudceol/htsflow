@@ -14,7 +14,7 @@ CREATE TABLE `controlled_vocabulary` (
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1399 DEFAULT CHARSET=latin1;
---delete from controlled_vocabulary;
+
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'ChIP-Seq', 'chip-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'RNA-Seq', 'rna-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'DNase-Seq', 'dnase-seq', true);
@@ -192,6 +192,28 @@ CREATE TABLE `primary_analysis` (
   CONSTRAINT `pre_analysis_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `pre_analysis_ibfk_2` FOREIGN KEY (`options_id`) REFERENCES `pa_options` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2706 DEFAULT CHARSET=latin1;
+
+
+--
+-- Table structure for table `other_analysis`
+--
+
+DROP TABLE IF EXISTS `other_analysis`;
+CREATE TABLE `other_analysis` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `type` text,
+  `status` varchar(50) DEFAULT NULL,
+  `user_id` int(10) NOT NULL,
+  `dateStart` varchar(30) DEFAULT NULL,
+  `dateEnd` varchar(30) DEFAULT NULL,  
+  `description` text,
+  `created` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `other_analysis_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2706 DEFAULT CHARSET=latin1;
+
+
 
 --
 -- Table structure for table `sample`

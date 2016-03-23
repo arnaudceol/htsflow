@@ -1,10 +1,10 @@
 Species host version txdb_library annotation_library ucsc_table
 #Annotations available at http://bioconductor.org/packages/3.2/data/annotation/
-Mus_musculus UCSC mm10 TxDb.Mmusculus.UCSC.mm10.knownGene org.Mm.eg.db knownGene
+#Mus_musculus UCSC mm10 TxDb.Mmusculus.UCSC.mm10.knownGene org.Mm.eg.db knownGene
 Mus_musculus UCSC mm9 TxDb.Mmusculus.UCSC.mm9.knownGene org.Mm.eg.db knownGene
 Homo_sapiens UCSC hg38 TxDb.Hsapiens.UCSC.hg38.knownGene org.Hs.eg.db knownGene
-Homo_sapiens UCSC hg19 TxDb.Hsapiens.UCSC.hg19.knownGene org.Hs.eg.db knownGene
 Homo_sapiens UCSC hg18 TxDb.Hsapiens.UCSC.hg18.knownGene org.Hs.eg.db knownGene
+Homo_sapiens UCSC hg19 TxDb.Hsapiens.UCSC.hg19.knownGene org.Hs.eg.db knownGene
 Rattus_norvegicus UCSC rn5 TxDb.Rnorvegicus.UCSC.rn5.refGene org.Rn.eg.db knownGene
 Drosophila_melanogaster UCSC dm6 TxDb.Dmelanogaster.UCSC.dm6.refGene org.Dm.eg.db refGene
 Saccharomyces_cerevisiae UCSC sacCer3 TxDb.Scerevisiae.UCSC.sacCer3.sgdGene org.Sc.sgd.db sgdGene

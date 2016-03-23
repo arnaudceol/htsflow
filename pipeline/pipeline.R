@@ -17,7 +17,8 @@ options(scipen=999)
 source("commons/wrappers.R")
 source("commons/dbFunctions.R")
 source("commons/pipelineFunctions.R")
-
+source("commons/geo.R")
+source("commons/genomesConfig.R")
 
 library(logging, quietly = TRUE)
 basicConfig(level="DEBUG")
@@ -25,6 +26,8 @@ basicConfig(level="DEBUG")
 # load configuration
 source("commons/config.R")
 initHtsflow()
+
+initSpecies()
 
 # Add path variables:
 Sys.setenv(PATH=paste(Sys.getenv("PATH"),getHTSFlowPath("bowtie_dir"),getHTSFlowPath("bowtie2_dir"),getHTSFlowPath("HTSFLOW_TOOLS"),getHTSFlowPath("tophat_dir"),sep=":"))
@@ -39,6 +42,7 @@ source("secondary.R")
 source("merging.R")
 source("deletePrimary.R")
 source("deleteSecondary.R")
+source("geoDownload.R")
 
 library("BatchJobs", quietly = TRUE)
 
@@ -54,6 +58,8 @@ if ( TypeOfAnalysis == "primary" ) {
 	assign("PIPELINE_TYPE", "secondary", envir=globalenv())
 } else if ( TypeOfAnalysis == "merging" ) {
 	assign("PIPELINE_TYPE", "merging", envir=globalenv())
+} else if ( TypeOfAnalysis == "other" ) {
+	assign("PIPELINE_TYPE", "other", envir=globalenv())
 }
 
 # Create default directories
@@ -93,7 +99,7 @@ if (! file.exists(getHTSFlowPath("HTSFLOW_QC"))){
 setUserWorkDir()
 
 # Check if this job can be run: the combination of id/type/action should be in the job_list table and launch should be null
-sqlCheck <- paste0("SELECT count(*) FROM job_list WHERE analyses_type = '",TypeOfAnalysis,"' AND analyses_id = '",id,"' AND action = '",action,"' AND started is null;")
+sqlCheck <- paste0("SELECT count(*) FROM job_list WHERE analyses_type = '",TypeOfAnalysis,"' AND analyses_id = '",id,"' AND action = '",action,"' AND started is null;") 
 jobRowCount <- as.numeric(extractSingleColumnFromDB(sqlCheck))
 if (jobRowCount == 0) {
 	loginfo("This job does not exist or has already been run.")
@@ -199,6 +205,24 @@ if ( TypeOfAnalysis == "primary") {
 				loginfo("Session information: ")
 				sessionInfo()
 				setError( "Merging pipeline exited with errors." )
+				stop()
+			}
+	)
+} else if ( TypeOfAnalysis == "other" ) {
+	
+	setStatus(id, "other", status="started", startTime=TRUE)
+	
+	## SQL <- paste0("SELECT * FROM misc_task WHERE id =",id)
+	## flags <- extractInfoFromDB( SQL )	
+	## description <- flags$description
+	tryCatch(			
+			geoDownload ( id ),
+			error = function(e)
+			{
+				print(e)
+				loginfo("Session information: ")
+				sessionInfo()
+				setError( "GEO download exited with errors." )
 				stop()
 			}
 	)

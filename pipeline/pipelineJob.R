@@ -55,6 +55,8 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 		assign("PIPELINE_TYPE", "secondary", envir=globalenv())
 	} else if ( TypeOfAnalysis == "merging" ) {
 		assign("PIPELINE_TYPE", "merging", envir=globalenv())
+	} else if ( TypeOfAnalysis == "other" ) {
+		assign("PIPELINE_TYPE", "other", envir=globalenv())
 	}
 	
 	# Create default directories
@@ -203,7 +205,25 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	                 stop()
 	             }
 	     )
-	 }
+	 } else if ( TypeOfAnalysis == "other" ) {
+	
+		setStatus(id, "other", status="started", startTime=TRUE)
+	
+		## SQL <- paste0("SELECT * FROM misc_task WHERE id =",id)
+		## flags <- extractInfoFromDB( SQL )	
+		## description <- flags$description
+		tryCatch(			
+			geoDownload ( id ),
+			error = function(e)
+			{
+				print(e)
+				loginfo("Session information: ")
+				sessionInfo()
+				setError( "GEO download exited with errors." )
+				stop()
+			}
+		)
+	}
 	
 	loginfo("Session information: ")
 	sessionInfo()

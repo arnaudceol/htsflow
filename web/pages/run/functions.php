@@ -27,7 +27,9 @@ function putInUserFile($jobs)
         $id = explode("\t" , $command) [1];
         
         $sqlQuery = "insert into job_list (analyses_type , analyses_id , action , user_id ) values ('" . $type . "', ". $id . ", 'run', ". $user_id . ") ";
-        $res = mysqli_query($con, $sqlQuery);        
+        error_log($sqlQuery);
+        $res = mysqli_query($con, $sqlQuery);  
+        mysqli_free_result($res);
     }
        
     return sizeOf($jobs);  

@@ -33,7 +33,15 @@ $querySecondary = "SELECT secondary_analysis.created, id, dateStart, dateEnd,
     FROM secondary_analysis, users  
     WHERE secondary_analysis.user_id = users.user_id"; 
 
-$baseQuery = $queryPrimary . " UNION " . $querySecondary;
+$queryOther = "SELECT other_analysis.created, id, dateStart, dateEnd,
+    CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart ) ELSE timediff( NOW(), dateStart ) END AS time,
+    users.user_id, user_name, 'other' as type, 'other' as subtype, description, status
+    FROM other_analysis, users
+    WHERE other_analysis.user_id = users.user_id";
+
+
+
+$baseQuery = $queryPrimary . " UNION " . $querySecondary. " UNION " . $queryOther;
 
 $concatArray = array();
 
@@ -135,7 +143,7 @@ $result = mysqli_query($con, $sql . $pagination);
 							include '../secondary/' . $row ["method"] . '/detail_table.php';
 							?>
 							
-						<?php }  else {
+						<?php }  else if ($row["level"] == 'secondary') {
 							  // primary
 							    $convArr = array(
 							        1 => "<span style=\"color: #008000;font-weight:bold\">OK</span>",
@@ -182,7 +190,7 @@ $result = mysqli_query($con, $sql . $pagination);
 							    								</tbody>
 							    							</table><?php
 							                }
-							}
+							} 
 							
 							?></div><?php if ($row["level"] == 'primary' && $row["status"] == "completed") { ?>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id"]; ?>_fastqc/fastqc_report.html" target="_blank"><i class="fa fa-folder"></i></a>
@@ -205,6 +213,8 @@ $result = mysqli_query($con, $sql . $pagination);
 					       echo "/S";
 					   } else if ($row["level"] == 'merging') {
 					       echo "/M"; 
+					   }else  {
+					       echo "/O"; 
 					   }
 					   echo $row ["id"];
 				    ?>" target="_blank"><i class="fa fa-newspaper-o"></i></a></td>

@@ -49,7 +49,8 @@ initHtsflow <- function() {
 	# Global options:
 	options(BatchJobs.load.config = FALSE)
 	options(BatchJobs.verbose = FALSE)
-	options(BBmisc.ProgressBar.style = "off")
+	options(BBmisc.ProgressBar.style = "off")	
+	
 }
 
 

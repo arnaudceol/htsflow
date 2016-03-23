@@ -46,9 +46,11 @@ getJobID <- function(id, type) {
 		prefix<-"K"
 	} else  if (type == "merging") {
 		prefix = "M"
+	} else  if (type == "other") {
+		prefix<-"O"
 	} else {
 		loginfo("unknown type: %s", type)
-		prefix<-"O"
+		prefix<-"U"
 	}
 	
 	id<-paste0(prefix, id)
@@ -68,6 +70,8 @@ getPreprocessDir <- function() {
 		prefix<-"K"
 	} else  if (type == "merging") {
 		prefix = "M"
+	} else  if (type == "other") {
+		prefix<-"O"
 	} else {
 		loginfo("unknown type: %s", type)
 		prefix<-"O"
