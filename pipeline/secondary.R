@@ -29,6 +29,8 @@ secondaryPipeline <- function( IDsec ){
 		footprintAnalysis( IDsec )
 	} else if ( method == 'methylation_calling') {
 		methylationCalling( IDsec )
+	} else if ( method == 'inspect') {
+		inspect( IDsec )
 	}	
 }
 

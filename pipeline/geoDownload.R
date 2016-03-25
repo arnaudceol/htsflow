@@ -59,7 +59,7 @@ geoDownload <- function( taskId ) {
 	
 	# External user dir: 	
 	user<-Sys.getenv("USER")
-	uploadDir <- getHTSFlowPath("HTSFLOW_UPLOAD_DIR")	
+	uploadDir <- unlist(strsplit(getHTSFlowPath("HTSFLOW_UPLOAD_DIR"), ","))[1]	
 	userUploadDir<-paste0(uploadDir, "/", user)
 	
 	
@@ -184,7 +184,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		if(nrow(gsm_metadata)>1)
 			loginfo('Multiple experiments found')
 		else{
-			method <- gsm_metadata$library_strategy
+			method <- tolower(gsm_metadata$library_strategy)
 			library_layout <- gsm_metadata$library_layout
 			organism <- gsub(" ", "_", sra_metadata[,c(1,2)]$scientific_name) # this is a taxid			
 			description <- sra_metadata$sample_attribute			
@@ -201,7 +201,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		loginfo(paste0("Genome and version: ", organism, ", ",refGenome))
 		
 		loginfo(paste0('Downloading:', gsm_metadata$experiment_accession))
-		#downloadSRA(sra_con, userUploadDir, gsm_metadata$experiment_accession)
+		downloadSRA(sra_con, userUploadDir, gsm_metadata$experiment_accession)
 		sraToolkitPath <- ""
 		
 		

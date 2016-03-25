@@ -27,8 +27,6 @@ basicConfig(level="DEBUG")
 source("commons/config.R")
 initHtsflow()
 
-initSpecies()
-
 # Add path variables:
 Sys.setenv(PATH=paste(Sys.getenv("PATH"),getHTSFlowPath("bowtie_dir"),getHTSFlowPath("bowtie2_dir"),getHTSFlowPath("HTSFLOW_TOOLS"),getHTSFlowPath("tophat_dir"),sep=":"))
 

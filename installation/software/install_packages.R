@@ -22,3 +22,7 @@ biocLite(biocliteList)
 packagesList <- c('RColorBrewer', 'gplots', 'BatchJobs', 'raster', 'logging', 'R.utils')
 install.packages(packagesList, repos="http://cran.us.r-project.org" )
 
+
+# inspect
+packagesList <- c('pROC', 'deSolve', 'rootSolve', 'preprocessCore')
+install.packages(packagesList, repos="http://cran.us.r-project.org" )

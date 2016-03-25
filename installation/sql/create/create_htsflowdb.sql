@@ -14,7 +14,7 @@ CREATE TABLE `controlled_vocabulary` (
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1399 DEFAULT CHARSET=latin1;
-
+-delete from controlled_vocabulary;
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'ChIP-Seq', 'chip-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'RNA-Seq', 'rna-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'DNase-Seq', 'dnase-seq', true);
@@ -270,6 +270,34 @@ CREATE TABLE `secondary_analysis` (
   KEY `user_fk` (`user_id`),
   CONSTRAINT `user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `inspect`;
+CREATE TABLE `inspect` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `secondary_id` int(10) NOT NULL,
+ `type` varchar(30) NOT NULL,
+  `primary_id` int(10) NOT NULL,
+  `rnatotal_id` int(10) NOT NULL,
+  `cond` varchar(3) DEFAULT NULL,
+  `timepoint` double DEFAULT NULL,
+  labeling_time int,
+ deg_during_pulse  tinyint(1) NOT NULL DEFAULT '0',
+  modeling_rates  tinyint(1) NOT NULL DEFAULT '0',
+ counts_filtering int(10) NOT NULL DEFAULT 5,
+  `created` timestamp NULL DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `foursu_primary_id` (`foursu_primary_id`),
+  KEY `rnatotal_primary_id` (`rnatotal_primary_id`),
+  KEY `secondary_id` (`secondary_id`),
+  CONSTRAINT `inspect_ibfk_1` FOREIGN KEY (`foursu_primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `inspect_ibfk_2` FOREIGN KEY (`rnatotal_primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `inspect_ibfk_3` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
+)
+
+
+
 
 --
 -- Table structure for table `seq_samples`

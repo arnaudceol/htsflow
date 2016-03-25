@@ -39,8 +39,8 @@ if (file.exists(lockFile)) {
 	loginfo(sprintf("Lock user folder: %s", file.create(lockFile)))
 }
 
-#sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND launched is NULL AND user_name = '" , userName , "' ")
-sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "'")
+sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' ")
+#sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' AND analyses_ty")
 
 jobs = extractInfoFromDB(sqlQuery)
 

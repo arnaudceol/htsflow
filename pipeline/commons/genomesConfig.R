@@ -46,9 +46,5 @@ downloadGenome <- function(genome) {
 	htsflowGenomeVersionsToAnnotationLib[[version]] <<- annotationLibName;
 	htsflowSpeciesToVersions[[species]] <<-version;	
 	loginfo(species)
-	## loginfo("versions")
-	##htsflowGenomeVersions <<- htsflowGenomeVersions
-	## loginfo("txbds")
-	##htsflowGenomeVersionsToTxdbLib <<- htsflowGenomeVersionsToTxdbLib
 }
 
