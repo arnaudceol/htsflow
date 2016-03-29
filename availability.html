@@ -13,9 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
-  <body>
-  
-  
+  <body>  
     	<div id="header">
   			Htsflow (High-Throughput Sequencing flow)
   			    <div class="menu" id="linkmenu-wrapper">			
@@ -43,28 +41,35 @@
     <div class="wrapper">
 
 
+<p>The software is released under a the Apache License, Version 2.0 (the "License"); You may obtain a copy of the License at
+<a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
 
-<p><b>HTS-flow</b> (High-Throughput Sequencing flow) provides a framework for the <b>management and analysis of NGS data</b>.</p>
+<p>The source code is available at : <a href="https://github.com/arnaudceol/htsflow">https://github.com/arnaudceol/htsflow</a>.</p>
 
-<p>HTS-flow is based on a combination of a MySQL database, a PHP web interface and several NGS analysis modules. It allows labs generating NGS samples 
-to analyze sequencing data and to manage the increasing size of their data repository.</p>
-<p>HTS-flow facilitates the <b>reproducibility</b> and <b>traceability</b> of the analyses by avoiding manual, error-prone execution of a set of standard NGS tools.</p>
+<p>Installation procedures are described at : <a href="https://github.com/arnaudceol/htsflow/wiki/Installation">https://github.com/arnaudceol/htsflow/wiki/Installation</a>.</p>
 
-<p>The core of HTS-flow is a MySQL database with three main “entities”: sample description, primary and secondary analyses..</p>
+<p>The web site is developped in <a href="http://php.net/">PHP</a> and the data is stored with a <a href="https://www.mysql.com/">Mysql</a> database. We are also using <a href="https://jquery.com/">jQuery</a> and <a href="http://fortawesome.github.io/">Font Awesome</a> in the web pages.</p>
 
+
+<p>The analyses rely on predefined, easily customizable modular scripts to invoke the most common analysis steps:
 <ul>
-<li>A <b>primary analysis</b> is performed on each type of raw data: quality controls, filtering, and alignment.</li>
-<li>Higher-level (<b>secondary</b>) analysis can be performed on a group of samples according to the data type and user needs: peak calling, differential peak calling and saturation analysis for ChIP-seq; absolute and differential expression quantification for RNA-seq; determination of absolute and relative methylation levels, and identification of differentially methylated regions for high-throughput DNA methylation data.</li>
+  <li>FastX-toolkits and FastQC tools are used to filter reads and control the quality of all raw data.</li>
+  <li>BWA, TopHat and Bismark are the options for the reads alignment of ChIP-seq, RNA-seq and DNA-methylation reads, respectively.</li>
+  <li>MACS is used for peak calling and saturation analysis.</li>
+  <li>The Bioconductor diffBind is used for differential peak calling of ChIP-seq data.</li>
+  <li>Cufflinks and Cuffdiff, or alternatively Bioconductor tools including edgeR and DESeq are available for the absolute and differential quantification of expression.</li>
+  <li>The methylPipe R library is used for the analysis of DNA methylation data.</li>
+  <li>The INSPEcT R library is used for the analysis of 4sU-seq and RNA-seq time-course data.</li>
 </ul>
+</p>
 
-<p>The analyses rely on <b>predefined, easily customizable modular scripts</b> to invoke the most common analysis steps.</p>
-
-<p>A PHP-based <b>web interface</b> allows the users to run and follow the progression of the primary and secondary analysis. The user can decide which steps of the analysis have to be performed, and directly modify their specific settings, e.g. the maximum number of mismatches allowed in the alignment process.</p>
-
-<p>The results of the analyses are saved in RDS format, which can be loaded within R, as well as genome browser ready formats (bigwig, bed). HTS-flow allows those results to be directly loaded into the <a href="http://bioviz.org/igb/">Integrated Genome Browser</a>.</p>
-
-<p>Information on how to install HTS-flow is available from the wiki at: <a href="https://github.com/arnaudceol/htsflow/wiki">https://github.com/arnaudceol/htsflow/wiki</a></p>
-
+	<p>Other libraries and software used in the pipelines are listed below:
+				<div>
+					<iframe style="width: 100%; height: 1200px"
+						src="https://docs.google.com/spreadsheets/d/1UwvescfvjvwFPD28E4AJb3i48l-9mU435C0-aecU-Gk/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+				</div>
+</p>
           
     </div>
      <div id="footer" class="centered" style="margin-top: 100px;  height: 35px">Copyright 2015-2016 Fondazione Istituto Italiano di Tecnologia.</div>

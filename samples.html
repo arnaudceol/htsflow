@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Htsflow by arnaudceol</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+	<link rel="stylesheet" href="stylesheets/htsflow.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  
+  
+    	<div id="header">
+  			Htsflow (High-Throughput Sequencing flow)
+  			    <div class="menu" id="linkmenu-wrapper">			
+				<div id="linkmenu" class="menu">
+					<ul class="menu">
+						<li><a href="index.html">overview</a></li>
+						<li><a href="samples.html">samples</a></li>
+						<li><a href="primary.html">primary</a></li>
+						<li><a href="secondary.html">secondary</a></li>
+						<li><a href="availability.html">availability/references</a></li>						
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+      <header>
+        <p class="view"><a href="https://github.com/arnaudceol/htsflow">View the Project on GitHub <small>arnaudceol/htsflow</small></a></p>
+
+        <ul>
+          <li><a href="https://github.com/arnaudceol/htsflow/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/arnaudceol/htsflow/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/arnaudceol/htsflow">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+    <div class="wrapper">
+
+				<h2>Samples</h2>
+
+				<img style="display: block; margin: 0 auto;"  src="images/samples-legends.png"/>
+				<div id="samples">
+					<p>HTS-flow can be configured to import automatically samples from <b>SMITH</b>, a LIMS for handling next-generation
+sequencing workflows (<a href="http://cru.genomics.iit.it/smith/">http://cru.genomics.iit.it/smith/</a>). </p>
+
+			<p>In addition, the samples can be <b>imported</b> (in Fastq format) directly by the user.</p>
+			<p>Finally, it is possible to import directly samples with their meta-data from <b>GEO</b>
+			 (<a href="http://www.ncbi.nlm.nih.gov/geo/">http://www.ncbi.nlm.nih.gov/geo/</a>). In this case, the user provides either 
+			 a single expriment id (GSE), or a set of GSM ids. HTS-flow will take care at retrieving the metadata, downloading and preparing the raw data
+			 (generation of the fastq file), and creating new sample entries in the HTS-flow database.</p>
+
+</div>
+<div id="footer" class="centered" style="margin-top: 100px;  height: 35px">Copyright 2015-2016 Fondazione Istituto Italiano di Tecnologia.</div>
+</div>			
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-55459434-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

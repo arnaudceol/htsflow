@@ -15,7 +15,7 @@
 @font-face {
   font-family: 'Noto Sans';
   font-weight: 700;
-  font-style: normal;
+  font-style: normal;hea
   src: url('../fonts/Noto-Sans-700/Noto-Sans-700.eot');
   src: url('../fonts/Noto-Sans-700/Noto-Sans-700.eot?#iefix') format('embedded-opentype'),
        local('Noto Sans Bold'),
@@ -160,7 +160,8 @@ img {
 header {
   width:270px;
   float:left;
-  position:fixed;
+  margin-left:30px;
+  /* position:fixed; */
   -webkit-font-smoothing:subpixel-antialiased;
 }
 
