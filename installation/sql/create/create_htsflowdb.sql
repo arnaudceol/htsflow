@@ -245,7 +245,7 @@ CREATE TABLE `sample_description` (
   `description` text NOT NULL,
   PRIMARY KEY (`sample_id`),
   KEY `sample_id_fk` (`sample_id`),
-  CONSTRAINT `sample_id_fk` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `sample_id_fk` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

@@ -75,6 +75,23 @@ header('Content-type: text/html; charset=utf-8');
                 include ("pages/external/control_buttons.php");
                 ?>
 	   		        
+	   		     <!-- Downloading samples from GEO?  -->
+	   		     <?php 
+	   		     $geoSql = "SELECT description FROM other_analysis WHERE type='geo' AND dateEnd is NULL AND user_id = " . $user_id;
+ 			
+				$result = mysqli_query($con, $geoSql);
+				if (mysqli_num_rows($result) > 0) {
+					echo "Currently downloading samples from GEO: " ;
+					while ($row = mysqli_fetch_assoc($result)) {
+						echo $row[description] . " ";								
+ 					}
+				}
+	   		     
+	   	?> 
+	   		        
+	   		        
+	   		        
+	   		        
 	   		        <div id="messages"><?php 
 if (isset($_REQUEST['messageYes'])) {
     ?><div class="message"><i class="fa fa-thumbs-o-up" style="color:green"></i><?php echo $_REQUEST['messageYes']; ?></div><?php 

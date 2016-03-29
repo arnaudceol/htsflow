@@ -81,32 +81,64 @@ geoDownload <- function( taskId ) {
 	##downloadGSM(gse, gsms[1], userUploadDir)
 	
 	# load config and common functions
-	 workdir <- getwd()
-	 setwd(getHTSFlowPath("HTSFLOW_PIPELINE"))
-	 
-	 loadConfig("BatchJobs.R")
-	 setwd(workdir)
-	 
-	 regName <- paste0("HF_GEO_",taskId)
-	 
-	 reg <- makeHtsflowRegistry(regName)
-	 
-	 numjobs <- length(gsms)
-	 
-	 ids <- batchMap(reg, fun=downloadGSM, rep(gse, numjobs), gsms, rep(userUploadDir, numjobs))
-	 submitJobs(reg)
-	 waitForJobs(reg)
-	 
-	 print(paste0("Status of jobs for registry %s: ", regName))
-	 
-	 showStatus(reg)
-	 
-	 errors<-findErrors(reg)
-	 
-	 if (length(errors) > 0) {
-	     stop(paste0(length(errors), " job(s) failed, exit"))
-	 }
+	workdir <- getwd()
+	setwd(getHTSFlowPath("HTSFLOW_PIPELINE"))
 	
+	loadConfig("BatchJobs.R")
+	setwd(workdir)
+	
+	regName <- paste0("HF_GEO_",taskId)
+	
+	reg <- makeHtsflowRegistry(regName)
+	
+	numjobs <- length(gsms)
+	
+	ids <- batchMap(reg, fun=downloadGSM, rep(gse, numjobs), gsms, rep(userUploadDir, numjobs))
+	submitJobs(reg)
+	waitForJobs(reg)
+	
+	print(paste0("Status of jobs for registry %s: ", regName))
+	
+	showStatus(reg)
+	
+	errors<-findErrors(reg)
+	
+	if (length(errors) > 0) {
+		sqlSampleId <- "SELECT nextSampleId();";
+		sampleId <- extractSingleColumnFromDB(sqlSampleId)
+		loginfo(paste0("Create new sample: ", sampleId, " for GSMs: ", geoIds))
+		
+		readLength = 0		
+		readMode   = ''
+		refGenome  = 'unspecified'
+		
+		method <- "unspecified"
+		library_layout <- "unspecified"
+		organism <- "unspecified"
+		
+		description <- paste0("Data downloaded from GEO: ", geoIds, ". No metadata available, we cannot download this dataset.")
+		
+		sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
+				"SELECT 'X" , sampleId, "', '" , "GEO SAMPLE NOT AVAILABLE", "','" , method , "','" , 
+				readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , user , "'")
+		
+		res <- updateInfoOnDB( sqlSample )
+		
+		description<-gsub("'", "\\'", description)
+		description<-gsub("\\ +\\|\\|\\ +", "\n", description)
+		
+		sqlDescription <- paste0("INSERT INTO sample_description (sample_id, description) VALUES ('X", sampleId, "', '", description, "')")
+		loginfo(sqlDescription)
+		res <- updateInfoOnDB( sqlDescription )
+		
+		SQL <- paste("UPDATE other_analysis SET status='Error', dateEnd=NOW() WHERE id=", taskId ,sep="")
+		res <- updateInfoOnDB( SQL )
+		
+		stop(paste0(length(errors), " job(s) failed, exit"))
+	}
+	
+	SQL <- paste("UPDATE other_analysis SET status='completed', dateEnd=NOW() WHERE id=", taskId ,sep="")
+	res <- updateInfoOnDB( SQL )
 }
 
 downloadGSM <- function( gse, gsm , userUploadDir) {
@@ -145,13 +177,18 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		#If a GSM has been provided we have to check that the GSM belongs to the GSE
 		
 		gsm_ids <-  dbGetQuery(geo_con, paste0("select distinct gsm from gse_gsm where gse ='", toupper(gse), "'"))
+		
 		if(length(gsm_ids)==0){
 			stop(paste0("No GSMs found for id ", gse))
-		}	
-		if(gsm=='' | is.null(gsm) | is.na(gsm))
+		}
+		
+		if(gsm=='' | is.null(gsm) | is.na(gsm)) {
 			print("Missing GSM")
-		if(!  toupper(gsm) %in% gsm_ids)
+		} 
+		
+		if(! toupper(gsm) %in% gsm_ids[,1]) {
 			stop(paste0("Wrong match: ", gsm , " does not belong to  " , gse))
+		}
 		
 	}	
 	
@@ -173,104 +210,106 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		
 		#Querying the database to obtain metadata
 		gsm_metadata <- dbGetQuery(sra_con, paste0("select distinct experiment_accession, sample_accession, experiment_alias, library_strategy, library_layout, title from experiment where experiment_url_link like '%", toupper(gsm), "'"))	
-		sra_metadata <- dbGetQuery(sra_con, paste0("select distinct taxon_id, scientific_name, sample_attribute from sample where sample_accession=='", gsm_metadata$sample_accession, "'"))[1,]
 		## loginfo("GSM metadata: ")
 		## loginfo(gsm_metadata)
 		## loginfo("SRA metadata: ")
 		## loginfo(sra_metadata)
 		
-		if(nrow(gsm_metadata)==0)
-			stop(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))	
-		if(nrow(gsm_metadata)>1)
+		if(nrow(gsm_metadata)==0) {			
+			loginfo(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))	
+			stop(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))
+		} else if(nrow(gsm_metadata)>1) {
 			loginfo('Multiple experiments found')
-		else{
+			stop('Multiple experiments found')
+		} else {
+			sra_metadata <- dbGetQuery(sra_con, paste0("select distinct taxon_id, scientific_name, sample_attribute from sample where sample_accession=='", gsm_metadata$sample_accession, "'"))[1,]
 			method <- tolower(gsm_metadata$library_strategy)
 			library_layout <- gsm_metadata$library_layout
 			organism <- gsub(" ", "_", sra_metadata[,c(1,2)]$scientific_name) # this is a taxid			
 			description <- sra_metadata$sample_attribute			
-		}
+			
+			
+			readLength = 0
+			
+			if (organism %in% names(htsflowSpeciesToVersions)) {
+				refGenome <- htsflowSpeciesToVersions[[organism]]
+			} else {			
+				refGenome <- organism
+			}
+			
+			loginfo(paste0("Genome and version: ", organism, ", ",refGenome))
+			
+			loginfo(paste0('Downloading:', gsm_metadata$experiment_accession))
+			downloadSRA(sra_con, userUploadDir, gsm_metadata$experiment_accession)
+			sraToolkitPath <- ""
+			
+			
+			sra_files <- list.files(path=userUploadDir, pattern="*.sra", full.names=T, recursive=FALSE)
+			
+			if(library_layout != '' && grepl('PAIR', library_layout)){
+				readMode <- "PE"
 				
-		readLength = 0
-		
-		if (organism %in% names(htsflowSpeciesToVersions)) {
-			refGenome <- htsflowSpeciesToVersions[[organism]]
-		} else {			
-			refGenome <- organism
+				## lapply(files, function(sra_file){
+				##             callSRAToolkit("/data/BA/tools/sratoolkit.2.2.2a-centos_linux64/bin/fastq-dump --split-3", sra_file)
+				##             new_sra_name <- gsub("_1.fastq", "_R1.fastq", sra_file)
+				##             new_sra_name <- gsub("_2.fastq", "_R2.fastq", sra_file)
+				##             file.rename(sra_file, new_sra_name) #library(files)
+				##             gzip(new_sra_name, destname=sprintf("%s.gz", new_sra_name), temporary=FALSE, skip=FALSE,
+				##                     overwrite=FALSE, remove=TRUE) # This is in   library(R.utils)
+				##         })
+				## 
+				
+				lapply(sra_files, function(sra_file){
+							tryOrExit(paste0(getHTSFlowPath('fastqDump'), " --split-3 --outdir ", userUploadDir, " ", sra_file), "GEO")
+							sra1FileName <-  gsub(".sra", "_1.fastq", sra_file) 
+							sra2FileName <-  gsub(".sra", "_2.fastq", sra_file) 
+							
+							sra1NewFileName <- gsub(".sra", "_R1.fastq", sra_file) 
+							sra2NewFileName <- gsub(".sra", "_R2.fastq", sra_file) 
+							
+							file.rename( sra1FileName, sra1NewFileName) #library(files)
+							file.rename( sra2FileName, sra2NewFileName) #library(files)
+							
+							gzip(sra1NewFileName, destname=sprintf("%s.gz", sra1NewFileName), temporary=FALSE, skip=FALSE,
+									overwrite=FALSE, remove=TRUE)						 
+							gzip(sra2NewFileName, destname=sprintf("%s.gz", sra2NewFileName), temporary=FALSE, skip=FALSE,
+									overwrite=FALSE, remove=TRUE)					 
+							gzip(sra_file, destname=sprintf("%s.gz", sra_file), temporary=FALSE, skip=FALSE,
+									overwrite=FALSE, remove=TRUE)
+							
+						})
+				
+			}
+			else {
+				readMode <- "SE"
+				lapply(sra_files, function(sra_file){
+							call(getHTSFlowPath('fastqDump'), sra_file)
+							new_sra_name <- gsub("_1.fastq", "_R1.fastq", sra_file)
+							file.rename(sra_file, new_sra_name)
+							gzip(new_sra_name, destname=sprintf("%s.gz", new_sra_name), temporary=FALSE, skip=FALSE,
+									overwrite=FALSE, remove=TRUE) # This is in a library called R.utils
+						})
+				
+				
+			}
+			
+			sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
+					"SELECT 'X" , sampleId, "', '" , gsm , "','" , method , "','" , 
+					readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , user , "'")
+			
+			
+			res <- updateInfoOnDB( sqlSample )
+			
+			description<-gsub("'", "\\'", description)
+			description<-gsub("\\ +\\|\\|\\ +", "\n", description)
+			
+			sqlDescription <- paste0("INSERT INTO sample_description (sample_id, description) VALUES ('X", sampleId, "', '", description, "')")
+			loginfo(sqlDescription)
+			res <- updateInfoOnDB( sqlDescription )
+			
+			
+			loginfo(paste0("Create new sample: ", sampleId, " for GSM ", gse, "/", gsm, "added in directory ", userUploadDir))
 		}
-		
-		loginfo(paste0("Genome and version: ", organism, ", ",refGenome))
-		
-		loginfo(paste0('Downloading:', gsm_metadata$experiment_accession))
-		downloadSRA(sra_con, userUploadDir, gsm_metadata$experiment_accession)
-		sraToolkitPath <- ""
-		
-		
-		sra_files <- list.files(path=userUploadDir, pattern="*.sra", full.names=T, recursive=FALSE)
-		
-		if(library_layout != '' && grepl('PAIR', library_layout)){
-			readMode <- "PE"
-			
-			## lapply(files, function(sra_file){
-			##             callSRAToolkit("/data/BA/tools/sratoolkit.2.2.2a-centos_linux64/bin/fastq-dump --split-3", sra_file)
-			##             new_sra_name <- gsub("_1.fastq", "_R1.fastq", sra_file)
-			##             new_sra_name <- gsub("_2.fastq", "_R2.fastq", sra_file)
-			##             file.rename(sra_file, new_sra_name) #library(files)
-			##             gzip(new_sra_name, destname=sprintf("%s.gz", new_sra_name), temporary=FALSE, skip=FALSE,
-			##                     overwrite=FALSE, remove=TRUE) # This is in   library(R.utils)
-			##         })
-			## 
-			
-			lapply(sra_files, function(sra_file){
-						tryOrExit(paste0(getHTSFlowPath('fastqDump'), " --split-3 --outdir ", userUploadDir, " ", sra_file), "GEO")
-						sra1FileName <-  gsub(".sra", "_1.fastq", sra_file) 
-						sra2FileName <-  gsub(".sra", "_2.fastq", sra_file) 
-						
-						sra1NewFileName <- gsub(".sra", "_R1.fastq", sra_file) 
-						sra2NewFileName <- gsub(".sra", "_R2.fastq", sra_file) 
-												
-						file.rename( sra1FileName, sra1NewFileName) #library(files)
-						file.rename( sra2FileName, sra2NewFileName) #library(files)
-						
-						gzip(sra1NewFileName, destname=sprintf("%s.gz", sra1NewFileName), temporary=FALSE, skip=FALSE,
-						         overwrite=FALSE, remove=TRUE)						 
-						gzip(sra2NewFileName, destname=sprintf("%s.gz", sra2NewFileName), temporary=FALSE, skip=FALSE,
-								 overwrite=FALSE, remove=TRUE)					 
-						gzip(sra_file, destname=sprintf("%s.gz", sra_file), temporary=FALSE, skip=FALSE,
-								 overwrite=FALSE, remove=TRUE)
-						
-					})
-			
-		}
-		else {
-			readMode <- "SE"
-			lapply(sra_files, function(sra_file){
-						call(getHTSFlowPath('fastqDump'), sra_file)
-						new_sra_name <- gsub("_1.fastq", "_R1.fastq", sra_file)
-						file.rename(sra_file, new_sra_name)
-						gzip(new_sra_name, destname=sprintf("%s.gz", new_sra_name), temporary=FALSE, skip=FALSE,
-						         overwrite=FALSE, remove=TRUE) # This is in a library called R.utils
-					})
-			
-			
-		}
-		
-		sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
-				"SELECT 'X" , sampleId, "', '" , gsm , "','" , method , "','" , 
-				readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , user , "'")
-		
-		
-		res <- updateInfoOnDB( sqlSample )
-		
-		description<-gsub("'", "\\'", description)
-		description<-gsub("\\ +\\|\\|\\ +", "\n", description)
-		
-		sqlDescription <- paste0("INSERT INTO sample_description (sample_id, description) VALUES ('X", sampleId, "', '", description, "')")
-		loginfo(sqlDescription)
-		res <- updateInfoOnDB( sqlDescription )
-		
-		
-		loginfo(paste0("Create new sample: ", sampleId, " for GSM ", gse, "/", gsm, "added in directory ", userUploadDir))
-		
 	}
 }
 

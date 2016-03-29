@@ -289,7 +289,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<tbody>
 													<tr>
 														<td width="100%"><textarea rows="2" name="TEXTdescription"
-																style="width: 98%;"><?php echo trim($row["sample_name"]); ?></textarea>
+																style="width: 98%;"><?php echo $row["sample_name"];
+														?></textarea>
 														</td>
 														<td><input type="submit" value="Submit"
 															onclick="$.post('pages/sample/submitName.php', $('#submitSampleName_<?php echo $row["id"]; ?>').serialize($('#submitSampleName_<?php echo $row["id"]; ?>'))); refreshTable(); return false;"/>
@@ -299,7 +300,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												</tbody>
 											</table>
 									</form></td>
-								<td ><?php echo trim($row["sample_name"]) ; ?></td>
+								<td ><?php echo preg_replace("/(GSM[0-9]+)/", "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=$1\">$1</a>", trim($row["sample_name"])) ; ?></td>
 							</tr>
 						</tbody>
 					</table>

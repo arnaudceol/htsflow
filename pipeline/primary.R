@@ -707,8 +707,8 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
     # run bwa and create a file 'bwaexecfailed' to control
     if ( as.numeric( flags$paired ) ) {
 
-        part1File <- paste( HTSFLOW_PREPROCESS, '/' , primaryId, "_sa1.sai", sep="" )
-        part2File <- paste( HTSFLOW_PREPROCESS, '/' , primaryId, "_sa2.sai", sep="" )
+        part1File <- paste( getPreprocessDir(), '/' , primaryId, "_sa1.sai", sep="" )
+        part2File <- paste( getPreprocessDir(), '/' , primaryId, "_sa2.sai", sep="" )
 
         execPart1 <- paste (
             getHTSFlowPath("bwa")   # path of the aligner
