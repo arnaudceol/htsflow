@@ -54,7 +54,10 @@ sequencing workflows (<a href="http://cru.genomics.iit.it/smith/">http://cru.gen
 			 (<a href="http://www.ncbi.nlm.nih.gov/geo/">http://www.ncbi.nlm.nih.gov/geo/</a>). In this case, the user provides either 
 			 a single expriment id (GSE), or a set of GSM ids. HTS-flow will take care at retrieving the metadata, downloading and preparing the raw data
 			 (generation of the fastq file), and creating new sample entries in the HTS-flow database.</p>
-
+			<p>There is no limitation in HTS-flow about the genomes that can be installed. The genome version 
+			should be available at <a href="https://support.illumina.com/sequencing/sequencing_software/igenome.html, download">https://support.illumina.com/sequencing/sequencing_software/igenome.html</a>. 
+			We provide a script that takes care about downloading the data, installating (or creating if it is not available) the R annotation file, and generating the genome
+			data for teh different type of sequencing data.</p>
 </div>
 <div id="footer" class="centered" style="margin-top: 100px;  height: 35px">Copyright 2015-2016 Fondazione Istituto Italiano di Tecnologia.</div>
 </div>			
