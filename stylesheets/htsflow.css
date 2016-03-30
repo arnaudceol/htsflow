@@ -7,12 +7,13 @@ html, body {
 	height: 100%;
 	font-family: 'Open Sans', sans-serif;
 	background-color: white;
-	color: #003366;
+	color: #333;
 	height: 100%;
+	font-size: 14px;
 }
 
 .group{
-display: inline-block;
+	display: inline-block;
 }
 
 .group label{
@@ -27,10 +28,10 @@ display: inline-block;
 	text-decoration: none;
 }
 
-a {
+ a {
 	outline: 0;
-	color: #004466;
-}
+	color: #0288AD;
+} 
 
 .centered {
 	text-align: center;
@@ -45,11 +46,6 @@ a {
 /* the bottom margin is the negative value of the footer's height */
 }
 
-#content {
-	/* padding-bottom:30px; */ /* Height of the footer element */
-	padding-left: 10%;
-	padding-right: 10%;
-}
 
 .title {
 	background-color: #FFFFFF; 
@@ -76,15 +72,14 @@ hr {
 }
 
 #header{
-	text-align:center;
-	height: 86px;
+	text-align:center;	
 	font-size: 40px;
 	overflow: hidden;
 	margin-top: 0px;
 	margin-bottom: 50px;
 	color: #fff;
-	padding-left: 300px;
-	padding: 100px;
+	/* padding-left: 300px; */
+	padding: 20px;
 	background-color: #0288AD; /* 0288AD d02552  F6F3EC*/	
 	
 }
@@ -130,3 +125,16 @@ hr {
 #linkmenu a:hover, #linkmenu .current_page_item a {
 	text-decoration: underline;
 }
+
+#iit-wrapper{
+    border-radius: 8px;
+    border: solid thin #0288AD;
+    padding: 5px;
+    vertical-align: middle;
+    margin-bottom: 15px ;
+    margin-top: 15px ;
+    display:table;
+    width: 100%;
+}
+
+

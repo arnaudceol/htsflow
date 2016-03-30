@@ -51,7 +51,9 @@ to analyze sequencing data and to manage the increasing size of their data repos
 <p>HTS-flow facilitates the <b>reproducibility</b> and <b>traceability</b> of the analyses by avoiding manual,
 error-prone execution of a set of standard NGS tools.</p>
 
-<p>The core of HTS-flow is a MySQL database with three main “entities”: sample description, primary and secondary analyses..</p>
+<div class="center" style="text-align:center" id="iit-wrapper">The technical documentation (wiki) is available at: <a href="https://github.com/arnaudceol/htsflow/wiki">https://github.com/arnaudceol/htsflow/wiki</a>.</div>
+
+<p>The core of HTS-flow is a MySQL database with three main “entities”: sample description, primary and secondary analyses.</p>
 
 <ul>
 <li>A <b>primary analysis</b> is performed on each type of raw data: quality controls, filtering, and alignment.</li>
@@ -69,8 +71,6 @@ and Analysis of 4sU-seq and RNA-seq time-course data.
 <p>The analysis can run on different types of clusters or on a single laptop or desktop.</p>
 
 <p>The results of the analyses are saved in RDS format, which can be loaded within R, as well as genome browser ready formats (bigwig, bed). HTS-flow allows those results to be directly loaded into the <a href="http://bioviz.org/igb/">Integrated Genome Browser</a>.</p>
-
-<p>Information on how to install HTS-flow is available from the wiki at: <a href="https://github.com/arnaudceol/htsflow/wiki">https://github.com/arnaudceol/htsflow/wiki</a></p>
 
           
     </div>
