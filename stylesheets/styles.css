@@ -15,7 +15,7 @@
 @font-face {
   font-family: 'Noto Sans';
   font-weight: 700;
-  font-style: normal;hea
+  font-style: normal;
   src: url('../fonts/Noto-Sans-700/Noto-Sans-700.eot');
   src: url('../fonts/Noto-Sans-700/Noto-Sans-700.eot?#iefix') format('embedded-opentype'),
        local('Noto Sans Bold'),
@@ -172,7 +172,7 @@ header ul {
   background: #f4f4f4;
   border-radius:5px;
   border:1px solid #e0e0e0;
-  width:270px;
+  width:180px;
 }
 
 header li {
@@ -213,7 +213,7 @@ strong {
   font-weight:700;
 }
 
-header ul li + li + li {
+header ul li + li {
   border-right:none;
   width:89px;
 }
@@ -311,8 +311,8 @@ footer {
     width:99%;
   }
 
-  header li, header ul li + li + li {
-    width:33%;
+  header li, header ul li + li {
+    width:50%;
   }
 }
 
