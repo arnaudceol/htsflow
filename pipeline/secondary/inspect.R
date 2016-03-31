@@ -128,16 +128,6 @@ inspect <- function( IDsec ){
 		
 		#### other output 
 		#### matrices with row=genes and columns=timepoints
-# rpkms_foursu_exons
-# rpkms_total_exons
-# rpkms_foursu_introns
-# rpkms_total_introns
-# counts_foursu_exons
-# counts_total_exons
-# counts_foursu_introns
-# counts_total_introns
-		
-		
 		
 		# creating output folder
 		outFolder <- paste ( getHTSFlowPath("HTSFLOW_SECONDARY"), IDsec,"/", sep="" )
@@ -149,18 +139,13 @@ inspect <- function( IDsec ){
 		saveRDS( degradation, paste0( "degradation.rds" ) )
 		saveRDS( processing, paste0( "processing.rds" ) )
 		saveRDS( pre_mRNA, paste0( "pre_mRNA.rds" ) )
-		saveRDS( total_mRNA, paste0( "total_mRNA..rds" ) )
+		saveRDS( total_mRNA, paste0( "total_mRNA.rds" ) )
 		
 		# update the DB with the secondary analysis status complete
 		setSecondaryStatus( IDsec=IDsec, status='completed', endTime=T, outFolder=T )
 		
 		
 	} else  {
-		
-		
-		# fourSuBams <- sapply(1:length(values$primary_id), function(x) paste(bamFolder, values$primary_id[x], ".bam", sep="") )
-		# rnaTotalBams <- sapply(1:length(values$rnatotal_id), function(x) paste(bamFolder, values$primary_id[x], ".bam", sep="") )
-		# timepoints <-  as.numeric(values$timepoint)
 		
 		# Get conditions:
 		condition1 <- unique(values$cond)[1]
@@ -175,14 +160,13 @@ inspect <- function( IDsec ){
 		bamfiles_RNAtotal_cond2 <- c()
 		
 		for (x in 1:length(values$primary_id)) {
-		## sapply(1:length(values$primary_id), function(x)
-				if (values$cond[x] == condition1) {
-						bamfiles_4sU_cond1 <- c(bamfiles_4sU_cond1, paste(bamFolder, values$primary_id[x], ".bam", sep="")); 
-						bamfiles_RNAtotal_cond1 <- c(bamfiles_RNAtotal_cond1, paste(bamFolder, values$rnatotal_id[x], ".bam", sep="")); 
-					} else  {
-						bamfiles_4sU_cond2 <- c(bamfiles_4sU_cond2, paste(bamFolder, values$primary_id[x], ".bam", sep="")); 
-						bamfiles_RNAtotal_cond2 <- c(bamfiles_RNAtotal_cond2, paste(bamFolder, values$rnatotal_id[x], ".bam", sep="")); 
-					}
+			if (values$cond[x] == condition1) {
+				bamfiles_4sU_cond1 <- c(bamfiles_4sU_cond1, paste(bamFolder, values$primary_id[x], ".bam", sep="")); 
+				bamfiles_RNAtotal_cond1 <- c(bamfiles_RNAtotal_cond1, paste(bamFolder, values$rnatotal_id[x], ".bam", sep="")); 
+			} else  {
+				bamfiles_4sU_cond2 <- c(bamfiles_4sU_cond2, paste(bamFolder, values$primary_id[x], ".bam", sep="")); 
+				bamfiles_RNAtotal_cond2 <- c(bamfiles_RNAtotal_cond2, paste(bamFolder, values$rnatotal_id[x], ".bam", sep="")); 
+			}
 		}
 		
 		quantifyExInt_cond1 <- makeRPKMs(txdb, bamfiles_4sU_cond1, bamfiles_RNAtotal_cond1)
@@ -194,20 +178,23 @@ inspect <- function( IDsec ){
 		rpkms_cond2 <- quantifyExInt_cond2$rpkms
 		counts_cond2 <- quantifyExInt_cond2$counts
 		
-
 		
-		# cond 1
-
+		
 		## filtering based on counts
-
+		
 		exonFeatures <- rownames(rpkms_cond1$foursu_exons)
 		intronFeatures <- rownames(rpkms_cond1$foursu_introns)
-		exon_filt <- exonFeatures[apply(counts_cond1$foursu$exonCounts>=counts_filtering,1,all) &
-				apply(counts_cond1$total$exonCounts>=counts_filtering,1,all)]
-		intron_filt <- intronFeatures[apply(counts_cond1$foursu$intronCounts>=counts_filtering,1,all) &
-				apply(counts_cond1$total$intronCounts>=counts_filtering,1,all)]
+		exon_filt <- exonFeatures[apply(counts_cond1$foursu$exonCounts>counts_filtering,1,all) &
+						apply(counts_cond1$total$exonCounts>counts_filtering,1,all) &
+						apply(counts_cond2$foursu$exonCounts>counts_filtering,1,all) &
+						apply(counts_cond2$total$exonCounts>counts_filtering,1,all)]
+		intron_filt <- intronFeatures[apply(counts_cond1$foursu$intronCounts>counts_filtering,1,all) &
+						apply(counts_cond1$total$intronCounts>counts_filtering,1,all) &
+						apply(counts_cond2$foursu$intronCounts>counts_filtering,1,all) &
+						apply(counts_cond2$total$intronCounts>counts_filtering,1,all)]
 		intron_filt <- intersect(intron_filt, exon_filt)
-
+		
+		# cond 1
 		rpkms_cond1_foursu_exons <- rpkms_cond1$foursu_exons[exon_filt,,drop=FALSE]
 		rpkms_cond1_total_exons <- rpkms_cond1$total_exons[exon_filt,,drop=FALSE]
 		rpkms_cond1_foursu_introns <- rpkms_cond1$foursu_introns[intron_filt,,drop=FALSE]
@@ -217,20 +204,9 @@ inspect <- function( IDsec ){
 		counts_cond1_total_exons <- counts_cond1$total$exonCounts[exon_filt,,drop=FALSE]
 		counts_cond1_foursu_introns <- counts_cond1$foursu$intronCounts[intron_filt,,drop=FALSE]
 		counts_cond1_total_introns <- counts_cond1$total$intronCounts[intron_filt,,drop=FALSE]
-			
-		# cond 2
 		
-		## filtering based on counts
-
-		exonFeatures <- rownames(rpkms_cond2$foursu_exons)
-		intronFeatures <- rownames(rpkms_cond2$foursu_introns)
-		exon_filt <- exonFeatures[apply(counts_cond2$foursu$exonCounts>=counts_filtering,1,all) &
-				apply(counts_cond2$total$exonCounts>=counts_filtering,1,all)]
-		intron_filt <- intronFeatures[apply(counts_cond2$foursu$intronCounts>=counts_filtering,1,all) &
-				apply(counts_cond2$total$intronCounts>=counts_filtering,1,all)]
-		intron_filt <- intersect(intron_filt, exon_filt)
-
-
+		
+		# cond 2		
 		rpkms_cond2_foursu_exons <- rpkms_cond2$foursu_exons[exon_filt,,drop=FALSE]
 		rpkms_cond2_total_exons <- rpkms_cond2$total_exons[exon_filt,,drop=FALSE]
 		rpkms_cond2_foursu_introns <- rpkms_cond2$foursu_introns[intron_filt,,drop=FALSE]
@@ -240,9 +216,6 @@ inspect <- function( IDsec ){
 		counts_cond2_total_exons <- counts_cond2$total$exonCounts[exon_filt,,drop=FALSE]
 		counts_cond2_foursu_introns <- counts_cond2$foursu$intronCounts[intron_filt,,drop=FALSE]
 		counts_cond2_total_introns <- counts_cond2$total$intronCounts[intron_filt,,drop=FALSE]
-		
-		
-		## todo
 		
 		## quantification of rates
 		

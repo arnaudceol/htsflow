@@ -92,6 +92,9 @@ if (! file.exists(getHTSFlowPath("HTSFLOW_QC"))){
 }
 
 
+loginfo("Session information: ")
+sessionInfo()
+
 
 # Go to user dir
 setUserWorkDir()

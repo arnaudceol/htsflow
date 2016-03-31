@@ -67,24 +67,24 @@ downloadGenome <- function(genome) {
 	annotationLibName <- genome[5]
 	tableName <- genome[6]
 	
-	print(paste0("Download version: ", version, " of genome ", species, "lib: " , txdbLib))
+	print(paste0("Download version: ", version, " of genome ", species, " lib: " , txdbLib))
 	
 	versionDir <- paste0(genomesDir, "/", version)
 	versionGtfDir <- paste0(genomesDir, "/", version, "/GTF")
-	versionBsDir <- paste0(genomesDir, "/", version, "_bs")
+	#versionBsDir <- paste0(genomesDir, "/", version, "_bs")
 	
 	dir.create(versionDir, recursive=TRUE, showWarnings = FALSE )
 	dir.create(versionGtfDir, recursive=TRUE, showWarnings = FALSE )
-	dir.create(versionBsDir, recursive=TRUE, showWarnings = FALSE )
+	#dir.create(versionBsDir, recursive=TRUE, showWarnings = FALSE )
 	
 	igenomeFile <- paste0(species, "_", host,"_", version, ".tar.gz")
 	
 	if (! file.exists(paste(tmpDir, igenomeFile, sep="/"))) {
 	 download.file(paste("ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com", species, host, version, igenomeFile, sep="/"), 
-	         destfile=paste(tmpDir, igenomeFile, sep="/"), quiet=TRUE)
+	         destfile=paste(tmpDir, igenomeFile, sep="/"), quiet=TRUE)	 
+	 untar(paste(tmpDir, igenomeFile, sep="/"), exdir=tmpDir)
 	}
-	untar(paste(tmpDir, igenomeFile, sep="/"), exdir=tmpDir)
-	
+	loginfo("igenome files ready.")
 	# Copy files
 	file.copy(from = paste( tmpDir, species, host, version, "Sequence", "WholeGenomeFasta", "genome.fa", sep="/"), to = versionDir)
 	
@@ -105,8 +105,7 @@ downloadGenome <- function(genome) {
 				file.rename(from=paste(versionDir,eachPath, sep="/"),to=sub(pattern=paste(version, "genome", sep="/") ,replacement=paste(version, version, sep="/"),paste(versionDir,eachPath, sep="/")))				
 			})
 		
-	#Function to create txdb when this is not available in bioconductor
-	#if(txdbLib %in% rownames(installed.packages()) == FALSE){
+		#Function to create txdb when this is not available in bioconductor
 		if (txdbLib %in% bioclitePackages) {
 			loginfo("Install TxDb from bioconductor and generate GTF with makeGtfFromDb")
 			biocLite(txdbLib)
@@ -116,19 +115,15 @@ downloadGenome <- function(genome) {
 		} else if (host == 'UCSC') {
 			loginfo(paste0("Create TxDb from makeTxDbPackageFromUCSC, install the library and generate GTF with makeGtfFromDb, tablename: ", tableName, ", version: ", version, ", to ", tmpDir ))
 			txdb <- makeTxDbFromUCSC(genome=version, tablename="refGene", url="http://genome.ucsc.edu/cgi-bin/")
-			#txdb <- makeTxDbFromUCSC(genome=version, tablename=tableName, url="http://genome.ucsc.edu/cgi-bin/")
 			makeTxDbPackage(txdb = txdb, version = "1.0.0", author='htsflow', maintainer='htsflow <htsflow@htsflow.org>', destDir=paste(tmpDir, sep="/"), pkgname=txdbLib)
                         install.packages(paste(tmpDir, txdbLib, sep="/"), repos = NULL)
-#			makeTxDbPackageFromUCSC(genome=version, tablename=tableName, url = 'http://genome-euro.ucsc.edu/cgi-bin/', version='1.0', author='htsflow', maintainer='htsflow <htsflow@htsflow.org>') #, destDir=tmpDir)
-#			install.packages(paste(tmpDir, txdbLib, sep="/"), repos = NULL)
-                        library(txdbLib, character.only = TRUE)			
+            library(txdbLib, character.only = TRUE)			
 			txdb=get(txdbLib)
 			makeGtfFromDb(txdb, 'gene', filename=paste(versionGtfDir, "genes.gtf", sep="/"))
 		} else if (host == 'Ensembl') {					
 			loginfo(paste0("Create TxDb from the GTF file provided by ensembl, lib: ", txdbLib, ", dir: ", tmpDir))
 			loginfo(paste0("copy ", paste( tmpDir, species, host, version, "Annotation", "Genes", "genes.gtf", sep="/") , " to " , versionGtfDir))
 			file.copy(from = paste( tmpDir, species, host, version, "Annotation", "Genes", "genes.gtf", sep="/"), to = versionGtfDir)	
-			#file <- system.file(paste(versionGtfDir, "genes.gtf", sep="/"))
 			txdb <- makeTxDbFromGFF(paste(versionGtfDir, "genes.gtf", sep="/"), format="gtf", organism=gsub("_", " ", species))
 			makeTxDbPackage(txdb = txdb, version = "1.0.0", author='htsflow', maintainer='htsflow <htsflow@htsflow.org>', destDir=paste(tmpDir, sep="/"), pkgname=txdbLib )			
 			install.packages(paste(tmpDir, txdbLib, sep="/"), repos = NULL)		
@@ -136,7 +131,6 @@ downloadGenome <- function(genome) {
 			loginfo(paste0("The host ", host, " is not supported."))
 			stop(paste0("The host ", host, " is not supported."))
 		}
-		
 		
 		# install annotations
 		loginfo(paste0("Download and install ", annotationLibName)) 
@@ -148,6 +142,19 @@ downloadGenome <- function(genome) {
 		# Create GTF
 		loginfo("prepare transcripts.gtf")
 		makeGtfFromDb(txdb, 'tx', filename=paste(versionGtfDir, "transcripts.gtf", sep="/"))	
+				
+		# create chrom.size
+		fai<- read.csv(paste0(versionDir, "/", version, ".fa.fai"), header = FALSE, sep = "\t", colClasses=c( "character", "integer", "NULL", "NULL", "NULL") )
+		write.table(fai, paste0(versionDir, "/", version, ".chrom.sizes"), sep="\t", col.names=FALSE, row.names=FALSE,quote=FALSE)
+		
+		# Create BS
+		loginfo("prepare BS genome")
+		# bismark_genome_preparation --path_to_bowtie /data/BA/public_html/HTS-flow/DB/bowtie-1.1.1/ /data/BA/public_html/HTS-flow/DB/pathFiles/genomes/test/
+		bismarkCommand <- paste(getHTSFlowPath("bismark_genome_preparation"), " --path_to_bowtie ", getHTSFlowPath("bowtie_dir"), versionDir, sep=" " )
+		loginfo(bismarkCommand)
+		result <- system(bismarkCommand)
+#		loginfo(paste0("Copy ", paste( versionDir, "Bisulfite_Genome", sep="/"), " to ", versionBsDir))		
+#		file.rename(from = paste( versionDir, "Bisulfite_Genome", sep="/"), to = paste(versionBsDir, "Bisulfite_Genome", sep="/"))
 		
 	#}
 			

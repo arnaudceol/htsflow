@@ -95,17 +95,32 @@ getGenomePaths <- function ( genomeName = "mm9" ) {
 			,"transcripts-index"
 			,"fasta"
 	)
+	## GenPaths <- c(
+	##         paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"_bs/",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,"_rib",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/","GTF/","genes.gtf",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/","GTF/","transcripts.gtf",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,".chrom.sizes",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"_bs/",genomeName,".chrom.sizes",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/","transcriptome_data/transcripts",sep="")
+	##         ,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,".fa",sep="")
+	## )
+	
+	
+	# Moved BS genomes to the main directory
 	GenPaths <- c(
 			paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,sep="")
-			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"_bs/",sep="")
+			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",sep="")
 			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,"_rib",sep="")
 			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/","GTF/","genes.gtf",sep="")
 			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/","GTF/","transcripts.gtf",sep="")
 			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,".chrom.sizes",sep="")
-			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"_bs/",genomeName,".chrom.sizes",sep="")
+			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,".chrom.sizes",sep="")
 			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/","transcriptome_data/transcripts",sep="")
 			,paste( getHTSFlowPath("HTSFLOW_GENOMES"),"/",genomeName,"/",genomeName,".fa",sep="")
 	)
+	
 	df <- data.frame(
 			path=GenPaths
 			,stringsAsFactors=F
