@@ -91,10 +91,10 @@ downloadGenome <- function(genome) {
 	flist <- list.files(paste( tmpDir, species, host, version, "Sequence", "WholeGenomeFasta", sep="/"), "^.*\\.fa.*$", full.names = TRUE)
 	file.copy(flist, versionDir)
 	
-	flist <- list.files(paste( tmpDir, species, host, version, "Sequence", "Bowtie2Index", sep="/"), "^\\.*$", full.names = TRUE)
+	flist <- list.files(paste( tmpDir, species, host, version, "Sequence", "Bowtie2Index", sep="/"), "^.*\\.*$", full.names = TRUE)
 	file.copy(flist, versionDir)
 	
-	flist <- list.files(paste( tmpDir, species, host, version, "Sequence", "BWAIndex", sep="/"), "^\\.*$", full.names = TRUE)
+	flist <- list.files(paste( tmpDir, species, host, version, "Sequence", "BWAIndex", sep="/"), "^.*\\.*$", full.names = TRUE)
 	file.copy(flist, versionDir)
 	
 	# rename
