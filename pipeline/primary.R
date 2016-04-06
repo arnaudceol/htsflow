@@ -94,7 +94,7 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
 
     ## if the analysis is from RNA-Seq samples we want to extract the reads per gene count using
     ## featureCounts tool (incredibly much faster than HTSeqCount)
-    if ( flags$seq_method=="RNA-Seq" ) {
+    if ( flags$seq_method=="rna-seq" ) {
         ## update the DB with the "deconvolute reads.." status
         SQL <- paste("UPDATE primary_analysis SET status='deconvolute reads..' WHERE id=", primaryId ,sep="")
         res <- updateInfoOnDB( SQL )
@@ -104,7 +104,7 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
 	## generate the bw file. If the analysis comes from a BS experiments we need
     ## to pass the BS genome instead of the regular one. This is why exists two
     ## different functions for this task: doBW and doBW_bs
-    if ( flags$seq_method == 'BS-Seq' ) {
+    if ( flags$seq_method == 'bs-seq' ) {
         doBW_bs( sample, genomePaths )
     } else {
         doBW( sample, genomePaths )

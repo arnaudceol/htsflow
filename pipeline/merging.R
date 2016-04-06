@@ -170,7 +170,7 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 	countfile <- paste( COUNTdir, id_merge_primary, ".count" , sep='' )
 	gtf <- RefGenomes["genes",]
 	
-	if (seq_method == "RNA-Seq"){
+	if (seq_method == "rna-seq"){
 		loginfo ("Counting reads per gene with featuresCounts ---")
 		
 		# update the DB with the secondary analysis status counting reads
