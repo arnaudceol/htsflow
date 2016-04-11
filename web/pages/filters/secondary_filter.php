@@ -71,7 +71,7 @@ $result = mysqli_query($con, $sql);
     ?>
 </select></div>
 <?php
-    $sql = "SELECT DISTINCT users.user_id, user_name FROM primary_analysis, users WHERE users.user_id = primary_analysis.user_id ORDER BY user_name ASC;";
+    $sql = "SELECT DISTINCT users.user_id, user_name FROM secondary_analysis, users WHERE users.user_id = secondary_analysis.user_id ORDER BY user_name ASC;";
     $result = mysqli_query($con, $sql);
     ?>
  <div class="group"><label>User</label><br /> <select id="user_id" name="user_id">
