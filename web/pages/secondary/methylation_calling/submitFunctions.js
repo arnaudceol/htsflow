@@ -30,7 +30,7 @@ function submitSecondary(){
     INFO = INFO + "<input type=\"hidden\" name=\"no_overlap\" value=\""+no_overlap+"\" />";
     INFO = INFO + "<input type=\"hidden\" name=\"read_context\" value=\""+read_context+"\" />";
     INFO = INFO + "<input type='hidden' name='title' value='"+$('#title').val()+"' >";
-    INFO = INFO + "<input type='hidden' name='description' value='"+$('#description').val()+"' >";
+    INFO = INFO + "<input type='hidden' name='description' value='"+$('textarea#description').val()+"' >";
     INFO = INFO + "</form>";
     if (OK){
         $('#INFO').html(INFO);   

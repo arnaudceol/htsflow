@@ -31,7 +31,7 @@ function submitSecondary() {
     INFO = INFO + "<input type=\"hidden\" name=\"pvalue\" value=\""+pvalue+"\" />";
     INFO = INFO + "<input type=\"hidden\" name=\"options\" value=\""+options+"\" />";
     INFO = INFO + "<input type='hidden' name='title' value='"+$('#title').val()+"' >";
-    INFO = INFO + "<input type='hidden' name='description' value='"+$('#description').val()+"' >";
+    INFO = INFO + "<input type='hidden' name='description' value='"+$('textarea#description').val()+"' >";
 
     selectedSamples = $('#selectedIds').val().replace(/\'/g, "").trim().split(" ");
     

@@ -22,13 +22,13 @@ function peakAddLine(){
     var new_div1 = $('<div>').attr({ id: 'riquadro', style: "width: 80px; float: left"});
     boxes.append(new_div1);
     
-    var base1 = $('<input>').attr({ id: "base"+String(index), style: "width: 70px"});
+    var base1 = $('<input>').attr({ id: "input"+String(index), style: "width: 70px"});
     new_div1.append(base1);
 
     var new_div2 = $('<div>').attr({ id: 'riquadro', style : "width: 80px; float: left"});
     boxes.append(new_div2);
     
-    var input1 = $('<input>').attr({ id: "input"+String(index), style: "width: 70px; float: left"});
+    var input1 = $('<input>').attr({ id: "base"+String(index), style: "width: 70px; float: left"});
     new_div2.append(input1);
 
     var new_div3 = $('<div>').attr({ id: 'riquadro', style: "width = 210px; float: left"});
@@ -163,7 +163,7 @@ function submitSecondary(){
     
     INFO = INFO + "<input type='hidden' name='saturation' value='"+$('#saturation').is(':checked')+"' >";
     INFO = INFO + "<input type='hidden' name='title' value='"+$('#title').val()+"' >";
-    INFO = INFO + "<input type='hidden' name='description' value='"+$('#description').val()+"' >";
+    INFO = INFO + "<input type='hidden' name='description' value='"+$('textarea#description').val()+"' >";
     
     INFO = INFO + "</form>";
     if (!OKcheck){

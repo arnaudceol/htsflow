@@ -94,7 +94,7 @@ function submitSecondary(){
     }   
 
     INFO = INFO + "<input type='hidden' name='title' value='"+$('#title').val()+"' >";
-    INFO = INFO + "<input type='hidden' name='description' value='"+$('#description').val()+"' >";
+    INFO = INFO + "<input type='hidden' name='description' value='"+$('textarea#description').val()+"' >";
     
     INFO = INFO + "<input type='hidden' name='inspect_type' value='"+$("input[type='radio'][name='inspect_type']:checked").val()+"' >";
     INFO = INFO + "<input type='hidden' name='deg_during_pulse' value='"+$('#deg_during_pulse').prop('checked')+"' >";

@@ -52,7 +52,7 @@ function submitSecondary(){
         }
     }
     INFO = INFO + "<input type='hidden' name='title' value='"+$('#title').val()+"' >";
-    INFO = INFO + "<input type='hidden' name='description' value='"+$('#description').val()+"' >";
+    INFO = INFO + "<input type='hidden' name='description' value='"+$('textarea#description').val()+"' >";
     // in this part we put the form inside the div INFO.  
     INFO = INFO + "</form>";
     if (!OKcheck){
