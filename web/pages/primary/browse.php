@@ -122,6 +122,8 @@ if (isset($_REQUEST['messageYes'])) {
                        $.post("pages/tables/primary.php", {
 		            			selectable: "false", 
 		            			type: "completed",
+		            		    browsable: "false",
+		            			limit: "all",     	
             					selectedIds: $('#selectedIds').val(),
             			<?php
             foreach ($_POST as $key => $value) {

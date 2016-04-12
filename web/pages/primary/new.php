@@ -35,6 +35,8 @@ include 'pages/filters/sample_filter.php';
             selectedIds: $('#selectedIds').val(),
 			selectable: false,
 			editable: false,
+		    browsable: "false",
+			limit: "all",     	
             <?php
 			foreach ( $_POST as $key => $value ) {
 				if ($key != "selectable") {
@@ -71,7 +73,7 @@ Select one or more samples and press the Settings button:
 		<script>
 			$.post("pages/tables/samples.php", {
             	selectable: true,
-    			editable: false,        	    
+    			editable: false,       
 	       		<?php if (isset ( $_POST ['seq_method'] )) { echo "seq_method: \"" . $_POST ['seq_method'] ."\",\n"; } ?>
        			<?php if (isset ( $_POST ['user_id'] )) { echo "user_id: \"" . $_POST ['user_id'] ."\",\n" ; } ?>
        			<?php if (isset ( $_POST ['ref_genome'] )) { echo "ref_genome: \"" . $_POST ['ref_genome'] ."\",\n"; } ?>

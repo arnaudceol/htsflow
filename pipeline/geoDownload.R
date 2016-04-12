@@ -239,12 +239,20 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 			
 			loginfo(paste0("Genome and version: ", organism, ", ",refGenome))
 			
-			loginfo(paste0('Downloading:', gsm_metadata$experiment_accession))
-			downloadSRA(sra_con, userUploadDir, gsm_metadata$experiment_accession)
+			loginfo(paste0('Downloading:', gsm_metadata$experiment_accession))	
+			
+			# Check if the file has already been downloaded
+			sra_files <- list.files(path=userUploadDir, pattern="*.sra$", full.names=T, recursive=FALSE)
+			if (length(sra_files) > 0) {
+				loginfo(paste0('An SRA file is already present, skip downloading:'))
+			} else {
+				downloadSRA(sra_con, userUploadDir, gsm_metadata$experiment_accession)
+			}
+		
 			sraToolkitPath <- ""
 			
 			
-			sra_files <- list.files(path=userUploadDir, pattern="*.sra", full.names=T, recursive=FALSE)
+			sra_files <- list.files(path=userUploadDir, pattern="*.sra$", full.names=T, recursive=FALSE)
 			
 			if(library_layout != '' && grepl('PAIR', library_layout)){
 				readMode <- "PE"
@@ -273,9 +281,10 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 							gzip(sra1NewFileName, destname=sprintf("%s.gz", sra1NewFileName), temporary=FALSE, skip=FALSE,
 									overwrite=FALSE, remove=TRUE)						 
 							gzip(sra2NewFileName, destname=sprintf("%s.gz", sra2NewFileName), temporary=FALSE, skip=FALSE,
-									overwrite=FALSE, remove=TRUE)					 
-							gzip(sra_file, destname=sprintf("%s.gz", sra_file), temporary=FALSE, skip=FALSE,
 									overwrite=FALSE, remove=TRUE)
+							unlink(sra_file)
+							#gzip(sra_file, destname=sprintf("%s.gz", sra_file), temporary=FALSE, skip=FALSE,
+							#		overwrite=FALSE, remove=TRUE)
 							
 						})
 				
@@ -283,11 +292,13 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 			else {
 				readMode <- "SE"
 				lapply(sra_files, function(sra_file){
-							call(getHTSFlowPath('fastqDump'), sra_file)
-							new_sra_name <- gsub("_1.fastq", "_R1.fastq", sra_file)
-							file.rename(sra_file, new_sra_name)
-							gzip(new_sra_name, destname=sprintf("%s.gz", new_sra_name), temporary=FALSE, skip=FALSE,
+							tryOrExit(paste0(getHTSFlowPath('fastqDump'), " --outdir ", userUploadDir, " ", sra_file), "GEO")
+							#call(getHTSFlowPath('fastqDump'), sra_file)
+							fastq_name <- gsub(".sra", ".fastq", sra_file)
+							#file.rename(sra_file, new_sra_name)
+							gzip(fastq_name, destname=sprintf("%s.gz", fastq_name), temporary=FALSE, skip=FALSE,
 									overwrite=FALSE, remove=TRUE) # This is in a library called R.utils
+							unlink(sra_file)
 						})
 				
 				

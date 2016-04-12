@@ -285,7 +285,11 @@ function igbLoad(id) {
 	<?php
 $tableDiv = "tablePrimary";
 $phpTable = "primary.php";
-include 'browseScripts.php';
+
+if (! isset($_REQUEST["browsable"]) || $_REQUEST["browsable"] == false) {
+	include 'browseScripts.php';
+}
+
 ?>
 		<table class="mytable filterable" id="sf">
 			<thead >

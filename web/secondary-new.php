@@ -91,6 +91,8 @@ include ("pages/menu.php"); // import of menu
         	selectable: "false", 
 		    type: "completed",
 			selectedIds: $('#selectedIds').val(),
+		    browsable: "false",
+			limit: "all",
             <?php
       		  foreach ($_POST as $key => $value) {
             	if ($key != "selectable") {
