@@ -63,7 +63,7 @@ if ($isReferenced) {
 } else {
 
 ?>
-Delete all data for primary analysis: <b><?php echo $id; ?></b>?
+Delete all data for secondary analysis: <b><?php echo $id; ?></b>?
 <br /><i class="fa fa-exclamation-triangle" style="color: red"></i>
 <form style="display: inline" action="pages/secondary/common/submitRemove.php"
 	name="submitDelete_<?php echo $id; ?>" method="post">

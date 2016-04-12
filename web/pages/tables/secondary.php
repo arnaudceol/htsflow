@@ -342,7 +342,7 @@ function igbLoad(id, type) {
 					<a style="float: right;margin: 4px;" class="fa fa-repeat" href="#"  onclick="javascript:toggle('REPEAT_<?php echo $row["id"]; ?>');"></a>
 					<div id="REPEAT_<?php echo $row["id"]; ?>"
 							style="display: none" class="popupstyle">
-							<b>Repeat primary analysis: </b><?php echo $row['id']; ?>? <br/>
+							<b>Repeat secondary analysis: </b><?php echo $row['id']; ?>? <br/>
 							<form style=" display: inline" action="pages/secondary/common/submitRepeat.php"
 										name="submitRepeat_<?php echo $row["id"]; ?>"
 										method="post"><input type="submit" value="Confirm"
