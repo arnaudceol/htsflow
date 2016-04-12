@@ -44,6 +44,9 @@ define('DB_CONF', $HTSFLOW_PATHS['DB_CONF']);
 define('R_BASE', $HTSFLOW_PATHS['Rbase'] );
 define('GENOMES_FOLDER', $HTSFLOW_PATHS['HTSFLOW_GENOMES']);
 
+// Use this to display a message on each page, e.g. for a test server
+define('WARNING_MESSAGE', "");
+
 
 
 

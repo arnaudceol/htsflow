@@ -59,6 +59,7 @@ if (isset($_SESSION["hf_user_name"])) {
 </div>
 <?php
 }
-
 ?>
+<div style="text-align: center; text-decoration: bold; color: red"><?php echo WARNING_MESSAGE; ?></div>
 </div>
+
