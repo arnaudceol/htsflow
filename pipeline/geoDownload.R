@@ -60,7 +60,14 @@ geoDownload <- function( taskId ) {
 	# External user dir: 	
 	user<-Sys.getenv("USER")
 	uploadDir <- unlist(strsplit(getHTSFlowPath("HTSFLOW_UPLOAD_DIR"), ","))[1]	
+	
 	userUploadDir<-paste0(uploadDir, "/", user)
+
+	# Create it if it does not exist
+	if (! file.exists(uploadDir)){
+		loginfo(paste("create directory: ", uploadDir))
+		createDir(uploadDir, recursive=TRUE)		
+	}
 	
 	
 	## Get the list of GSMs if neccessary	
@@ -76,7 +83,7 @@ geoDownload <- function( taskId ) {
 	
 	loginfo(paste0("Download dir: " , userUploadDir))
 	
-	createDir(userUploadDir)
+	#createDir(userUploadDir)
 	
 	##downloadGSM(gse, gsms[1], userUploadDir)
 	
