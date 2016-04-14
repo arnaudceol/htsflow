@@ -3,6 +3,38 @@ create database htsflowdb;
 USE htsflowdb;
 
 
+--
+-- Table structure for table `seq_samples`
+--
+
+DROP TABLE IF EXISTS `seq_samples`;
+CREATE TABLE `seq_samples` (
+  `n` bigint(20) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`n`)
+) ENGINE=InnoDB AUTO_INCREMENT=12972 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `user_id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'auto incrementing user_id of each user, unique index',
+  `user_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s name, unique',
+  `is_dev` tinyint(1) NOT NULL DEFAULT '0',
+  `granted_browse` tinyint(1) NOT NULL DEFAULT '0',
+  `granted_primary` tinyint(1) NOT NULL DEFAULT '0',
+  `granted_secondary` tinyint(1) NOT NULL DEFAULT '0',
+  `granted_admin` tinyint(1) NOT NULL DEFAULT '0',
+  `user_group` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` varchar(60) DEFAULT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='user data';
+
+
 DROP TABLE IF EXISTS `controlled_vocabulary`;
 CREATE TABLE `controlled_vocabulary` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -14,111 +46,13 @@ CREATE TABLE `controlled_vocabulary` (
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1399 DEFAULT CHARSET=latin1;
--delete from controlled_vocabulary;
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'ChIP-Seq', 'chip-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'RNA-Seq', 'rna-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'DNase-Seq', 'dnase-seq', true);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'DNA-Seq', 'dna-seq', false);
 INSERT INTO `controlled_vocabulary` (cv_type, display_term, cv_term, available) VALUES ('sequencing_type', 'BS-Seq', 'bs-seq', true);
 
---
--- Table structure for table `differential_gene_expression`
---
 
-DROP TABLE IF EXISTS `differential_gene_expression`;
-CREATE TABLE `differential_gene_expression` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `secondary_id` int(10) NOT NULL,
-  `exp_name` text NOT NULL,
-  `primary_id` int(10) NOT NULL,
-  `cond` varchar(30) NOT NULL,
-  `mix_spike` varchar(3) DEFAULT NULL,
-  `created` timestamp NULL DEFAULT NULL,
-  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `primary_id` (`primary_id`),
-  KEY `secondary_id` (`secondary_id`),
-  CONSTRAINT `diff_gene_expression_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
-  CONSTRAINT `diff_gene_expression_ibfk_2` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1997 DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `expression_quantification`
---
-
-DROP TABLE IF EXISTS `expression_quantification`;
-CREATE TABLE `expression_quantification` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `secondary_id` int(10) NOT NULL,
-  `primary_id` int(10) NOT NULL,
-  `mix_spike` varchar(3) DEFAULT NULL,
-  `created` timestamp NULL DEFAULT NULL,
-  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `primary_id` (`primary_id`),
-  KEY `secondary_id` (`secondary_id`),
-  CONSTRAINT `expression_quantification_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
-  CONSTRAINT `expression_quantification_ibfk_2` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1399 DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `footprint_analysis`
---
-
-DROP TABLE IF EXISTS `footprint_analysis`;
-CREATE TABLE `footprint_analysis` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `htsflow1_id` int(11) DEFAULT NULL,
-  `secondary_id` int(11) NOT NULL,
-  `exp_name` text NOT NULL,
-  `peak_id` int(11) NOT NULL,
-  `caller` text NOT NULL,
-  `pvalue` float NOT NULL,
-  `options` text,
-  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `footprint2_ibfk_2` (`peak_id`),
-  KEY `footprint2_ibfk_1` (`secondary_id`),
-  CONSTRAINT `footprint2_ibfk_1` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`),
-  CONSTRAINT `footprint2_ibfk_2` FOREIGN KEY (`peak_id`) REFERENCES `peak_calling` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=latin1;
-
-
---
--- Table structure for table `merged_primary`
---
-
-DROP TABLE IF EXISTS `merged_primary`;
-CREATE TABLE `merged_primary` (
-  `result_primary_id` int(10) NOT NULL DEFAULT '0',
-  `source_primary_id` int(10) NOT NULL,
-  `created` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`result_primary_id`,`source_primary_id`),
-  KEY `source_fk` (`source_primary_id`),
-  CONSTRAINT `merged_fk` FOREIGN KEY (`result_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `source_fk` FOREIGN KEY (`source_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `methylation_calling`
---
-
-DROP TABLE IF EXISTS `methylation_calling`;
-CREATE TABLE `methylation_calling` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `secondary_id` int(10) NOT NULL,
-  `exp_name` text NOT NULL,
-  `primary_id` int(10) NOT NULL,
-  `no_overlap` tinyint(1) NOT NULL,
-  `read_context` varchar(10) NOT NULL,
-  `created` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `secondary_id` (`secondary_id`),
-  KEY `primary_id` (`primary_id`),
-  CONSTRAINT `methylation_ibfk_1` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`),
-  CONSTRAINT `methylation_ibfk_2` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `pa_options`
@@ -141,32 +75,6 @@ CREATE TABLE `pa_options` (
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 
 
---
--- Table structure for table `peak_calling`
---
-
-DROP TABLE IF EXISTS `peak_calling`;
-CREATE TABLE `peak_calling` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `secondary_id` int(10) NOT NULL,
-  `exp_name` text NOT NULL,
-  `program` varchar(50) NOT NULL,
-  `primary_id` int(10) NOT NULL,
-  `input_id` int(10) NOT NULL,
-  `label` varchar(30) NOT NULL,
-  `pvalue` text,
-  `stats` text,
-  `saturation` tinyint(1) DEFAULT '0',
-  `created` timestamp NULL DEFAULT NULL,
-  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `primary_id` (`primary_id`),
-  KEY `input_id` (`input_id`),
-  KEY `secondary_id` (`secondary_id`),
-  CONSTRAINT `peak_calling_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
-  CONSTRAINT `peak_calling_ibfk_2` FOREIGN KEY (`input_id`) REFERENCES `primary_analysis` (`id`),
-  CONSTRAINT `peak_calling_ibfk_3` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1626 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `primary_analysis`
@@ -272,6 +180,112 @@ CREATE TABLE `secondary_analysis` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+
+
+--
+-- Table structure for table `differential_gene_expression`
+--
+
+DROP TABLE IF EXISTS `differential_gene_expression`;
+CREATE TABLE `differential_gene_expression` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `secondary_id` int(10) NOT NULL,
+  `exp_name` text NOT NULL,
+  `primary_id` int(10) NOT NULL,
+  `cond` varchar(30) NOT NULL,
+  `mix_spike` varchar(3) DEFAULT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `primary_id` (`primary_id`),
+  KEY `secondary_id` (`secondary_id`),
+  CONSTRAINT `diff_gene_expression_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `diff_gene_expression_ibfk_2` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1997 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `expression_quantification`
+--
+
+DROP TABLE IF EXISTS `expression_quantification`;
+CREATE TABLE `expression_quantification` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `secondary_id` int(10) NOT NULL,
+  `primary_id` int(10) NOT NULL,
+  `mix_spike` varchar(3) DEFAULT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `primary_id` (`primary_id`),
+  KEY `secondary_id` (`secondary_id`),
+  CONSTRAINT `expression_quantification_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `expression_quantification_ibfk_2` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1399 DEFAULT CHARSET=latin1;
+
+
+--
+-- Table structure for table `merged_primary`
+--
+
+DROP TABLE IF EXISTS `merged_primary`;
+CREATE TABLE `merged_primary` (
+  `result_primary_id` int(10) NOT NULL DEFAULT '0',
+  `source_primary_id` int(10) NOT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`result_primary_id`,`source_primary_id`),
+  KEY `source_fk` (`source_primary_id`),
+  CONSTRAINT `merged_fk` FOREIGN KEY (`result_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `source_fk` FOREIGN KEY (`source_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `methylation_calling`
+--
+
+DROP TABLE IF EXISTS `methylation_calling`;
+CREATE TABLE `methylation_calling` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `secondary_id` int(10) NOT NULL,
+  `exp_name` text NOT NULL,
+  `primary_id` int(10) NOT NULL,
+  `no_overlap` tinyint(1) NOT NULL,
+  `read_context` varchar(10) NOT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `secondary_id` (`secondary_id`),
+  KEY `primary_id` (`primary_id`),
+  CONSTRAINT `methylation_ibfk_1` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`),
+  CONSTRAINT `methylation_ibfk_2` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `peak_calling`
+--
+
+DROP TABLE IF EXISTS `peak_calling`;
+CREATE TABLE `peak_calling` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `secondary_id` int(10) NOT NULL,
+  `exp_name` text NOT NULL,
+  `program` varchar(50) NOT NULL,
+  `primary_id` int(10) NOT NULL,
+  `input_id` int(10) NOT NULL,
+  `label` varchar(30) NOT NULL,
+  `pvalue` text,
+  `stats` text,
+  `saturation` tinyint(1) DEFAULT '0',
+  `created` timestamp NULL DEFAULT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `primary_id` (`primary_id`),
+  KEY `input_id` (`input_id`),
+  KEY `secondary_id` (`secondary_id`),
+  CONSTRAINT `peak_calling_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `peak_calling_ibfk_2` FOREIGN KEY (`input_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `peak_calling_ibfk_3` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1626 DEFAULT CHARSET=latin1;
+
+
 DROP TABLE IF EXISTS `inspect`;
 CREATE TABLE `inspect` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -288,47 +302,38 @@ CREATE TABLE `inspect` (
   `created` timestamp NULL DEFAULT NULL,
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `foursu_primary_id` (`foursu_primary_id`),
-  KEY `rnatotal_primary_id` (`rnatotal_primary_id`),
+  KEY `foursu_primary_id` (`primary_id`),
+  KEY `rnatotal_primary_id` (`rnatotal_id`),
   KEY `secondary_id` (`secondary_id`),
-  CONSTRAINT `inspect_ibfk_1` FOREIGN KEY (`foursu_primary_id`) REFERENCES `primary_analysis` (`id`),
-  CONSTRAINT `inspect_ibfk_2` FOREIGN KEY (`rnatotal_primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `inspect_ibfk_1` FOREIGN KEY (`primary_id`) REFERENCES `primary_analysis` (`id`),
+  CONSTRAINT `inspect_ibfk_2` FOREIGN KEY (`rnatotal_id`) REFERENCES `primary_analysis` (`id`),
   CONSTRAINT `inspect_ibfk_3` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`)
-)
-
-
+);
 
 
 --
--- Table structure for table `seq_samples`
+-- Table structure for table `footprint_analysis`
 --
 
-DROP TABLE IF EXISTS `seq_samples`;
-CREATE TABLE `seq_samples` (
-  `n` bigint(20) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`n`)
-) ENGINE=InnoDB AUTO_INCREMENT=12972 DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `user_id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'auto incrementing user_id of each user, unique index',
-  `user_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s name, unique',
-  `is_dev` tinyint(1) NOT NULL DEFAULT '0',
-  `granted_browse` tinyint(1) NOT NULL DEFAULT '0',
-  `granted_primary` tinyint(1) NOT NULL DEFAULT '0',
-  `granted_secondary` tinyint(1) NOT NULL DEFAULT '0',
-  `granted_admin` tinyint(1) NOT NULL DEFAULT '0',
-  `user_group` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `password` varchar(60) DEFAULT NULL,
-  `created` timestamp NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `footprint_analysis`;
+CREATE TABLE `footprint_analysis` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `htsflow1_id` int(11) DEFAULT NULL,
+  `secondary_id` int(11) NOT NULL,
+  `exp_name` text NOT NULL,
+  `peak_id` int(11) NOT NULL,
+  `caller` text NOT NULL,
+  `pvalue` float NOT NULL,
+  `options` text,
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_name` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='user data';
+  `created` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `footprint2_ibfk_2` (`peak_id`),
+  KEY `footprint2_ibfk_1` (`secondary_id`),
+  CONSTRAINT `footprint2_ibfk_1` FOREIGN KEY (`secondary_id`) REFERENCES `secondary_analysis` (`id`),
+  CONSTRAINT `footprint2_ibfk_2` FOREIGN KEY (`peak_id`) REFERENCES `peak_calling` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=latin1;
+
 
 DROP TABLE IF EXISTS `job_list`;
 CREATE TABLE `job_list` (
