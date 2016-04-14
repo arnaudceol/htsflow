@@ -61,13 +61,14 @@ def main(configFile):
 
 	########################
 	# selection of the first scheduled element
+	# Order by runid desc: if more than one run, keep the last one
 	stringa1 = "SELECT sample.sam_id, sample.name, samplerun.flowcell, application.readlength, application.readmode,application.depth,  user.login, user.username, user.mailadress, organism,  \
 application.applicationname, pi.login, runfolder \
 FROM sample, samplerun, application, user, user as pi \
 WHERE application.application_id = sample.application_id AND samplerun.sam_id = sample.sam_id \
 AND sample.requester_user_id = user.user_id AND pi.user_id = user.pi \
 AND status = 'analyzed' %s \
-order by requestdate DESC;" % pisQuery;
+order by run_id DESC;" % pisQuery;
 	print(stringa1)
 	cLims.execute(stringa1)
 	limsEntries = cLims.fetchall()
@@ -131,9 +132,13 @@ order by requestdate DESC;" % pisQuery;
 	numFileNotFound = 0
 	numNoRunId = 0
 
+	samplesDone = []
+
 	for elem in limsEntries:
 		id_sample = str(elem[0]).strip()
-		if id_sample not in HTSsamples:
+		if id_sample not in HTSsamples and id_sample not in samplesDone:
+			samplesDone.append(id_sample)
+
 			sample_name = elem[1].replace(" ","")
 			FCID = elem[2]
 			readL = elem[3]
