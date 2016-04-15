@@ -21,6 +21,8 @@ library("BatchJobs", quietly = TRUE)
 peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, annotation=TRUE ) {
 	basicConfig()
 	
+	
+	
 	execute <- paste( "SELECT * FROM peak_calling WHERE id=", IDpeak, ";" )
 	IDpreList <- extractInfoFromDB( execute )
 	
@@ -35,7 +37,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 	if ( 1 == IDpreList$saturation) {
 		saturation <- TRUE
 		loginfo("Perform saturation.")
-	}else {
+	} else {
 		saturation <- FALSE
 		loginfo("Skip saturation.")
 	}
@@ -62,36 +64,63 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 	
 	bedFolder <- paste0(getHTSFlowPath("HTSFLOW_BED"), '/', IDsec, '/bed/' )
 	createDir(bedFolder,  recursive =  TRUE)		
+
 	
+
 	###### peakcaller function #######
 	if ( peak_calling ) {
+		
+		# prepare downsample files
+		if (saturation) {
+			loginfo("Downsampling ChIP ID: %s",  CHIP_ID)
+			downsampled( CHIP_ID, IDsec_FOLDER, BAMfolder, "create" ) # this function is in pipeFunctions.R
+		}
+		
 		if ( typeOfpeakCalling == "MACSboth" ) {
 			pvalue <- unlist( strsplit( pval, split=';' ) )
 			stats <- unlist( strsplit( stats_opt, split=';' ) )
 			macsOUT1 <- paste0( IDsec_FOLDER, 'NARROW/' )
 			macsOUT2 <- paste0( IDsec_FOLDER, 'BROAD/' )
 			
-			batchPvalue <-  c(pvalue[1], pvalue[2])
-			batchStats <-  c(stats[1], stats[2])
-			batchMacsOut <-  c(macsOUT1, macsOUT2)
-			batchType <- c("MACSnarrow","MACSbroad")
+			# Send broad in parallel and run narrow
 			
-			regName <- paste0("HF_PC_sub",IDpeak)
+			
+			## batchPvalue <-  c(pvalue[1], pvalue[2])
+			## batchStats <-  c(stats[1], stats[2])
+			## batchMacsOut <-  c(macsOUT1, macsOUT2)
+			## batchType <- c("MACSnarrow","MACSbroad")
+			
+			regName <- paste0("HF_BROAD",IDpeak)
 			
 			# load config and common functions
 			workdir <- getwd()
 			setwd(getHTSFlowPath("HTSFLOW_PIPELINE"))
 			
 			loadConfig("BatchJobs.R")
+			
+			## # Ensure we use tha maximum of jobs alowed.
+			## config <-getConfig()
+			## config["max.concurrent.jobs"] <- "Inf"
+			## setConfig(config)
+			## 
+			## loginfo(getConfig())
+			
+			
 			setwd(workdir)
-			
-			
+						
 			reg <- makeHtsflowRegistry(regName)
-			ids <- batchMap(reg, fun=peakcaller, rep(INPUT_ID, 2), rep(CHIP_ID,2), rep(label, 2),batchPvalue, batchStats,
-					rep(IDsec_FOLDER, 2),
-					rep(BAMfolder, 2), batchMacsOut,rep(REFGENOME, 2),
-					rep(saturation, 2), batchType)
+			ids <- batchMap(reg, fun=peakcaller, INPUT_ID, CHIP_ID, label,pvalue[2], stats[2],
+					IDsec_FOLDER, BAMfolder, macsOUT2 , REFGENOME,	saturation, "MACSbroad")
+			loginfo("Submit broad peak calling as a new job.")
 			submitJobs(reg)
+			showStatus(reg)
+			
+			loginfo("Broad peals launched in parallel, continue with narrow peaks")
+			
+			# Run narrow and then wait for broad to finish
+			peakcaller(INPUT_ID, CHIP_ID, label,pvalue[1], stats[1],
+			IDsec_FOLDER, BAMfolder, macsOUT1 , REFGENOME,saturation, "MACSnarrow")
+				
 			waitForJobs(reg)
 			
 			loginfo(paste0("Status of jobs for registry %s: ", regName))
@@ -103,8 +132,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 			if (length(errors) > 0) {
 				stop(paste0(length(errors), " job(s) failed, exit"))
 			}
-			
-			
+									
 			makeBigBedFile( fileBEDnarrow, genomePaths, bedFolder )
 			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
 			
@@ -117,6 +145,13 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 			peakcaller( INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
 			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
 		}
+		
+		
+		if (saturation) {
+			loginfo("Remove downsampling files for ChIP ID: %s",  CHIP_ID)			
+			downsampled( CHIP_ID, outFolder, BAMfolder,  'remove' )
+		}
+		
 	}
 	###### annotation function #######
 	if ( annotation ) {
@@ -166,25 +201,10 @@ peakCalling <- function( IDsec ){
 	loginfo("Type of peak calling: %s", typeOfpeakCalling)
 	loginfo("Number of ids: %s", length(values$primary_id))
 	
-	execute <- paste( "SELECT saturation FROM peak_calling, secondary_analysis WHERE secondary_id = secondary_analysis.id AND secondary_analysis.id=", IDsec, ";" )
-	IDpreList <- extractInfoFromDB( execute )
+	execute <- paste( "SELECT DISTINCT saturation, program FROM peak_calling, secondary_analysis WHERE secondary_id = secondary_analysis.id AND secondary_analysis.id=", IDsec, ";" )
+	saturationAndProgram <- extractInfoFromDB( execute )
 	
 	
-	for ( i in 1:length(values$primary_id) ) {
-		if ( 1 == IDpreList$saturation) {	
-			loginfo("Get saturation")			
-			# update the DB with the secondary analysis status complete
-			setSecondaryStatus( IDsec=IDsec, status='Downsampling..', startTime=T )
-			CHIP_ID <- values$primary_id[i]
-			loginfo("ChIP ID: %s",  CHIP_ID)
-			downsampled( CHIP_ID, outFolder, BAMfolder, "create" ) # this function is in pipeFunctions.R
-		} else {
-			loginfo("No saturation: skip downsampling")
-		}
-	}
-	
-	loginfo("Start peak calling after saturation")
-		
 	# load config and common functions
 	workdir <- getwd()
 	setwd(getHTSFlowPath("HTSFLOW_PIPELINE"))
@@ -192,11 +212,48 @@ peakCalling <- function( IDsec ){
 	loadConfig("BatchJobs.R")
 	setwd(workdir)
 	
+	
 	regName <- paste0("HF_PC",IDsec)
 	
 	reg <- makeHtsflowRegistry(regName)	
-
 	ids <- batchMap(reg, fun=peakCallingJob, IDsec=values[,"secondary_id"], IDpeak=values[,"id"])
+	
+	
+	# How many jobs will be launched?
+	numPeaks = length(values[,"id"])
+	
+	saturation = saturationAndProgram$saturation
+	typeOfpeakCalling = saturationAndProgram$program
+	
+	numJobsPerPeak <- 1
+	
+	if ( 1 == saturation) {
+		if ( typeOfpeakCalling == "MACSboth" ) {
+			numJobsPerPeak <- 10
+		} else {
+			numJobsPerPeak <- 5		
+		}		
+	} else {		
+		if ( typeOfpeakCalling == "MACSboth" ) {
+			numJobsPerPeak <- 2
+		} else {
+			numJobsPerPeak <- 1
+		}		
+	}
+	
+	maxConcurentJobsAllowed = as.numeric(getHTSFlowPath("max_jobs"))
+	if (!is.na(maxConcurentJobsAllowed) & ! maxConcurentJobsAllowed == "Inf") {
+		# Set max number of concurent jobs, to ensure we do not block everything
+		numChunks = floor(maxConcurentJobsAllowed / numJobsPerPeak)
+		loginfo(paste0("Limit the number of concurent peaks to ", numChunks, " chunks."))			
+		chunked = chunk(getJobIds(reg), n.chunks = numChunks, shuffle = FALSE)
+		submitJobs(reg, chunked)
+	} else {				
+		submitJobs(reg)				
+	}
+	
+	
+	
 	submitJobs(reg)
 	
 	waitForJobs(reg)
@@ -213,17 +270,17 @@ peakCalling <- function( IDsec ){
 		
 	#removeRegistry(reg,"no")
 	
-	setSecondaryStatus( IDsec=IDsec, status='Calling peaks..' )
-	
-	for ( i in 1:length(values$primary_id) ) {
-		if ( 1 == IDpreList$saturation) {
-			CHIP_ID <- values$primary_id[i]
-			downsampled( CHIP_ID, outFolder, BAMfolder,  'remove' )
-		} else {
-			loginfo("No saturation: skip downsampling")
-		}	
-	}
-	
+	## setSecondaryStatus( IDsec=IDsec, status='Calling peaks..' )
+	## 
+	## for ( i in 1:length(values$primary_id) ) {
+	##     if ( 1 == IDpreList$saturation) {
+	##         CHIP_ID <- values$primary_id[i]
+	##         downsampled( CHIP_ID, outFolder, BAMfolder,  'remove' )
+	##     } else {
+	##         loginfo("No saturation: skip downsampling")
+	##     }	
+	## }
+	## 
 	setSecondaryStatus( IDsec=IDsec, status='completed', endTime=T, outFolder=T )
 }
 

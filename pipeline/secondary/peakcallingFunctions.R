@@ -310,7 +310,15 @@ peakcaller <- function( INPUT_ID, CHIP_ID, label, pvalue, stats, IDsec_FOLDER, B
 	INPUT_BAM <- paste0( BAMfolder, INPUT_ID, ".bam" )
 	CHIP_BAM <- paste0( BAMfolder, CHIP_ID, ".bam" )
 	
-	if ( saturation ) {
+	
+	if ( typeOfpeakCalling == 'MACSnarrow' ) {
+		narrow<- 'NARROW'
+	} else {
+		narrow<- 'BROAD'
+	}
+	
+	
+	if ( saturation ) {		
 		
 		CHIP_BAM_80 <- paste0( IDsec_FOLDER, CHIP_ID, "_80.bam" )
 		CHIP_BAM_60 <- paste0( IDsec_FOLDER, CHIP_ID, "_60.bam" )
@@ -318,14 +326,9 @@ peakcaller <- function( INPUT_ID, CHIP_ID, label, pvalue, stats, IDsec_FOLDER, B
 		CHIP_BAM_20 <- paste0( IDsec_FOLDER, CHIP_ID, "_20.bam" )
 		
 		# check if bam are missing
-		if ( typeOfpeakCalling == 'MACSnarrow' ) {
-			narrow<- 'NARROW'
-		} else {
-			narrow<- 'BROAD'
-		}
 		
-		batch_CHIP_BAM <- c(CHIP_BAM,CHIP_BAM_80,CHIP_BAM_60,CHIP_BAM_40,CHIP_BAM_20)
-		batch_label<- c(label,paste0( label, "_80" ), paste0( label, "_60" ), paste0( label, "_40" ), paste0( label, "_20" ))
+		batch_CHIP_BAM <- c(CHIP_BAM_80,CHIP_BAM_60,CHIP_BAM_40,CHIP_BAM_20)
+		batch_label<- c(paste0( label, "_80" ), paste0( label, "_60" ), paste0( label, "_40" ), paste0( label, "_20" ))
 		
 		# load config and common functions
 		workdir <- getwd()
@@ -334,13 +337,28 @@ peakcaller <- function( INPUT_ID, CHIP_ID, label, pvalue, stats, IDsec_FOLDER, B
 		loadConfig("BatchJobs.R")
 		setwd(workdir)
 		
+## # Ensure we use tha maximum of jobs alowed.
+##         config <-getConfig()
+##         config["max.concurrent.jobs"] <- "Inf"
+##         setConfig(config)
+## 
+##         loginfo(getConfig())
+## 
+		
 		regName <- paste0("HF_MACS2_",CHIP_ID,"_",narrow)
 		reg <- makeHtsflowRegistry(regName)
 		
-		ids <- batchMap(reg, fun=macs2Exec, rep(INPUT_BAM, 5), batch_CHIP_BAM, batch_label, rep(pvalue, 5),
-				rep(stats, 5), rep(macsOUT, 5), rep(REFGENOME, 5), rep(narrow, 5))
+		ids <- batchMap(reg, fun=macs2Exec, rep(INPUT_BAM, 4), batch_CHIP_BAM, batch_label, rep(pvalue, 4),
+				rep(stats, 4), rep(macsOUT, 4), rep(REFGENOME, 4), rep(narrow, 4))
 		
 		submitJobs(reg)
+				
+		showStatus(reg)
+		
+		loginfo("MACS2 for subsets launched in parallel, continue with the main ChIP")
+		
+		# run the main peak calling, then wait for the other ones.
+		macs2Exec( INPUT_BAM, CHIP_BAM, label, pvalue, stats, macsOUT, REFGENOME, narrow )
 		
 		waitForJobs(reg)
 						
@@ -352,11 +370,8 @@ peakcaller <- function( INPUT_ID, CHIP_ID, label, pvalue, stats, IDsec_FOLDER, B
 		}
 	
 		create_saturation_file( label, macsOUT )
-	} else {
-		if ( typeOfpeakCalling == 'MACSnarrow' ) {
-			macs2Exec( INPUT_BAM, CHIP_BAM, label, pvalue, stats, macsOUT, REFGENOME, 'NARROW' )
-		} else {
-			macs2Exec( INPUT_BAM, CHIP_BAM, label, pvalue, stats, macsOUT, REFGENOME, 'BROAD' )
-		}
+	} else {	
+		macs2Exec( INPUT_BAM, CHIP_BAM, label, pvalue, stats, macsOUT, REFGENOME, narrow )
 	}
+	
 }

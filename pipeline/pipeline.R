@@ -63,7 +63,7 @@ if ( TypeOfAnalysis == "primary" ) {
 # Create default directories
 if (! file.exists(getPreprocessDir())){
 	loginfo(paste("create directory: ", getPreprocessDir()))
-	createDir(getPreprocessDir())		
+	createDir(getPreprocessDir(), recursive=TRUE)		
 }
 
 if (! file.exists(getHTSFlowPath("HTSFLOW_SECONDARY"))){

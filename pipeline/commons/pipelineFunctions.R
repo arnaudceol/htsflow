@@ -174,6 +174,14 @@ downsampled <- function( CHIP_ID, IDsec_FOLDER, BAMfolder=paste0(getHTSFlowPath(
 		batch_chip2 <- c(CHIP_BAM_80,CHIP_BAM_60,CHIP_BAM_40,CHIP_BAM_20)
 		batch_val <- c(0.8,0.6,0.4,0.2)
 		loginfo("create registry : downsampling")
+
+		## # Ensure we use tha maximum of jobs alowed.
+		## config <-getConfig()
+		## config["max.concurrent.jobs"] <- "Inf"
+		## setConfig(config)
+		## 
+		## loginfo(getConfig())
+		
 		
 		# load config and common functions
 		workdir <- getwd()
@@ -183,7 +191,7 @@ downsampled <- function( CHIP_ID, IDsec_FOLDER, BAMfolder=paste0(getHTSFlowPath(
 		loadConfig("BatchJobs.R")
 		setwd(workdir)
 				
-		regName <- paste0("HF_DS",CHIP_ID)
+		regName <- paste0("HF_RM_READS",CHIP_ID)
 		reg <- makeHtsflowRegistry(regName)
 		
 		ids <- batchMap(reg, fun=removeReadsFromBAM, rep(CHIP_BAM, 4), batch_chip2, batch_val)
