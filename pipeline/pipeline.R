@@ -55,7 +55,7 @@ if ( TypeOfAnalysis == "primary" ) {
 } else if ( TypeOfAnalysis == "secondary" ) {
 	assign("PIPELINE_TYPE", "secondary", envir=globalenv())
 } else if ( TypeOfAnalysis == "merging" ) {
-	assign("PIPELINE_TYPE", "merging", envir=globalenv())
+	assign("PIPELINE_TYPE", "primary", envir=globalenv())
 } else if ( TypeOfAnalysis == "other" ) {
 	assign("PIPELINE_TYPE", "other", envir=globalenv())
 }

@@ -224,7 +224,7 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 			"mv "
 			,bamfile
 			,".bai "
-			,ALNdirq
+			,ALNdir
 			,id_merge_primary
 			,".bam.bai"
 	)
@@ -253,7 +253,7 @@ makeBWmerge <- function( sample, RefGenomes ){
 	chromSize <- RefGenomes[ "chromSize", ]
 	primaryId <- sample
 	# this is a patch for having all the bw in the genome browser
-	BWOUTFOLDER <- paste0(getHTSFlowPath("HTSFLOW_PRIMARY"), '/tracks/bw/')
+	BWOUTFOLDER <-  getHTSFlowPath("HTSFLOW_BW")
 	bamFile <- paste0 (
 			getHTSFlowPath("HTSFLOW_ALN")
 			,"/"
