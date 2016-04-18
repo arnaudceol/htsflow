@@ -132,9 +132,25 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 			if (length(errors) > 0) {
 				stop(paste0(length(errors), " job(s) failed, exit"))
 			}
-									
+							
+			# GR -> bedfile
+			grCHIP1 <- loadGR( fileBEDnarrow, typeOfpeakCalling )
+			grCHIP2 <- loadGR( fileBEDbroad, typeOfpeakCalling )
+			grCHIP <- union( grCHIP1, grCHIP2 )
+
+			# create dir for BOTH
+			macsOUTboth <- paste0( IDsec_FOLDER, 'BOTH/' )
+			if (! file.exists(macsOUTboth)){
+				loginfo(paste("create directory: ", macsOUTboth))
+				createDir(macsOUTboth, recursive=TRUE)		
+			}
+
+			fileBEDboth <- paste0( macsOUTboth, label, "_peaks.bed" )
+			write.table(as.data.frame(grCHIP)[,1:4], fileBEDboth, quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+			
 			makeBigBedFile( fileBEDnarrow, genomePaths, bedFolder )
 			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
+			makeBigBedFile( fileBEDboth, genomePaths, bedFolder )
 			
 		} else if ( typeOfpeakCalling == "MACSnarrow" ) {
 			macsOUT <- paste0( IDsec_FOLDER, 'NARROW/' )
