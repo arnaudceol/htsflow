@@ -299,7 +299,6 @@ if (! isset($_REQUEST["browsable"]) || $_REQUEST["browsable"] == false) {
 					<?php } ?>					
 					<th class="centered">PRIMARY ID</th>
 					<th style="width: 0%"></th>
-					<th>DESCRIPTION</th>
 					<th class="centered">SAMPLE ID</th>
 					<th style="text-align: left">Sample name</th>
 					<th class="centered">READS NUM (raw/aligned)</th>
@@ -327,7 +326,35 @@ while ($row = mysqli_fetch_assoc($result)) {
 	<?php } ?>
 				<td class="centered"><?php echo $row["id_pre"]; ?> <?php printStatus($row['status']); ?></td>
 				
-				<td><?php
+				<td><?php 
+				$description = $row['description'];
+				
+				$class ="";
+				if ($description != '') {
+				        $class = "title=\"sample description, click to edit\" class=\"fa fa-file-text-o\" style=\"color: green\"";				        
+				} else {
+				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
+				}
+				
+				?><a <?php echo $class; ?>  href='#'
+									onclick='javascript:toggle("submitDescription_<?php echo $row["id_pre"]; ?>")'></a>
+										<form action="#" style="display: none; " class="popupstyle"
+											id="submitDescription_<?php echo $row["id_pre"]; ?>"
+											method="POST">
+											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitDescription_<?php echo $row["id_pre"]; ?>'); ">close <i  class="fa fa-times"></i></a>
+											<table>
+												<tbody style="vertical-align: top">
+													<tr>
+														<td ><textarea rows="30" cols="100" name="TEXTdescription" id="TEXTdescription_<?php echo $row["id_pre"]; ?>" ><?php echo $description; ?></textarea>
+														</td>
+														<td ><input type="hidden" name="ID"
+															value="<?php echo $row["id_pre"]; ?>" /><input type="submit" value="Submit"
+															name="submitDescriptionPrimary" onclick="$.post('pages/primary/submitDescription.php', $('#submitDescription_<?php echo $row["id_pre"]; ?>').serialize($('#TEXTdescription<?php echo $row["id_pre"]; ?>'))); refreshTable(); return false;" />
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</form><?php
             
             // $convArr = array(1 => "TRUE", 0 => "FALSE");
             $convArr = array(
@@ -403,27 +430,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 							</span>		
 							<?php }?>
 					</td>	
-					<td><span id="description_<?php echo $row["id_pre"]; ?>"><?php echo $row['description']; ?></span><?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
-									onclick='javascript:toggle("submitDescription_<?php echo $row["id_pre"]; ?>")'></a><form action="#"
-										id="submitDescription_<?php echo $row["id_pre"]; ?>"
-										method="post" style="display: none" class="popupstyle"><div id="descriptiond_<?php echo $row["id_pre"]; ?>"
-											>
-											<a style="float: right;margin: 4px;" class="fa" href="#"  onclick="javascript:toggle('submitDescription_<?php echo $row["id_pre"]; ?>'); ">close <i  class="fa fa-times"></i></a>
-											<table>
-												<tbody>
-													<tr>
-														<td width="100%"><textarea rows="2" name="TEXTdescription" id="TEXTdescription_<?php echo $row["id_pre"]; ?>"
-																style="width: 98%;"><?php echo trim($row["description"]); ?></textarea>
-														</td>
-														<td><input type="hidden" name="ID"
-															value="<?php echo $row["id_pre"]; ?>" /><input type="submit" value="Submit"
-															name="submitDescriptionPrimary" onclick="$.post('pages/primary/submitDescription.php', $('#submitDescription_<?php echo $row["id_pre"]; ?>').serialize($('#submitDescription_<?php echo $row["id_pre"]; ?>'))); refreshTable(); return false;" />
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</form><?php  } ?>	</td>			
+		
 					<td class="centered"><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><?php echo $row["id_sample_fk"]; ?></a></td>
 					<td><?php echo $row["sample_name"]; ?></td>
 					<td class="centered"><span <?php if (isset($row["reads_num"]) && intval($row["reads_num"]) > 200000000) { echo "style=\"color: #CC9900\" title=\"High definition sample: > 200,000,000 aligned reads\"";} ?>"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); if (isset($row["reads_num"]) && intval($row["reads_num"]) > 200000000) { echo " (hd)"; }?></span></td>
