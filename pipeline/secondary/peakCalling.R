@@ -18,7 +18,7 @@ options(scipen=999)
 library(logging, quietly = TRUE)
 library("BatchJobs", quietly = TRUE)
 
-peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, annotation=TRUE ) {
+peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) {
 	basicConfig()
 	
 	
@@ -165,7 +165,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, saturation=TRUE, a
 		
 		if (saturation) {
 			loginfo("Remove downsampling files for ChIP ID: %s",  CHIP_ID)			
-			downsampled( CHIP_ID, outFolder, BAMfolder,  'remove' )
+			downsampled( CHIP_ID, IDsec_FOLDER, BAMfolder,  'remove' )
 		}
 		
 	}
