@@ -80,7 +80,7 @@ function PeakCallerOptions() {
 	}
 	TEXT = TEXT + "\t\t</tbody></table>\n";
 	TEXT = TEXT
-			+ "\t\t<u>Saturation</u>: <input type=\"checkbox\" id=\"saturation\" name=\"saturation\" value=\"1\" checked />\n";
+			+ "\t\t<u>Saturation</u>: <input type=\"checkbox\" id=\"saturation\" name=\"saturation\" value=\"1\" /> (default: no saturation)\n";
 	TEXT = TEXT + "\t\t</form>\n";
 
     document.getElementById("OPTIONS").innerHTML=TEXT;	
