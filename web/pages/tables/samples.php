@@ -364,7 +364,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 											<table>
 												<tbody>
 													<tr>
-														<td width="100%"><select name="TEXTdescription">
+														<td width="100%"><select name=REFGENOMEdescription>
 														<?php 
 														if ($row["seq_method"] == 'BS-Seq') {
 															$selectedAssemblies = $availableAssembliesBs;
