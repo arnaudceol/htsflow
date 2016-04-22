@@ -18,6 +18,8 @@ options(scipen=999)
 library(logging, quietly = TRUE)
 library("BatchJobs", quietly = TRUE)
 
+
+
 peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) {
 	basicConfig()
 	
@@ -60,7 +62,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 	loginfo(paste("ChIP/input reads: ", CHIPReads, INPUTReads))
 	
 	fileBEDnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_broad_peaks.bed" )
+	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
 	
 	bedFolder <- paste0(getHTSFlowPath("HTSFLOW_BED"), '/', IDsec, '/bed/' )
 	createDir(bedFolder,  recursive =  TRUE)		
@@ -73,7 +75,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 		# prepare downsample files
 		if (saturation) {
 			loginfo("Downsampling ChIP ID: %s",  CHIP_ID)
-			downsampled( CHIP_ID, IDsec_FOLDER, BAMfolder, "create" ) # this function is in pipeFunctions.R
+			downsampled( IDpeak, CHIP_ID, IDsec_FOLDER, BAMfolder, "create" ) # this function is in pipeFunctions.R
 		}
 		
 		if ( typeOfpeakCalling == "MACSboth" ) {
@@ -109,16 +111,16 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 			setwd(workdir)
 						
 			reg <- makeHtsflowRegistry(regName)
-			ids <- batchMap(reg, fun=peakcaller, INPUT_ID, CHIP_ID, label,pvalue[2], stats[2],
+			ids <- batchMap(reg, fun=peakcaller,  IDpeak, INPUT_ID, CHIP_ID, label,pvalue[2], stats[2],
 					IDsec_FOLDER, BAMfolder, macsOUT2 , REFGENOME,	saturation, "MACSbroad")
 			loginfo("Submit broad peak calling as a new job.")
 			submitJobs(reg)
 			showStatus(reg)
 			
-			loginfo("Broad peals launched in parallel, continue with narrow peaks")
+			loginfo("Broad peaks launched in parallel, continue with narrow peaks")
 			
 			# Run narrow and then wait for broad to finish
-			peakcaller(INPUT_ID, CHIP_ID, label,pvalue[1], stats[1],
+			peakcaller( IDpeak, INPUT_ID, CHIP_ID, label,pvalue[1], stats[1],
 			IDsec_FOLDER, BAMfolder, macsOUT1 , REFGENOME,saturation, "MACSnarrow")
 				
 			waitForJobs(reg)
@@ -132,21 +134,29 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 			if (length(errors) > 0) {
 				stop(paste0(length(errors), " job(s) failed, exit"))
 			}
-							
+			loginfo("Prepare bigbed")       
 			# GR -> bedfile
 			grCHIP1 <- loadGR( fileBEDnarrow, typeOfpeakCalling )
 			grCHIP2 <- loadGR( fileBEDbroad, typeOfpeakCalling )
-			grCHIP <- union( grCHIP1, grCHIP2 )
-
+			loginfo("bigbed union")                 
+			grCHIP <- GenomicRanges::union( grCHIP1, grCHIP2 )
+			
 			# create dir for BOTH
 			macsOUTboth <- paste0( IDsec_FOLDER, 'BOTH/' )
 			if (! file.exists(macsOUTboth)){
 				loginfo(paste("create directory: ", macsOUTboth))
-				createDir(macsOUTboth, recursive=TRUE)		
+				createDir(macsOUTboth, recursive=TRUE)          
 			}
-
+			
+			#fileBEDboth <- paste0( macsOUTboth, label, "_peaks.bed" )
+			#write.table(as.data.frame(grCHIP)[,1:4], fileBEDboth, quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+			
+			loginfo("Write table" )
 			fileBEDboth <- paste0( macsOUTboth, label, "_peaks.bed" )
-			write.table(as.data.frame(grCHIP)[,1:4], fileBEDboth, quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+			loginfo(paste("Write table: ", fileBEDboth))
+			write.table(GenomicRanges::as.data.frame(grCHIP)[,1:4], fileBEDboth, quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
+			loginfo("Make bigbed" )
+			
 			
 			makeBigBedFile( fileBEDnarrow, genomePaths, bedFolder )
 			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
@@ -154,18 +164,18 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 			
 		} else if ( typeOfpeakCalling == "MACSnarrow" ) {
 			macsOUT <- paste0( IDsec_FOLDER, 'NARROW/' )
-			peakcaller( INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
+			peakcaller(  IDpeak,INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
 			makeBigBedFile( fileBEDnarrow, genomePaths, bedFolder )			
 		} else if ( typeOfpeakCalling == "MACSbroad" ) {
 			macsOUT <- paste0( IDsec_FOLDER, 'BROAD/' )
-			peakcaller( INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
+			peakcaller(  IDpeak,INPUT_ID, CHIP_ID, label, pval, stats_opt, IDsec_FOLDER, BAMfolder, macsOUT, REFGENOME, saturation, typeOfpeakCalling )
 			makeBigBedFile( fileBEDbroad, genomePaths, bedFolder )
 		}
 		
 		
 		if (saturation) {
 			loginfo("Remove downsampling files for ChIP ID: %s",  CHIP_ID)			
-			downsampled( CHIP_ID, IDsec_FOLDER, BAMfolder,  'remove' )
+			downsampled( IDpeak, CHIP_ID, IDsec_FOLDER, BAMfolder,  'remove' )
 		}
 		
 	}
@@ -229,7 +239,7 @@ peakCalling <- function( IDsec ){
 	setwd(workdir)
 	
 	
-	regName <- paste0("HF_PC",IDsec)
+	regName <- paste0("HF_PEAK",IDsec)
 	
 	reg <- makeHtsflowRegistry(regName)	
 	ids <- batchMap(reg, fun=peakCallingJob, IDsec=values[,"secondary_id"], IDpeak=values[,"id"])

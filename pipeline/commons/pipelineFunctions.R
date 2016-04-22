@@ -156,16 +156,16 @@ removeReadsFromBAM <- function( BAMin, BAMout, FinalPercentage ) {
 }
 
 
-downsampled <- function( CHIP_ID, IDsec_FOLDER, BAMfolder=paste0(getHTSFlowPath("HTSFLOW_ALN"), '/'), toDo='create' ) { #paths=HTSFLOW_Path(),
+downsampled <- function( IDpeak, CHIP_ID, IDsec_FOLDER, BAMfolder=paste0(getHTSFlowPath("HTSFLOW_ALN"), '/'), toDo='create' ) { #paths=HTSFLOW_Path(),
 	
 	loginfo("Start downsampling")
 	
 	CHIP_BAM <- paste0( BAMfolder, CHIP_ID, ".bam" )
 	loginfo(paste("ChIP BAM: ", CHIP_BAM))
-	CHIP_BAM_80 <- paste0( IDsec_FOLDER, CHIP_ID, "_80.bam" )
-	CHIP_BAM_60 <- paste0( IDsec_FOLDER, CHIP_ID, "_60.bam" )
-	CHIP_BAM_40 <- paste0( IDsec_FOLDER, CHIP_ID, "_40.bam" )
-	CHIP_BAM_20 <- paste0( IDsec_FOLDER, CHIP_ID, "_20.bam" )
+	CHIP_BAM_80 <- paste0( IDsec_FOLDER, IDpeak, "_", CHIP_ID, "_80.bam" )
+	CHIP_BAM_60 <- paste0( IDsec_FOLDER, IDpeak, "_", CHIP_ID, "_60.bam" )
+	CHIP_BAM_40 <- paste0( IDsec_FOLDER, IDpeak, "_", CHIP_ID, "_40.bam" )
+	CHIP_BAM_20 <- paste0( IDsec_FOLDER, IDpeak, "_", CHIP_ID, "_20.bam" )
 	
 	# check if bam are missing
 	# downsampling BAM
@@ -191,7 +191,7 @@ downsampled <- function( CHIP_ID, IDsec_FOLDER, BAMfolder=paste0(getHTSFlowPath(
 		loadConfig("BatchJobs.R")
 		setwd(workdir)
 				
-		regName <- paste0("HF_RM_READS",CHIP_ID)
+		regName <- paste0("HF_RM_READS", IDpeak)
 		reg <- makeHtsflowRegistry(regName)
 		
 		ids <- batchMap(reg, fun=removeReadsFromBAM, rep(CHIP_BAM, 4), batch_chip2, batch_val)
@@ -234,5 +234,27 @@ checkMixPresence <- function( values ) {
 		return (1)
 	}
 }
+
+
+
+# Genome functions
+getTxdbLibraryName <- function( assembly ) {
+	genomeListFile <- getHTSFlowPath("HTSFLOW_GENOMES_CONF")
+	loginfo(paste0("Genome conf: " , genomeListFile))
+	genomes <- read.table(genomeListFile ,header=TRUE, sep=" ")	
+	txdbName <- genomes[ which(genomes$version==assembly),][1, "txdb_library"]
+	return(as.character(txdbName))
+}
+
+getAnnotationLibraryName <- function( assembly ) {
+	genomeListFile <- getHTSFlowPath("HTSFLOW_GENOMES_CONF")
+	loginfo(paste0("Genome conf: " , genomeListFile))
+	genomes <- read.table(genomeListFile ,header=TRUE, sep=" ")	
+	txdbName <- genomes[ which(genomes$version==assembly),]$annotation_library
+	return(as.character(txdbName))	
+}
+
+
+
 
 
