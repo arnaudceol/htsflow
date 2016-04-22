@@ -46,7 +46,7 @@ foreach ($_POST as $key => $value) {
     }
 }
 for ($i = 0; $i < count($PeakCallData["base"]); $i ++) {
-    $queryPeakCall = "INSERT INTO peak_calling ( secondary_id, program, primary_id, input_id, label, pvalue, stats, saturation ) VALUES ( '" . $new_id_sec . "', '" . $program . "', '" . $PeakCallData["base"][$i] . "', '" . $PeakCallData["input"][$i] . "', '" . $PeakCallData["label"][$i] . "', '" . $pvalue . "', '" . $stats . "', ". $saturation ." );";
+    $queryPeakCall = "INSERT INTO peak_calling ( secondary_id, program, primary_id, input_id, label, pvalue, stats, saturation ) VALUES ( '" . $new_id_sec . "', '" . $program . "', '" . $PeakCallData["base"][$i] . "', '" . $PeakCallData["input"][$i] . "', '" . trim($PeakCallData["label"][$i]) . "', '" . $pvalue . "', '" . $stats . "', ". $saturation ." );";
 //$queryPeakCall = "INSERT INTO peak_calling ( id_sec_fk, exp_name, program, S1, S2, label, pvalue, stats, saturation ) VALUES ( '".$new_id_sec."', '".$exp_name."', '".$program."', '".$PeakCallData["base"][$i]."', '".$PeakCallData["input"][$i]."', '".$PeakCallData["label"][$i]."', '".$pvalue."', '".$stats."', ". $saturation ." );";
     
     //echo '<br />'.$queryPeakCall.'<br />';
