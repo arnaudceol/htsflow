@@ -54,3 +54,44 @@ initHtsflow <- function() {
 }
 
 
+# Genome functions
+
+
+genomeConfig <- function(genome) {
+	species <- genome[1]
+	host <- genome[2]
+	version <- genome[3]
+	txdbLib <- genome[4]	
+	annotationLibName <- genome[5]
+	tableName <- genome[6]
+	
+	
+	
+	genomesToTxdb <<- readIniFile(Sys.getenv("HTSFLOW_CONF"), aslist = TRUE)
+}
+
+initGenomes <- function() {
+	
+	genomeListFile <- getHTSFlowPath("GENOME_CONF")
+	
+	loginfo(paste0("Genome conf: " , genomeListFile))
+	
+	genomes <- read.table(genomeListFile ,header=TRUE, sep=" ")
+	
+	
+		
+	htsflowConfig <<- readIniFile(Sys.getenv("HTSFLOW_CONF"), aslist = TRUE)
+	
+	
+	genomeListFile <-commandArgs(TRUE)[1]
+	species <- genome[1]
+	host <- genome[2]
+	version <- genome[3]
+	txdbLib <- genome[4]	
+	annotationLibName <- genome[5]
+	tableName <- genome[6]	
+	
+}
+
+
+
