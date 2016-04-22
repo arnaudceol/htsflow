@@ -156,7 +156,7 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
         ## Extract fastq contains the line for unzipping fastq files
         cmd1 <- getExtractFastqCommand( sample, tag1 )
         cmd2 <- getExtractFastqCommand( sample, tag2 )
-        if ( as.numeric( flags$origin ) != 2 ) {
+       # if ( as.numeric( flags$origin ) != 2 ) {
             if( as.numeric( flags$rm_bad_reads ) ) {
                 ## line of code for removing reads flagged as bad from the sequencer and rename the reads
                 cmd1 <- paste0( cmd1, ' | ', getFastqFilterBadReadsCommand() )
@@ -166,7 +166,7 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
                 cmd1 <- paste0( cmd1, ' | ', getRenameReadsCommand() )
                 cmd2 <- paste0( cmd2, ' | ', getRenameReadsCommand() )
             }
-        }
+        #}
         if( as.numeric( flags$trimming ) ) {
             ## line of code for add trimming part in the piped command
             cmd1 <- paste0( cmd1, ' | ', getFastqTrimmingCommand(  ) )
@@ -208,13 +208,13 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
         ## line of code for removing reads flagged as bad from the sequencer and rename the reads
         ## otherwise simply rename the reads
         cmd1 <- getExtractFastqCommand( sample, tag1 )
-        if ( as.numeric( flags$origin ) != 2 ) {
+        #if ( as.numeric( flags$origin ) != 2 ) {
             if( as.numeric( flags$rm_bad_reads ) ) {
                 cmd1 <- paste0( cmd1, ' | ', getFastqFilterBadReadsCommand() )
             } else {
                 cmd1 <- paste0( cmd1, ' | ', getRenameReadsCommand() )
             }
-        }
+        #}
         if( as.numeric( flags$trimming ) ) {
             ## line of code for add trimming part in the piped command
             cmd1 <- paste0( cmd1, ' | ', getFastqTrimmingCommand(  ) )
