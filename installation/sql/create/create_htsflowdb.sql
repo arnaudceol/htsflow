@@ -377,5 +377,6 @@ INSERT INTO seq_samples VALUES(0);
 
 
 grant all on `htsflowdb`.* to 'htsflow'@'%' identified by 'hts';
+grant select on `htsflowdb`.* to 'htsflow_view'@'%' identified by 'hts';
 
 
