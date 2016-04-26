@@ -64,9 +64,9 @@ geoDownload <- function( taskId ) {
 	userUploadDir<-paste0(uploadDir, "/", user)
 
 	# Create it if it does not exist
-	if (! file.exists(uploadDir)){
+	if (! file.exists(userUploadDir)){
 		loginfo(paste("create directory: ", uploadDir))
-		createDir(uploadDir, recursive=TRUE)		
+		createDir(userUploadDir, recursive=TRUE)		
 	}
 	
 	
@@ -110,7 +110,7 @@ geoDownload <- function( taskId ) {
 	
 	errors<-findErrors(reg)
 	
-	if (length(errors) > 0) {
+	if (length(errors) > 0) { 
 		sqlSampleId <- "SELECT nextSampleId();";
 		sampleId <- extractSingleColumnFromDB(sqlSampleId)
 		loginfo(paste0("Create new sample: ", sampleId, " for GSMs: ", geoIds))
