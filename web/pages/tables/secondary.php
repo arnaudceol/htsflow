@@ -349,7 +349,7 @@ function igbLoad(id, type) {
 															name="submitRepeatSecondary" /> <input type="hidden" name="ID"
 															value="<?php echo $row["id"]; ?>" />
 
-									</form><input type="submit" value="Cancel"  onclick="javascript:toggle('DELETE_<?php echo $row["id"]; ?>')"/>
+									</form><input type="submit" value="Cancel"  onclick="javascript:toggle('REPEAT_<?php echo $row["id"]; ?>')"/>
 									</div>
 									<?php  }?>	
 					
