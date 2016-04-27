@@ -39,7 +39,6 @@ $rowSpec = mysqli_fetch_assoc($resSpec)
 		<th>INPUT</th>
 		<th>CHIP</th>
 		<th>LABEL</th>
-		<th>METHOD</th>
 	</tr>
 </thead>
 <tbody>
@@ -50,7 +49,6 @@ $rowSpec = mysqli_fetch_assoc($resSpec)
 		<td><a href="primary-browse.php?primaryId=<?php echo $rowSpec["input_id"]; ?>"><?php echo $rowSpec["input_id"]; ?></a></td>
 		<td><a href="primary-browse.php?primaryId=<?php echo $rowSpec["primary_id"]; ?>"><?php echo $rowSpec["primary_id"]; ?></a></td>
 		<td><?php echo $rowSpec["label"]; ?></td>
-		<td><?php echo $rowSpec["program"]; ?></td>
 	</tr><?php
 		$rowSpec = mysqli_fetch_assoc($resSpec);
     }
