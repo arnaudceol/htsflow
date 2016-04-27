@@ -17,9 +17,9 @@
 #
 
 
-library('GEOmetadb')
-library('SRAdb')
-library('R.utils')
+suppressWarnings(suppressMessages(library('GEOmetadb')))
+suppressWarnings(suppressMessages(library('SRAdb')))
+suppressWarnings(suppressMessages(library('R.utils')))
 
 ####
 ####

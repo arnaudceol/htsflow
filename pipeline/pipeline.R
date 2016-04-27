@@ -21,11 +21,22 @@ source("commons/geo.R")
 source("commons/genomesConfig.R")
 
 library(logging, quietly = TRUE)
-basicConfig(level="DEBUG")
+basicConfig(level="INFO")
 
 # load configuration
 source("commons/config.R")
 initHtsflow()
+
+
+gitVersionFile<-"version"
+if (! file.exists(gitVersionFile)){
+	gitVersion <- "UNSPECIFIED!"
+} else {
+	gitVersion <- readChar(gitVersionFile, file.info(gitVersionFile)$size)
+}
+loginfo(paste0("HTSFLOW git version number: ", gitVersion))
+
+
 
 # Add path variables:
 Sys.setenv(PATH=paste(Sys.getenv("PATH"),getHTSFlowPath("bowtie_dir"),getHTSFlowPath("bowtie2_dir"),getHTSFlowPath("HTSFLOW_TOOLS"),getHTSFlowPath("tophat_dir"),sep=":"))
@@ -117,7 +128,7 @@ deleteFile("HF_*-files/", recursive=TRUE)
 
 
 if ( TypeOfAnalysis == "primary") {
-	if (action == 'delete') {
+	if (action == 'delete' || action == 'redo') {
 		tryCatch(
 				deletePrimary(id) ,
 				error = function(e)
@@ -130,7 +141,9 @@ if ( TypeOfAnalysis == "primary") {
 				}
 		)
 		
-	} else {
+	}
+	
+	if ( action == 'run' || action == 'redo') {
 		
 		setStatus(id, "primary", status="started", startTime=TRUE)
 		
@@ -163,7 +176,7 @@ if ( TypeOfAnalysis == "primary") {
 		)
 	}
 } else if ( TypeOfAnalysis == "secondary" ) {
-	if (action == 'delete') {
+	if (action == 'delete' || action == 'redo') {
 		tryCatch(
 				deleteSecondary(id) ,
 				error = function(e)
@@ -176,7 +189,9 @@ if ( TypeOfAnalysis == "primary") {
 				}
 		)
 		
-	} else {
+	} 
+	
+	if ( action == 'run' || action == 'redo') {
 		setStatus(id, "secondary", status="started", startTime=TRUE)
 		
 		tryCatch(
