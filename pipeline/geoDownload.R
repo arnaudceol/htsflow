@@ -233,7 +233,8 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 			method <- tolower(gsm_metadata$library_strategy)
 			library_layout <- gsm_metadata$library_layout
 			organism <- gsub(" ", "_", sra_metadata[,c(1,2)]$scientific_name) # this is a taxid			
-			description <- sra_metadata$sample_attribute			
+			description <- sra_metadata$sample_attribute	
+			title <- gsm_metadata$title
 			
 			
 			readLength = 0
