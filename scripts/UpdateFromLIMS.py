@@ -154,6 +154,8 @@ order by run_id DESC;" % pisQuery;
 			runFolder = elem[12]
 			runId = runFolder.split("_")[0].strip()		
 
+			if app 
+
 			if runId == "":
 				numNoRunId = numNoRunId+1
 				#print("Ignore missing runId: sample %s" % sample_name)
@@ -179,11 +181,11 @@ order by run_id DESC;" % pisQuery;
 				
 
 	# fix integrity of seq_method to match RNA-Seq and ChIP-Seq signature.
-	stringaRNA = "UPDATE sample SET seq_method=\"rna-seq\" where seq_method LIKE \"%RNA%\";"
-	stringaChIP = "UPDATE sample SET seq_method=\"chip-seq\" where seq_method LIKE \"%ChIP%\";"
-	stringaDNA = "UPDATE sample SET seq_method=\"dna-seq\" where seq_method LIKE \"%DNA-Seq%\";"
-	stringaDNAse = "UPDATE sample SET seq_method=\"dnase-seq\" where seq_method LIKE \"%DNAseI-Seq%\";"
-	stringaBS = "UPDATE sample SET seq_method=\"bs-seq\" where seq_method LIKE \"%BS-Seq%\";"
+	stringaRNA = "UPDATE sample SET seq_method=\"rna-seq\" where seq_method LIKE \"%RNA%\" AND source = 0;"
+	stringaChIP = "UPDATE sample SET seq_method=\"chip-seq\" where seq_method LIKE \"%ChIP%\" AND source = 0;"
+	stringaDNA = "UPDATE sample SET seq_method=\"dna-seq\" where seq_method LIKE \"%DNA-Seq%\" AND source = 0;"
+	stringaDNAse = "UPDATE sample SET seq_method=\"dnase-seq\" where seq_method LIKE \"%DNAseI-Seq%\" AND source = 0;"
+	stringaBS = "UPDATE sample SET seq_method=\"bs-seq\" where seq_method LIKE \"%BS-Seq%\" AND source = 0;"
 	cHTSflow.execute(stringaRNA)
 	cHTSflow.execute(stringaChIP)
 	cHTSflow.execute(stringaDNA)
