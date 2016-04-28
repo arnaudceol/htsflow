@@ -298,7 +298,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 				
 			}
 			else {
-				readMode <- "SE"
+				readMode <- "SR"
 				lapply(sra_files, function(sra_file){
 							tryOrExit(paste0(getHTSFlowPath('fastqDump'), " --outdir ", userUploadDir, " ", sra_file), "GEO")
 							#call(getHTSFlowPath('fastqDump'), sra_file)
