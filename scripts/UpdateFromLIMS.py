@@ -154,8 +154,6 @@ order by run_id DESC;" % pisQuery;
 			runFolder = elem[12]
 			runId = runFolder.split("_")[0].strip()		
 
-			if app 
-
 			if runId == "":
 				numNoRunId = numNoRunId+1
 				#print("Ignore missing runId: sample %s" % sample_name)
