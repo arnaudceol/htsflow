@@ -218,9 +218,9 @@ annotateGR <- function( INPUT_ID, CHIP_ID, label, IDsec_FOLDER, typeOfpeakCallin
 		end(GRtmp) <- GR$summit
 		loginfo("Is orgdb a OrgDb?")
 		loginfo(is(orgdb,"OrgDb"))
-		GRtmp$orgdb <- orgdb
+#		GRtmp$orgdb <- orgdb
 		loginfo("get annotaions")
-#		res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
+		res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
 	} else {
 		res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
 	}
