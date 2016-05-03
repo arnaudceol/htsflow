@@ -107,20 +107,24 @@ if (isset($_POST['title']) && $_POST['title'] != "") {
 
 
 if (isset($_POST['status']) && $_POST['status'] != "") {
-    if ($_POST['status'] ==  "completed") {
-        $status="status='completed'";
-        array_push($concatArray, $status);
-    } elseif ($_POST['status'] ==  "running") {
-        $status="(status!='completed' AND status!='deleted' AND status NOT like 'Error%')";
-        array_push($concatArray, $status);
-    }  elseif ($_POST['status'] ==  "deleted") {
-        $status="(status ='deleted')";
-        array_push($concatArray, $status);
-    } else { // error
-        $status="status like 'Error%'";
-        array_push($concatArray, $status);
-    }
+	if ($_POST['status'] ==  "completed") {
+		$status="status='completed'";
+		array_push($concatArray, $status);
+	} elseif ($_POST['status'] ==  "running") {
+		$status="(status!='completed' AND status <> 'deleted' AND status NOT like 'Error%')";
+		array_push($concatArray, $status);
+	}  elseif ($_POST['status'] ==  "deleted") {
+		$status="(status ='deleted')";
+		array_push($concatArray, $status);
+	} elseif ($_POST['status'] != "all") { // error
+		$status="status like 'Error%'";
+		array_push($concatArray, $status);
+	}
+} else {
+	$status="(status <> 'deleted')";
+	array_push($concatArray, $status);
 }
+
 
 
 

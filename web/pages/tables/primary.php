@@ -132,16 +132,20 @@ if (isset($_POST['status']) && $_POST['status'] != "") {
         $status="status='completed'";
         array_push($concatArray, $status);
     } elseif ($_POST['status'] ==  "running") {
-        $status="(status!='completed' AND status!='deleted' AND status NOT like 'Error%')";
+        $status="(status!='completed' AND status <> 'deleted' AND status NOT like 'Error%')";
         array_push($concatArray, $status);
     }  elseif ($_POST['status'] ==  "deleted") {
-        $status="(status =='deleted')";
+        $status="(status ='deleted')";
         array_push($concatArray, $status);
-    } else { // error
+    } elseif ( $_POST['status'] != "all") { // error
         $status="status like 'Error%'";
         array_push($concatArray, $status);
     }
+} else {
+	$status="(status <> 'deleted')";
+    array_push($concatArray, $status);
 }
+
 
 
 
@@ -203,6 +207,7 @@ switch ($numOfelements) {
 }
 
 $result = mysqli_query($con, "SELECT COUNT(*) FROM (". $sql . ") as g" );
+
 $count=$result->fetch_row();
 $result->close();
 $numRighe= $count[0];

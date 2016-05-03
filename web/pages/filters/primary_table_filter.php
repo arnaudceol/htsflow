@@ -163,7 +163,9 @@ $result = mysqli_query($con, $sql);
 		</div>
 		<div class="group">
 			<label>Status</label><br /> <select id="status" name="status">
-				<option value="" selected>All status</option>
+				<option value="" selected>Completed & Running</option>
+				<option value="all"
+					<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "all") { echo "selected"; }?>>all</option>
 				<option value="completed"
 					<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "completed") { echo "selected"; }?>>completed</option>
 				<option value="running"
@@ -171,7 +173,7 @@ $result = mysqli_query($con, $sql);
 				<option value="error"
 					<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "error") { echo "selected"; }?>>error</option>
 				<option value="deleted"
-					<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "error") { echo "selected"; }?>>deleted</option>
+					<?php if (isset ( $_POST ['status'] ) && $_POST ['status'] == "deleted") { echo "selected"; }?>>deleted</option>
 			</select>
 		</div>
 		<input type="button" value="FILTER"
