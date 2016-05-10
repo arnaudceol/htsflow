@@ -192,16 +192,22 @@ annotateGR <- function( INPUT_ID, CHIP_ID, label, IDsec_FOLDER, typeOfpeakCallin
 	##     txdb <- TxDb.Rnorvegicus.UCSC.rn5.refGene
 	## }
 		
+	
+	
+	fileBEDnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_narrow_peaks.bed" )
+	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_broad_peaks.bed" )
+	fileBEDboth <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_both_peaks.bed" )
+	
 	if ( typeOfpeakCalling == "MACSnarrow" ){
-		fileTMP <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-		GR <- loadGRBind( fileTMP, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
+		#fileTMP <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
+		GR <- loadGRBind( fileBEDnarrow, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
 	} else if ( typeOfpeakCalling == "MACSbroad" ){
-		fileTMP <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
-		GR <- loadGRBind( fileTMP, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
+		#fileTMP <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+		GR <- loadGRBind( fileBEDbroad, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
 	}  else if ( typeOfpeakCalling == "MACSboth" ){
-		fileTMPnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-		fileTMPbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
-		GR <- loadGRBindBOTH( fileTMPnarrow, fileTMPbroad,  paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam") )
+		#fileTMPnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
+		#fileTMPbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+		GR <- loadGRBindBOTH( fileBEDnarrow, fileBEDbroad,  paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam") )
 	}
 	
 	summit <- GRcoverageSummit(GR, paste0( BAMfolder, CHIP_ID, ".bam" ))
