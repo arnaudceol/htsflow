@@ -216,7 +216,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		}			
 		
 		#Querying the database to obtain metadata
-		gsm_metadata <- dbGetQuery(sra_con, paste0("select distinct experiment_accession, sample_accession, experiment_alias, library_strategy, library_layout, title from experiment where experiment_url_link like '%", toupper(gsm), "'"))	
+		gsm_metadata <- dbGetQuery(sra_con, paste0("select distinct experiment_accession, sample_accession, experiment_alias, library_strategy, library_layout, title from experiment where experiment_url_link like '%", toupper(gsm), "' OR  experiment_alias like '%", toupper(gsm), "'"))	
 		## loginfo("GSM metadata: ")
 		## loginfo(gsm_metadata)
 		## loginfo("SRA metadata: ")
