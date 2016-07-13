@@ -184,7 +184,7 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 		updateInfoOnDB( SQL )
 		
 		if ( paired ) {
-			cmd <- paste(
+			execute <- paste(
 					getHTSFlowPath("featuresCounts")
 					,"-T 16 -p -P -a"
 					,gtf
@@ -195,7 +195,7 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 			)
 			tryOrExit(execute, "feature counts")
 		} else {
-			cmd <- paste(
+			execute <- paste(
 					getHTSFlowPath("featuresCounts")
 					,"-T 16 -a"
 					,gtf
