@@ -144,153 +144,159 @@ loadGRBindBOTH <- function( FILEnarrow, FILEbroad,  BAM, BAMREF ){
 annotateGR <- function( INPUT_ID, CHIP_ID, label, IDsec_FOLDER, typeOfpeakCalling, BAMfolder, REFGENOME ) {
 	loginfo(paste("Ref genome: " ,REFGENOME))
 	
-	##annotationLibraryName <- getAnnotationLibraryName(REFGENOME)
-	##txdbLibraryName <- getTxdbLibraryName(REFGENOME)
-	##
-	##library(annotationLibraryName, character.only = TRUE)
-	##library(txdbLibraryName, character.only = TRUE)
-	##
-	##txdb <- get(txdbLibraryName)
-	##orgdb <- get(annotationLibraryName)
-	##
-	##e<-baseenv()
-	##e$orgdb <- orgdb
-	##
-	##loginfo(paste("Ref genome and libraries: ",REFGENOME,annotationLibraryName, txdbLibraryName, sep=", "))
+	annotationLibraryName <- getAnnotationLibraryName(REFGENOME)
+	txdbLibraryName <- getTxdbLibraryName(REFGENOME)
+	
+	library(annotationLibraryName, character.only = TRUE)
+	library(txdbLibraryName, character.only = TRUE)
+	
+	txdb <- get(txdbLibraryName)
+	orgdb <- get(annotationLibraryName)
+	
+	e<-baseenv()
+	e$orgdb <- orgdb
+	
+	loginfo(paste("Ref genome and libraries: ",REFGENOME,annotationLibraryName, txdbLibraryName, sep=", "))
 	
 	## library( org.Mm.eg.db , quietly = TRUE)
 	## library( TxDb.Mmusculus.UCSC.mm9.knownGene)
 	## txdb <- TxDb.Mmusculus.UCSC.mm9.knownGene
 	
-	 if ( REFGENOME == 'mm9' ) {		
-	     library( org.Mm.eg.db , quietly = TRUE)
-	     library( TxDb.Mmusculus.UCSC.mm9.knownGene)
-	     txdb <- TxDb.Mmusculus.UCSC.mm9.knownGene
-	 }
-	 if ( REFGENOME == 'hg19' ) {
-	     library( org.Hs.eg.db , quietly = TRUE)
-	     library( TxDb.Hsapiens.UCSC.hg19.knownGene , quietly = TRUE)
-	     txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
-	 }
-	 if ( REFGENOME == 'mm10' ) {
-	     library( org.Mm.eg.db , quietly = TRUE)
-	     library( TxDb.Mmusculus.UCSC.mm10.knownGene , quietly = TRUE)
-	     txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
-	 }
-	 if ( REFGENOME == 'hg18' ) {
-	     library( org.Hs.eg.db , quietly = TRUE)
-	     library( TxDb.Hsapiens.UCSC.hg18.knownGene , quietly = TRUE)
-	     txdb <- TxDb.Hsapiens.UCSC.hg18.knownGene
-	 }
-	 if ( REFGENOME == 'dm6' ) {
-	     library( org.Dm.eg.db , quietly = TRUE)
-	     txdb <- loadDb('/home/egaleota/txdb.sqlite')
-	 }
-	 if ( REFGENOME == 'rn5' ) {
-	     library( org.Rn.eg.db , quietly = TRUE)
-	     library( TxDb.Rnorvegicus.UCSC.rn5.refGene , quietly = TRUE)
-	     txdb <- TxDb.Rnorvegicus.UCSC.rn5.refGene
-	 }
+	## if ( REFGENOME == 'mm9' ) {		
+	##     library( org.Mm.eg.db , quietly = TRUE)
+	##     library( TxDb.Mmusculus.UCSC.mm9.knownGene)
+	##     txdb <- TxDb.Mmusculus.UCSC.mm9.knownGene
+	## }
+	## if ( REFGENOME == 'hg19' ) {
+	##     library( org.Hs.eg.db , quietly = TRUE)
+	##     library( TxDb.Hsapiens.UCSC.hg19.knownGene , quietly = TRUE)
+	##     txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+	## }
+	## if ( REFGENOME == 'mm10' ) {
+	##     library( org.Mm.eg.db , quietly = TRUE)
+	##     library( TxDb.Mmusculus.UCSC.mm10.knownGene , quietly = TRUE)
+	##     txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+	## }
+	## if ( REFGENOME == 'hg18' ) {
+	##     library( org.Hs.eg.db , quietly = TRUE)
+	##     library( TxDb.Hsapiens.UCSC.hg18.knownGene , quietly = TRUE)
+	##     txdb <- TxDb.Hsapiens.UCSC.hg18.knownGene
+	## }
+	## if ( REFGENOME == 'dm6' ) {
+	##     library( org.Dm.eg.db , quietly = TRUE)
+	##     txdb <- loadDb('/home/egaleota/txdb.sqlite')
+	## }
+	## if ( REFGENOME == 'rn5' ) {
+	##     library( org.Rn.eg.db , quietly = TRUE)
+	##     library( TxDb.Rnorvegicus.UCSC.rn5.refGene , quietly = TRUE)
+	##     txdb <- TxDb.Rnorvegicus.UCSC.rn5.refGene
+	## }
 		
+	
+	
+	fileBEDnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_narrow_peaks.bed" )
+	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_broad_peaks.bed" )
+	fileBEDboth <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_both_peaks.bed" )
+	
 	if ( typeOfpeakCalling == "MACSnarrow" ){
-		fileTMP <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-		GR <- loadGRBind( fileTMP, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
+		#fileTMP <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
+		GR <- loadGRBind( fileBEDnarrow, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
 	} else if ( typeOfpeakCalling == "MACSbroad" ){
-		fileTMP <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
-		GR <- loadGRBind( fileTMP, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
+		#fileTMP <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+		GR <- loadGRBind( fileBEDbroad, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
 	}  else if ( typeOfpeakCalling == "MACSboth" ){
-		fileTMPnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-		fileTMPbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
-		GR <- loadGRBindBOTH( fileTMPnarrow, fileTMPbroad,  paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam") )
+		#fileTMPnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
+		#fileTMPbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+		GR <- loadGRBindBOTH( fileBEDnarrow, fileBEDbroad,  paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam") )
 	}
 	
 	summit <- GRcoverageSummit(GR, paste0( BAMfolder, CHIP_ID, ".bam" ))
 	GR$summit <- start(summit)
 	GR$midpoint <- start(GRmidpoint(GR))
 	
-	### annotation differs. use summit for narrow peaks as viewpoint, while midpoint for broad peaks
-	##loginfo("annotate")
+	# annotation differs. use summit for narrow peaks as viewpoint, while midpoint for broad peaks
+	loginfo("annotate")
 #       loginfo(orgdb)
-	##
-	##if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	##	GRtmp <- GR
-	##	start(GRtmp) <- GR$summit
-	##	end(GRtmp) <- GR$summit
-	##	loginfo("Is orgdb a OrgDb?")
-	##	loginfo(is(orgdb,"OrgDb"))
+	
+	if ( typeOfpeakCalling == 'MACSnarrow' ) {
+		GRtmp <- GR
+		start(GRtmp) <- GR$summit
+		end(GRtmp) <- GR$summit
+		loginfo("Is orgdb a OrgDb?")
+		loginfo(is(orgdb,"OrgDb"))
 #		GRtmp$orgdb <- orgdb
-	##	loginfo("get annotaions")
-	##	res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
-	##} else {
-	##	res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
-	##}
+		loginfo("get annotaions")
+		res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
+	} else {
+		res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=orgdb, upstream=2000, downstream=1000 )
+	}
 	
 	
 
-	 if ( REFGENOME == 'mm9' ) {
-	     # annotation differs. use summit for narrow peaks as viewpoint, while midpoint for broad peaks
-	     if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	         GRtmp <- GR
-	         start(GRtmp) <- GR$summit
-	         end(GRtmp) <- GR$summit
-	         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
-	     } else {
-	         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
-	     }
-	 }
-	 if ( REFGENOME == 'hg19' ) {
-	     if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	         GRtmp <- GR
-	         start(GRtmp) <- GR$summit
-	         end(GRtmp) <- GR$summit
-	         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
-	     } else {
-	         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
-	     }
-	 
-	 }
-	 if ( REFGENOME == 'mm10' ) {
-	     if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	         GRtmp <- GR
-	         start(GRtmp) <- GR$summit
-	         end(GRtmp) <- GR$summit
-	         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
-	     } else {
-	         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
-	     }
-	 
-	 }
-	 if ( REFGENOME == 'hg18' ) {
-	     if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	         GRtmp <- GR
-	         start(GRtmp) <- GR$summit
-	         end(GRtmp) <- GR$summit
-	         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
-	     } else {
-	         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
-	     }
-	 
-	 }
-	 if ( REFGENOME == 'dm6' ) {
-	     if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	         GRtmp <- GR
-	         start(GRtmp) <- GR$summit
-	         end(GRtmp) <- GR$summit
-	         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Dm.eg.db, upstream=2000, downstream=1000 )
-	     } else {
-	         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Dm.eg.db, upstream=2000, downstream=1000 )
-	     }
-	 }
-	 if ( REFGENOME == 'rn5' ) {
-	     if ( typeOfpeakCalling == 'MACSnarrow' ) {
-	         GRtmp <- GR
-	         start(GRtmp) <- GR$summit
-	         end(GRtmp) <- GR$summit
-	         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Rn.eg.db, upstream=2000, downstream=1000 )
-	     } else {
-	         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Rn.eg.db, upstream=2000, downstream=1000 )
-	     }
-	 }
+	## if ( REFGENOME == 'mm9' ) {
+	##     # annotation differs. use summit for narrow peaks as viewpoint, while midpoint for broad peaks
+	##     if ( typeOfpeakCalling == 'MACSnarrow' ) {
+	##         GRtmp <- GR
+	##         start(GRtmp) <- GR$summit
+	##         end(GRtmp) <- GR$summit
+	##         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
+	##     } else {
+	##         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
+	##     }
+	## }
+	## if ( REFGENOME == 'hg19' ) {
+	##     if ( typeOfpeakCalling == 'MACSnarrow' ) {
+	##         GRtmp <- GR
+	##         start(GRtmp) <- GR$summit
+	##         end(GRtmp) <- GR$summit
+	##         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
+	##     } else {
+	##         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
+	##     }
+	## 
+	## }
+	## if ( REFGENOME == 'mm10' ) {
+	##     if ( typeOfpeakCalling == 'MACSnarrow' ) {
+	##         GRtmp <- GR
+	##         start(GRtmp) <- GR$summit
+	##         end(GRtmp) <- GR$summit
+	##         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
+	##     } else {
+	##         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Mm.eg.db, upstream=2000, downstream=1000 )
+	##     }
+	## 
+	## }
+	## if ( REFGENOME == 'hg18' ) {
+	##     if ( typeOfpeakCalling == 'MACSnarrow' ) {
+	##         GRtmp <- GR
+	##         start(GRtmp) <- GR$summit
+	##         end(GRtmp) <- GR$summit
+	##         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
+	##     } else {
+	##         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Hs.eg.db, upstream=2000, downstream=1000 )
+	##     }
+	## 
+	## }
+	## if ( REFGENOME == 'dm6' ) {
+	##     if ( typeOfpeakCalling == 'MACSnarrow' ) {
+	##         GRtmp <- GR
+	##         start(GRtmp) <- GR$summit
+	##         end(GRtmp) <- GR$summit
+	##         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Dm.eg.db, upstream=2000, downstream=1000 )
+	##     } else {
+	##         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Dm.eg.db, upstream=2000, downstream=1000 )
+	##     }
+	## }
+	## if ( REFGENOME == 'rn5' ) {
+	##     if ( typeOfpeakCalling == 'MACSnarrow' ) {
+	##         GRtmp <- GR
+	##         start(GRtmp) <- GR$summit
+	##         end(GRtmp) <- GR$summit
+	##         res <- GRannotate( Object=GRtmp, txdb=txdb, EG2GS=org.Rn.eg.db, upstream=2000, downstream=1000 )
+	##     } else {
+	##         res <- GRannotate( Object=GRmidpoint(GR), txdb=txdb, EG2GS=org.Rn.eg.db, upstream=2000, downstream=1000 )
+	##     }
+	## }
 	ranges(res) <- ranges(GR)
 	return (res)
 }
