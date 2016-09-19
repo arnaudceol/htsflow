@@ -36,7 +36,9 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
 
     # location of files important for the primary analysis ############
     outPath <- getPreprocessDir()
-    tmpFold <- getHTSFlowPath("HTSFLOW_TMP")
+    tmpFold <- getPreprocessDir()
+	
+	createDir(tmpFold, TRUE);
 
 	loginfo(paste("Start primary, primary id: ", primaryId, ", BAM file: ", bamFileName, ", Pre-process directory: ", outPath, ", tmp directory: ", tmpFold))
 	
@@ -99,8 +101,35 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
         SQL <- paste("UPDATE primary_analysis SET status='deconvolute reads..' WHERE id=", primaryId ,sep="")
         res <- updateInfoOnDB( SQL )
         doFeatureCounts( sample, genomePaths, flags )
-    }
+	}
 
+	## if the analysis is from RNA-Seq samples we 
+	## We may want to separate strand
+	if ( flags$seq_method=="rna-seq" && as.numeric( flags$stranded )) {		
+		
+		# Strand +		
+		bam_p <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_p.bam')
+		sam_p <- paste0(tmpFold,primaryId,'_p.sam')
+		
+		str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:+ >', sam_p)		
+		tryOrExit(str, "Extract positive strand")
+		
+		str=paste(getHTSFlowPath("samtools"), '  view -bT', genomePaths["fasta",] , sam_p, '>', bam_p)
+		tryOrExit(str, "Write BAM for positive strand")
+		
+		# Strand -		
+		bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
+		sam_n <- paste0(tmpFold,primaryId,'_p.sam')
+		
+		str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:- >', sam_n)		
+		tryOrExit(str, "Extract positive strand")
+		
+		str=paste(getHTSFlowPath("samtools"), '  view -bT',  genomePaths["fasta",], sam_p, '>', bam_n)
+		tryOrExit(str, "Write BAM for positive strand")
+		
+	}
+	
+	
 	## generate the bw file. If the analysis comes from a BS experiments we need
     ## to pass the BS genome instead of the regular one. This is why exists two
     ## different functions for this task: doBW and doBW_bs
@@ -108,6 +137,19 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
         doBW_bs( sample, genomePaths )
     } else {
         doBW( sample, genomePaths )
+		
+		if ( flags$seq_method=="rna-seq" && as.numeric( flags$stranded) ) {			
+			doBW( sample, genomePaths, "+" )
+			doBW( sample, genomePaths, "-" )
+			
+			# Remove stranded bams		
+			bam_p <- paste0(getHTSFlowPath("HTSFLOW_AbigLN"),'/',primaryId,'_p.bam')
+			bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
+			
+			deleteFile(bam_p)
+			deleteFile(bam_n)			
+		}
+		
     }
     ## The last tool to be launched will be FastQC. fastQCexec creates a report from FastQC in ./QC/ folder.
     ## For the future: add on the web interface a link to this output.
@@ -811,10 +853,18 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
 	return(result)
 }
 
-doBW <- function( sample, RefGenomes ){
-    loginfo ( "Generating BW file")
+
+
+# In case of strand specific alignment, specify
+# strand = + or strand = -. The bam files used
+# will be the one ended with _p or _n respectively
+# If strand is null or empty,the main bam file is used.
+doBW <- function( sample, RefGenomes, strand = FALSE){
+    
     chromSize <- RefGenomes[ "chromSize", ]
     primaryId <- names(sample)
+
+	
     # this is a patch for having all the bw in the genome browser
     BWOUTFOLDER <-  getHTSFlowPath("HTSFLOW_BW")
 
@@ -822,17 +872,32 @@ doBW <- function( sample, RefGenomes ){
 		loginfo(paste("create directory: ", BWOUTFOLDER))
 		createDir(BWOUTFOLDER,  recursive =  TRUE)		
 	}
-	
-    bamFile <- paste0 (
-                getHTSFlowPath("HTSFLOW_ALN")
-                ,"/"
-                ,primaryId
-                ,".bam"
-        )
-    loginfo(bamFile)
+
     SQL <- paste0("SELECT reads_num FROM primary_analysis WHERE id=",primaryId,";")
     readsAln <- extractInfoFromDB( SQL )
 
+	
+	
+	if (strand == "+") {
+		loginfo ( "Generating BW file: strand +")
+		primaryId <- paste0(primaryId, "_p")
+	} else if (strand == "-") {
+		loginfo ( "Generating BW file: strand +")
+		primaryId <- paste0(primaryId, "_n")
+	} else {
+		loginfo ( "Generating BW file: unstranded")
+	}
+	
+	
+	bamFile <- paste0 (
+			getHTSFlowPath("HTSFLOW_ALN")
+			,"/"
+			,primaryId
+			,".bam"
+	)
+	
+	loginfo(bamFile)
+	
     bedgraphF <- paste0(
                 getPreprocessDir()
                 ,primaryId
@@ -861,7 +926,7 @@ doBW <- function( sample, RefGenomes ){
             ,bedgraphF
         )
 
-	tryOrExit(execute, "BW")
+	tryOrExit(execute, "BW-gcb")
 	
     execute <- paste0(
             "awk '{print $1,$2,$3,int($4*1e7/"
@@ -872,7 +937,7 @@ doBW <- function( sample, RefGenomes ){
             ,bedgraphTmp
         )
 	
-	tryOrExit(execute, "BW")
+	tryOrExit(execute, "BW-awk")
 	
     execute <- paste0(
             getHTSFlowPath("bedGraphToBigWig")
@@ -884,7 +949,7 @@ doBW <- function( sample, RefGenomes ){
             ,bwF
         )
 
-	tryOrExit(execute, "BW")
+	tryOrExit(execute, "BW-bgw")
 	
 	deleteFile(bedgraphF, recursive=TRUE)
 	deleteFile(bedgraphTmp, recursive=TRUE)

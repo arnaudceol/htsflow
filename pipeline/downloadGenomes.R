@@ -80,9 +80,9 @@ downloadGenome <- function(genome) {
 	igenomeFile <- paste0(species, "_", host,"_", version, ".tar.gz")
 	
 	if (! file.exists(paste(tmpDir, igenomeFile, sep="/"))) {
-	 download.file(paste("ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com", species, host, version, igenomeFile, sep="/"), 
+		 download.file(paste("ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com", species, host, version, igenomeFile, sep="/"), 
 	         destfile=paste(tmpDir, igenomeFile, sep="/"), quiet=TRUE)	 
-	 untar(paste(tmpDir, igenomeFile, sep="/"), exdir=tmpDir)
+		 untar(paste(tmpDir, igenomeFile, sep="/"), exdir=tmpDir)
 	}
 	loginfo("igenome files ready.")
 	# Copy files

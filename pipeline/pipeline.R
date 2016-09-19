@@ -60,6 +60,13 @@ id <- commandArgs(TRUE)[1] # TypeOfAnalysisID
 TypeOfAnalysis <- commandArgs(TRUE)[2]
 action <- commandArgs(TRUE)[3]
 
+# Forse starting the job, even if it was already 
+force <- FALSE
+if (length(commandArgs(TRUE)) > 3 && commandArgs(TRUE)[4] == "force") {
+	force <- TRUE
+}
+
+
 assign("PIPELINE_ID", id, envir=globalenv())
 if ( TypeOfAnalysis == "primary" ) {
 	assign("PIPELINE_TYPE", "primary", envir=globalenv())
@@ -113,7 +120,7 @@ setUserWorkDir()
 # Check if this job can be run: the combination of id/type/action should be in the job_list table and launch should be null
 sqlCheck <- paste0("SELECT count(*) FROM job_list WHERE analyses_type = '",TypeOfAnalysis,"' AND analyses_id = '",id,"' AND action = '",action,"' AND started is null;") 
 jobRowCount <- as.numeric(extractSingleColumnFromDB(sqlCheck))
-if (jobRowCount == 0) {
+if (jobRowCount == 0 && force == FALSE) {
 	loginfo("This job does not exist or has already been run.")
 	stop()
 }
