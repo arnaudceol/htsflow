@@ -19,7 +19,7 @@
 // ini_set("display_startup_errors", 1);
 // ini_set("display_errors", 1);
 
-$conf= "/home/aceol/workspace45/htsflow2/conf/htsflow-local.ini";
+$conf= "/home/aceol/Work/data/htsflow-conf/htsflow-local.ini";
 
 $HTSFLOW_PATHS=array();
 
@@ -45,7 +45,7 @@ define('R_BASE', $HTSFLOW_PATHS['Rbase'] );
 define('GENOMES_FOLDER', $HTSFLOW_PATHS['HTSFLOW_GENOMES']);
 
 // Use this to display a message on each page, e.g. for a test server
-define('WARNING_MESSAGE', "");
+define('WARNING_MESSAGE', "TEST LOCAL DATABASE");
 
 
 

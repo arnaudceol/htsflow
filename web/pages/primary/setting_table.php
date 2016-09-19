@@ -112,6 +112,20 @@ $defaultProgram = $defaultOptions[$typeOfDefault]["program"];
 									?>
 									document.getElementById('aln_options').value = options;
 								}
+
+								function updateStranded() {
+									program = document.getElementById('aln_prog').value;
+									stranded = document.getElementById('stranded').value;
+									options = "";
+
+									if (program == 'tophat' && stranded == 'TRUE') {
+										options = '<?php echo $defaultOptions['options']['tophat-stranded'];?>';
+									} else {
+										options = '<?php echo $defaultOptions['options']['tophat'];?>';
+									}
+									document.getElementById('aln_options').value = options;
+								}
+								
 								</script>
 								
 <table>
@@ -176,6 +190,12 @@ $defaultProgram = $defaultOptions[$typeOfDefault]["program"];
 									size="55" value="<?php 
 										echo $defaultOptions['options'][$defaultProgram]; 
 									?>" /></td>
+							</tr>
+							<tr>
+								<td>Stranded (RNA-seq only)</td>
+								<td><select name="stranded" id="stranded" onchange="updateStranded()"><option value="FALSE"  selected>FALSE</option>
+								<option value="TRUE" >TRUE</option></select>
+										</td>
 							</tr>
 							
                                                                              </table></td>
