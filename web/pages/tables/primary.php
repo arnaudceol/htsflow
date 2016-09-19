@@ -414,6 +414,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 										<th>remove duplicates</th>
 										<td><?php echo $convArr[$row_details["rm_duplicates"]]; ?></td>
 									</tr>
+									<tr>
+										<th>Stranded</th>
+										<td><?php $stranded = $row_details["stranded"];  echo $convArr[$row_details["stranded"]];  ?></td>
+									</tr>
 								</tbody>
 							</table>
 						</div><?php
@@ -432,8 +436,14 @@ while ($row = mysqli_fetch_assoc($result)) {
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
-							</span>		
-							<?php }?>
+							</span>	
+							<?php if ( $stranded == 1  ) { ?>
+								<i class="fa fa-exchange" style="color: green" aria-hidden="true" title="stranded"></i>								
+							<?php 
+            			} else {
+            				?><i class="fa fa-long-arrow-right" aria-hidden="true" title="unstranded"></i><?php 
+            			}
+            		}?>
 					</td>	
 		
 					<td class="centered"><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><?php echo $row["id_sample_fk"]; ?></a></td>
