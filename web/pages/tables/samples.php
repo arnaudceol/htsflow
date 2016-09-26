@@ -152,7 +152,7 @@ $availableAssemblies= array();
 $availableAssembliesBs= array();
 
 foreach (scandir(GENOMES_FOLDER) as $assembly) {
-    if ($assembly[0] != ".") {
+    if ($assembly[0] != "." && $assembly != 'alternative-genomes' ) {
     	if (strrpos($assembly, "_bs") > 0) {
     		$assemblyName = explode("_", $assembly) [0];
     		array_push($availableAssembliesBs, $assemblyName );
