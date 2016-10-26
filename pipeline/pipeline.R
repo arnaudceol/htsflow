@@ -19,6 +19,7 @@ source("commons/dbFunctions.R")
 source("commons/pipelineFunctions.R")
 source("commons/geo.R")
 source("commons/genomesConfig.R")
+source("commons/bigwig.R")
 
 library(logging, quietly = TRUE)
 basicConfig(level="INFO")
@@ -49,6 +50,7 @@ sourceSecondaries <- sapply(list.files(pattern="[.]R$", path="secondary/", full.
 source("primary.R")
 source("secondary.R")
 source("merging.R")
+source("downsampling.R")
 source("deletePrimary.R")
 source("deleteSecondary.R")
 source("geoDownload.R")
@@ -73,6 +75,8 @@ if ( TypeOfAnalysis == "primary" ) {
 } else if ( TypeOfAnalysis == "secondary" ) {
 	assign("PIPELINE_TYPE", "secondary", envir=globalenv())
 } else if ( TypeOfAnalysis == "merging" ) {
+	assign("PIPELINE_TYPE", "primary", envir=globalenv())
+} else if ( TypeOfAnalysis == "downsampling" ) {
 	assign("PIPELINE_TYPE", "primary", envir=globalenv())
 } else if ( TypeOfAnalysis == "other" ) {
 	assign("PIPELINE_TYPE", "other", envir=globalenv())
@@ -228,6 +232,24 @@ if ( TypeOfAnalysis == "primary") {
 				loginfo("Session information: ")
 				sessionInfo()
 				setError( "Merging pipeline exited with errors." )
+				stop()
+			}
+	)
+} else if ( TypeOfAnalysis == "downsampling" ) {
+	
+	setStatus(id, "primary", status="started", startTime=TRUE)
+	
+	flags <- getFlagsElementsFromMergeDB ( id )
+	SQL <- paste0("SELECT * FROM primary_analysis, pa_options WHERE options_id = pa_options.id and primary_analysis.id =",id)
+	flagsPRE <- extractInfoFromDB( SQL )
+	tryCatch(
+			downsampling ( flags, flagsPRE, id ),
+			error = function(e)
+			{
+				print(e)
+				loginfo("Session information: ")
+				sessionInfo()
+				setError( "downsampling pipeline exited with errors." )
 				stop()
 			}
 	)

@@ -169,5 +169,3 @@ setStatus <- function( id, type, status='completed', startTime=FALSE, endTime=FA
 	SQL <- paste0( SQL, ' WHERE id =', id )
 	tmp <- dbQuery(SQL)
 }
-
-

@@ -67,3 +67,4 @@ buildNumber.properties
 *~
 .RData
 conf/htsflow-local.ini
+web/out

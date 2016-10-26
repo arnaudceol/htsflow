@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# load configuration
-source(paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/commons/config.R"))
 
 merging <- function ( flags, flagsPRE, id_merge_primary ) {
 	# HTS-flow2 : id_merge is the sample id	
@@ -232,8 +230,8 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 	
 	# Then we have to create the bw files and copy on track_manager folder.
 	
-	makeBWmerge( id_merge_primary, RefGenomes )
-
+	## makeBWmerge( id_merge_primary, RefGenomes )
+	createBigWig(id_merge_primary, RefGenomes, seq_method, as.numeric( flagsPRE$stranded))
 	
 	# update the DB with the secondary analysis status complete
 	SQL <-
@@ -247,86 +245,4 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 	#########################################
 	
 }
-
-makeBWmerge <- function( sample, RefGenomes ){
-	loginfo ( "Generating BW file")
-	chromSize <- RefGenomes[ "chromSize", ]
-	primaryId <- sample
-	# this is a patch for having all the bw in the genome browser
-	BWOUTFOLDER <-  getHTSFlowPath("HTSFLOW_BW")
-	bamFile <- paste0 (
-			getHTSFlowPath("HTSFLOW_ALN")
-			,"/"
-			,primaryId
-			,".bam"
-	)
-	SQL <- paste0("SELECT reads_num FROM primary_analysis WHERE id=",primaryId,";")
-	readsAln <- extractInfoFromDB( SQL )
-	
-	bedgraphF <- paste0(
-			getPreprocessDir()
-			,primaryId
-			,".bedgraph"
-	)
-	
-	bedgraphTmp <- paste0(
-			getPreprocessDir()
-			,primaryId
-			,".tmp"
-	)
-	
-	bwF <- paste0(
-			getPreprocessDir()
-			,primaryId
-			,".bw"
-	)
-	
-	execute <- paste0(
-			getHTSFlowPath("genomeCoverageBed")
-			," -split -ibam "
-			,bamFile
-			," -g "
-			,chromSize
-			," -bg > "
-			,bedgraphF
-	)
-	tryOrExit(execute, "make BW merge: genome coverage BED")
-	
-	execute <- paste0(
-			"awk '{print $1,$2,$3,int($4*1e7/"
-			,readsAln
-			,")+1}' "
-			,bedgraphF
-			," >  "
-			,bedgraphTmp
-	)
-	tryOrExit(execute, "make BW merge: awk")
-	
-	execute <- paste0(
-			getHTSFlowPath("bedGraphToBigWig")
-			," "
-			,bedgraphTmp
-			," "
-			,chromSize
-			," "
-			,bwF
-	)
-	tryOrExit(execute, "make BW merge: BED graph to BigWig")
-	
-	execute <- paste0(
-			"rm -f "
-			,bedgraphF
-			," "
-			,bedgraphTmp
-	)
-	tryOrExit(execute, "make BW merge: clean")
-	
-	print ('Copying BW file to Genome Browser folder')
-	execute <- paste0( 'mv ',bwF, ' ',BWOUTFOLDER )
-	result <- tryOrExit(execute, "make BW merge: move files")
-	
-	loginfo ( "BW done.")
-	return(result)
-}
-
 

@@ -68,7 +68,11 @@ include 'pages/filters/primary_table_filter.php';
 		<a href="#"
 			class="fa fa-object-group  fa-2x"
 			onclick="loadMergeTable(); return false;"
-			title="Merge selected samples"></a> 
+			title="Merge selected samples"></a>
+		<a href="#"
+			class="fa fa-filter  fa-2x"
+			onclick="loadDownsampleTable(); return false;"
+			title="Downsample"></a>
 		<a href="#"
 			class="fa fa-reply fa-2x" onclick="goToSample();return false;"
 			title="Show samples for selected analyses"></a> 
@@ -115,6 +119,41 @@ if (isset($_REQUEST['messageYes'])) {
 	</script>
 
 	<script>
+
+	function loadDownsampleTable() {                   
+
+		if ($('#selectedIds').val().trim().split(" ") == "" || $('#selectedIds').val().trim().split(" ").length > 2 ) {
+			alert("Select at least one sample, and at most two sample (the number of reads in the smallest sample with be usedas a base for the down sampling).");
+		} else { 		
+               $.post("pages/tables/primary.php", {
+            			selectable: "false", 
+            			type: "completed",
+            		    browsable: "false",
+            			limit: "all",     	
+    					selectedIds: $('#selectedIds').val(),
+    			<?php
+    foreach ($_POST as $key => $value) {
+        if ($key != "selectable") {
+            echo "$key: \"$value\",\n";
+        }
+    }
+    ?>	
+						}, function(response) {
+			    			$( "#tableDownsample" ).html(response);
+			    			javascript:toggle('downsample_form')
+						});        
+                	 }  
+	 
+
+    	// load settings
+        $.post("pages/downsample/submit_form.php", {
+    			selectedIds: $('#selectedIds').val(),
+    		}, function(response) {
+    			$( "#settingsSubmitDownSample" ).html(response);
+    		});        
+         
+	};
+	
 			function loadMergeTable() {                   
 				if ($('#selectedIds').val().trim().split(" ").length < 2) {
 					alert("Select at least two samples.");
@@ -156,5 +195,12 @@ if (isset($_REQUEST['messageYes'])) {
 			onclick="javascript:toggle('merging_form')">close</div>
 		<div id="tableMerge"></div>
 		<div id="settingsSubmit"></div>
+	</div>
+	<div id="downsample_form" style="display: none" class="over-form">
+		<div
+			style="text-align: right; margin: 20px; font-style: italic; font-weight: bold"
+			onclick="javascript:toggle('downsample_form')">close</div>
+		<div id="tableDownsample"></div>
+		<div id="settingsSubmitDownSample"></div>
 	</div>
 </form>

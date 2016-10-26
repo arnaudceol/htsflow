@@ -23,6 +23,7 @@
 #######################################################################
 
 
+
 ## pipeline.R generates all the informartion needed to call
 ## primary_Pipeline.
 ## sample contains the primary ID and the path to fastq files.
@@ -96,61 +97,65 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
 
     ## if the analysis is from RNA-Seq samples we want to extract the reads per gene count using
     ## featureCounts tool (incredibly much faster than HTSeqCount)
-    if ( flags$seq_method=="rna-seq" ) {
-        ## update the DB with the "deconvolute reads.." status
-        SQL <- paste("UPDATE primary_analysis SET status='deconvolute reads..' WHERE id=", primaryId ,sep="")
-        res <- updateInfoOnDB( SQL )
-        doFeatureCounts( sample, genomePaths, flags )
+	if ( flags$seq_method=="rna-seq" ) {
+		## update the DB with the "deconvolute reads.." status
+		SQL <- paste("UPDATE primary_analysis SET status='deconvolute reads..' WHERE id=", primaryId ,sep="")
+		res <- updateInfoOnDB( SQL )
+		doFeatureCounts( sample, genomePaths, flags )
 	}
-
-	## if the analysis is from RNA-Seq samples we 
-	## We may want to separate strand
-	if ( flags$seq_method=="rna-seq" && as.numeric( flags$stranded )) {		
-		
-		# Strand +		
-		bam_p <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_p.bam')
-		sam_p <- paste0(tmpFold,primaryId,'_p.sam')
-		
-		str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:+ >', sam_p)		
-		tryOrExit(str, "Extract positive strand")
-		
-		str=paste(getHTSFlowPath("samtools"), '  view -bT', genomePaths["fasta",] , sam_p, '>', bam_p)
-		tryOrExit(str, "Write BAM for positive strand")
-		
-		# Strand -		
-		bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
-		sam_n <- paste0(tmpFold,primaryId,'_p.sam')
-		
-		str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:- >', sam_n)		
-		tryOrExit(str, "Extract positive strand")
-		
-		str=paste(getHTSFlowPath("samtools"), '  view -bT',  genomePaths["fasta",], sam_p, '>', bam_n)
-		tryOrExit(str, "Write BAM for positive strand")
-		
-	}
+		## 
+		## ## if the analysis is from RNA-Seq samples we 
+		## ## We may want to separate strand
+		## if ( as.numeric( flags$stranded )) {		
+		## generateStrandedBW(primaryId, bamFileName)
+		## 
+		## # Strand +		
+		## bam_p <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_p.bam')
+		## sam_p <- paste0(tmpFold,primaryId,'_p.sam')
+		## 
+		## str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:+ >', sam_p)		
+		## tryOrExit(str, "Extract positive strand")
+		## 
+		## str=paste(getHTSFlowPath("samtools"), '  view -bT', genomePaths["fasta",] , sam_p, '>', bam_p)
+		## tryOrExit(str, "Write BAM for positive strand")
+		## 
+		## # Strand -		
+		## bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
+		## sam_n <- paste0(tmpFold,primaryId,'_p.sam')
+		## 
+		## str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:- >', sam_n)		
+		## tryOrExit(str, "Extract positive strand")
+		## 
+		## str=paste(getHTSFlowPath("samtools"), '  view -bT',  genomePaths["fasta",], sam_p, '>', bam_n)
+		## tryOrExit(str, "Write BAM for positive strand")
+		## }
+	## }
 	
 	
 	## generate the bw file. If the analysis comes from a BS experiments we need
     ## to pass the BS genome instead of the regular one. This is why exists two
     ## different functions for this task: doBW and doBW_bs
-    if ( flags$seq_method == 'bs-seq' ) {
-        doBW_bs( sample, genomePaths )
-    } else {
-        doBW( sample, genomePaths )
-		
-		if ( flags$seq_method=="rna-seq" && as.numeric( flags$stranded) ) {			
-			doBW( sample, genomePaths, "+" )
-			doBW( sample, genomePaths, "-" )
-			
-			# Remove stranded bams		
-			bam_p <- paste0(getHTSFlowPath("HTSFLOW_AbigLN"),'/',primaryId,'_p.bam')
-			bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
-			
-			deleteFile(bam_p)
-			deleteFile(bam_n)			
-		}
-		
-    }
+	createBigWig(primaryId, genomePaths, flags$seq_method, as.numeric( flags$stranded))
+	
+	## if ( flags$seq_method == 'bs-seq' ) {
+	##     doBW_bs( sample, genomePaths )
+	## } else {
+	##     doBW( sample, genomePaths )
+	## 
+	##     if ( flags$seq_method=="rna-seq" && as.numeric( flags$stranded) ) {			
+	##         doBW( sample, genomePaths, "+" )
+	##         doBW( sample, genomePaths, "-" )
+	## 
+	##         # Remove stranded bams		
+	##         bam_p <- paste0(getHTSFlowPath("HTSFLOW_AbigLN"),'/',primaryId,'_p.bam')
+	##         bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
+	## 
+	##         deleteFile(bam_p)
+	##         deleteFile(bam_n)			
+	##     }
+	## 
+	## }
+	
     ## The last tool to be launched will be FastQC. fastQCexec creates a report from FastQC in ./QC/ folder.
     ## For the future: add on the web interface a link to this output.
     SQL <- paste("UPDATE primary_analysis SET status='FastQC quality control..' WHERE id=", primaryId ,sep="")
@@ -854,193 +859,3 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
 }
 
 
-
-# In case of strand specific alignment, specify
-# strand = + or strand = -. The bam files used
-# will be the one ended with _p or _n respectively
-# If strand is null or empty,the main bam file is used.
-doBW <- function( sample, RefGenomes, strand = FALSE){
-    
-    chromSize <- RefGenomes[ "chromSize", ]
-    primaryId <- names(sample)
-
-	
-    # this is a patch for having all the bw in the genome browser
-    BWOUTFOLDER <-  getHTSFlowPath("HTSFLOW_BW")
-
-	if (! file.exists(BWOUTFOLDER)){
-		loginfo(paste("create directory: ", BWOUTFOLDER))
-		createDir(BWOUTFOLDER,  recursive =  TRUE)		
-	}
-
-    SQL <- paste0("SELECT reads_num FROM primary_analysis WHERE id=",primaryId,";")
-    readsAln <- extractInfoFromDB( SQL )
-
-	
-	
-	if (strand == "+") {
-		loginfo ( "Generating BW file: strand +")
-		primaryId <- paste0(primaryId, "_p")
-	} else if (strand == "-") {
-		loginfo ( "Generating BW file: strand +")
-		primaryId <- paste0(primaryId, "_n")
-	} else {
-		loginfo ( "Generating BW file: unstranded")
-	}
-	
-	
-	bamFile <- paste0 (
-			getHTSFlowPath("HTSFLOW_ALN")
-			,"/"
-			,primaryId
-			,".bam"
-	)
-	
-	loginfo(bamFile)
-	
-    bedgraphF <- paste0(
-                getPreprocessDir()
-                ,primaryId
-                ,".bedgraph"
-        )
-
-    bedgraphTmp <- paste0(
-				getPreprocessDir()
-                ,primaryId
-                ,".tmp"
-        )
-
-    bwF <- paste0(
-				getPreprocessDir()
-                ,primaryId
-                ,".bw"
-        )
-
-    execute <- paste0(
-            getHTSFlowPath("genomeCoverageBed")
-            ," -split -ibam "
-            ,bamFile
-            ," -g "
-            ,chromSize
-            ," -bg > "
-            ,bedgraphF
-        )
-
-	tryOrExit(execute, "BW-gcb")
-	
-    execute <- paste0(
-            "awk '{print $1,$2,$3,int($4*1e7/"
-            ,readsAln
-            ,")+1}' "
-            ,bedgraphF
-            ," >  "
-            ,bedgraphTmp
-        )
-	
-	tryOrExit(execute, "BW-awk")
-	
-    execute <- paste0(
-            getHTSFlowPath("bedGraphToBigWig")
-            ," "
-            ,bedgraphTmp
-            ," "
-            ,chromSize
-            ," "
-            ,bwF
-        )
-
-	tryOrExit(execute, "BW-bgw")
-	
-	deleteFile(bedgraphF, recursive=TRUE)
-	deleteFile(bedgraphTmp, recursive=TRUE)
-		
-	loginfo ('Copying BW file to Genome Browser folder')
-    execute <- paste0( 'mv ',bwF, ' ',BWOUTFOLDER )
-	result <- tryOrExit(execute, "BW")
-	
-    loginfo ( "BW done.")
-	return (result)
-}
-
-doBW_bs <- function( sample, RefGenomes ){
-    loginfo ( "Generating BW file")
-    chromSize <- RefGenomes[ "chromSize_bs", ]
-    primaryId <- names(sample)
-    # this is a patch for having all the bw in the genome browser
-    BWOUTFOLDER <-  paste0 ( getHTSFlowPath("HTSFLOW_BW"))
-	
-	if (! file.exists(BWOUTFOLDER)){
-		loginfo(paste("create directory: ", BWOUTFOLDER))
-		createDir(BWOUTFOLDER,  recursive =  TRUE)		
-	}
-	
-    bamFile <- paste0 (
-                getHTSFlowPath("HTSFLOW_ALN")
-                ,"/"
-                ,primaryId
-                ,".bam"
-        )
-    SQL <- paste0("SELECT reads_num FROM primary_analysis WHERE id=",primaryId,";")
-    readsAln <- extractInfoFromDB( SQL )
-
-    bedgraphF <- paste0(
-				getPreprocessDir()
-                ,primaryId
-                ,".bedgraph"
-        )
-
-    bedgraphTmp <- paste0(
-				getPreprocessDir()
-                ,primaryId
-                ,".tmp"
-        )
-
-    bwF <- paste0(
-				getPreprocessDir()
-                ,primaryId
-                ,".bw"
-        )
-
-    execute <- paste0(
-            getHTSFlowPath("genomeCoverageBed")
-            ," -split -ibam "
-            ,bamFile
-            ," -g "
-            ,chromSize
-            ," -bg > "
-            ,bedgraphF
-        )
-	tryOrExit(execute, "BW_bs")
-	
-    execute <- paste0(
-            "awk '{print $1,$2,$3,int($4*1e7/"
-            ,readsAln
-            ,")+1}' "
-            ,bedgraphF
-            ," >  "
-            ,bedgraphTmp
-        )
-	tryOrExit(execute, "BW_bs")
-	
-    execute <- paste0(
-            getHTSFlowPath("bedGraphToBigWig")
-            ," "
-            ,bedgraphTmp
-            ," "
-            ,chromSize
-            ," "
-            ,bwF
-        )
-	tryOrExit(execute, "BW_bs")
-	
-	deleteFile(bedgraphF, recursive=TRUE)
-	deleteFile(bedgraphTmp, recursive=TRUE)
-	
-	
-    loginfo ('Copying BW file to Genome Browser folder')
-    execute <- paste0( 'mv ',bwF, ' ',BWOUTFOLDER )
-	result <- tryOrExit(execute, "BW_bs")
-    loginfo ( "BW done.")
-	
-	return(result)
-}

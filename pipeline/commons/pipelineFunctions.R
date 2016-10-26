@@ -59,7 +59,7 @@ getJobID <- function(id, type) {
 
 getPreprocessDir <- function() {
 	
-	id <- get("PIPELINE_ID", envir=globalenv())
+	id <- get("PIPELINE_ID", envir=globalenv())	
 	type <- get("PIPELINE_TYPE", envir=globalenv())	
 	
 	if (type == "primary") {
@@ -219,6 +219,32 @@ downsampled <- function( IDpeak, CHIP_ID, IDsec_FOLDER, BAMfolder=paste0(getHTSF
 	}
 }
 
+# RNA stranded: generate bigwig
+generateStrandedBW <- function(primaryId, bamFileName) {
+	
+	# Strand +		
+	bam_p <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_p.bam')
+	sam_p <- paste0(tmpFold,primaryId,'_p.sam')
+	
+	str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:+ >', sam_p)		
+	tryOrExit(str, "Extract positive strand")
+	
+	str=paste(getHTSFlowPath("samtools"), '  view -bT', genomePaths["fasta",] , sam_p, '>', bam_p)
+	tryOrExit(str, "Write BAM for positive strand")
+	
+	# Strand -		
+	bam_n <- paste0(getHTSFlowPath("HTSFLOW_ALN"),'/',primaryId,'_n.bam')
+	sam_n <- paste0(tmpFold,primaryId,'_p.sam')
+	
+	str=paste(getHTSFlowPath("samtools"), ' view', bamFileName, '| grep -v ERCC | grep XS:A:- >', sam_n)		
+	tryOrExit(str, "Extract positive strand")
+	
+	str=paste(getHTSFlowPath("samtools"), '  view -bT',  genomePaths["fasta",], sam_p, '>', bam_n)
+	tryOrExit(str, "Write BAM for positive strand")
+	
+}
+
+
 getNumberOfGenes <- function(assembly) {
 	genomePath <- paste(getHTSFlowPath("HTSFLOW_GENOMES"),"/",assembly,"/","GTF/","genes.gtf",sep="")
 	execute <- paste0( "grep -v -P '^ERCC' ", genomePath, " |cut -f 9  | sort -u | wc -l" )	
@@ -253,8 +279,6 @@ getAnnotationLibraryName <- function( assembly ) {
 	txdbName <- genomes[ which(genomes$version==assembly),]$annotation_library
 	return(as.character(txdbName))	
 }
-
-
 
 
 

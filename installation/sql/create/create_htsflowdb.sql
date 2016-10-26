@@ -238,6 +238,26 @@ CREATE TABLE `merged_primary` (
   CONSTRAINT `source_fk` FOREIGN KEY (`source_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+
+--
+-- Table structure for table `downsample_primary`
+--
+
+DROP TABLE IF EXISTS `downsample_primary`;
+CREATE TABLE `downsample_primary` (
+  `result_primary_id` int(10) NOT NULL DEFAULT '0',
+  `source_primary_id` int(10) NOT NULL,
+  `target_reads_number` int(10) NOT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`result_primary_id`,`source_primary_id`),
+  KEY `source_fk` (`source_primary_id`),
+  CONSTRAINT `downsample_fk` FOREIGN KEY (`result_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `downsample_source_fk` FOREIGN KEY (`source_primary_id`) REFERENCES `primary_analysis` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
 --
 -- Table structure for table `methylation_calling`
 --

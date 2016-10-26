@@ -35,7 +35,8 @@ $convArr = array(
 $mergArr = array(
     0 => "<span style=\"color: ##0288AD; font-weight: bold\">lims</span>",
     1 => "<span style=\"color: orange; font-weight: bold\">merged</span>",
-    2 => "<span style=\"color: green; font-weight: bold\">ext.</span>"
+    2 => "<span style=\"color: green; font-weight: bold\">ext.</span>",
+    3 => "<span style=\"color: green; font-weight: bold\">downs.</span>"
 );
 
 function printStatus($status) {

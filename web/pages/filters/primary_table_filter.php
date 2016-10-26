@@ -151,7 +151,8 @@ $result = mysqli_query($con, $sql);
     $mergeOptions = array(
         0 => "<span>lims</span>",
         1 => "<span>merged</span>",
-        2 => "<span>external</span>"
+        2 => "<span>external</span>",
+        3 => "<span>downsampling</span>"
     );
     while ($row = mysqli_fetch_assoc($result)) {
         ?><option value="<?php echo $row["source"]; ?>"
