@@ -452,6 +452,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 								<td class="centered"><?php echo $row["ref_genome"]; ?></td>
 					<td class="centered method"><?php echo $row["seq_method"]; ?></td>
 					<td class="centered"><?php echo $mergArr[$row["SOURCE"]]; 
+					   // merging
 					   if ($row["SOURCE"] == 1) {
 				        ?><a  href="#" id="ICON_MERGE_<?php echo $row["id_pre"]; ?>" title="Go to sample" class="fa fa-info" onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $(this).toggleClass('fa-info');$(this).toggleClass('fa-info-slash')"></a>
 				        <div id="MERGE_<?php echo $row["id_pre"]; ?>" style="display: none" class="popupstyle">
@@ -462,7 +463,21 @@ while ($row = mysqli_fetch_assoc($result)) {
 				        	?>
 				        </div>
 				        <?php 
-				    } ?></td>					
+				    } 
+				    // Downsampling
+				    if ($row["SOURCE"] == 3) {
+				    	?><a  href="#" id="ICON_MERGE_<?php echo $row["id_pre"]; ?>" title="Go to sample" class="fa fa-info" onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $(this).toggleClass('fa-info');$(this).toggleClass('fa-info-slash')"></a>
+				    				        <div id="MERGE_<?php echo $row["id_pre"]; ?>" style="display: none" class="popupstyle">
+				    				        	<a style="float: right;margin: 4px;" class="fa fa-times" href="#"  onclick="javascript:toggle('MERGE_<?php echo $row["id_pre"]; ?>'); $('#ICON_MERGE_<?php echo $row["id_pre"];?>').toggleClass('fa-info');$('#ICON_MERGE_<?php echo $row["id_pre"]; ?>').toggleClass('fa-info-slash')"></a>
+				    				        	<?php
+				    				        	   $mergedPrimaryId = $row["id_pre"];
+				    				        	   include 'downsamplingDetails.php';
+				    				        	?>
+				    				        </div>
+				    				        <?php 
+				    				    } 
+				    
+				    ?></td>					
 					<td class="centered"><?php echo $row["sample_owner"]; ?></td>
 					<td style="text-align: right"><?php echo $row["user_name"];  ?>
 					<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/users/<?php 

@@ -21,6 +21,7 @@
 <ul class="fa-ul">
 <li><i class="fa fa-plus-square"></i> Add new sample (external data) / Start new analysis.</li>
 <li><i class="fa fa-object-group"></i> Merge analysis.</li>
+<li><i class="fa fa-filter"></i> Downsampling.</li>
 <li><i class="fa fa-share"></i> See follow up analysis.</li>
 <li><i class="fa fa-reply"></i> See source sample/analysis.</li>
 </ul>

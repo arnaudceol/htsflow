@@ -102,7 +102,7 @@ if ($errors) {
 			<td><select id="rm_duplicates">
 					<option value="1">TRUE</option>
 					<option value="0">FALSE</option>
-			</select><?php echo $stranded[0]; ?></td>
+			</select></td>
 			<input type="hidden" name="stranded" id="stranded" value="<?php echo $stranded[0]; ?>"/>
 		</tr>
 		<?php if ($methods[0] == 'rna-seq') { ?>

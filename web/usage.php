@@ -338,6 +338,18 @@ header('Content-type: text/html; charset=utf-8');
 				</div>
 
 
+				<h3>Downsampling primary analysis</h3>
+				<div>
+					It is possible to down-sample an already aligned sample. The user can select one or two primary analyses. 
+					If two analyses are selected, the one with the biggest number of aligned reads with be downsample to the 
+					number of aligned reads in the other analyses. This function is
+					available from the primary analysis page, with the following
+					parameters:
+					<ul>
+						<li>Sample name: the name for the merged sample. By default, it is the name of the original sample followed by _down and the target number of reads.</li>
+						<li>Target number of reads: number of reads expected in the downsampled analysis.</li>
+					</ul>
+				</div>
 
 
 				<h2>Secondary analysis</h2>
