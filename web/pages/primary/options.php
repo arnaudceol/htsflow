@@ -46,12 +46,12 @@ function getPrimaryOptionId($options) {
 			array_push ( $setQueryAttribute,  "paired=" . $value);
 			array_push ( $setAttributes, "paired" );
 			array_push ( $setValues, $value );
-		} elseif ($key == "removeTmpfqfiles") {
+		} elseif ($key == "rm_tmp_files") {
 // 			$query .= "and rm_tmp_files=" . $value . " ";
 			array_push ( $setQueryAttribute,  "rm_tmp_files=" . $value );
 			array_push ( $setAttributes, "rm_tmp_files" );
 			array_push ( $setValues, $value );
-		} elseif ($key == "removeDuplicates") {
+		} elseif ($key == "rm_duplicates") {
 // 			$query .= "and rm_duplicates=" . $value . " ";
 			array_push ( $setQueryAttribute, "rm_duplicates=" . $value );
 			array_push ( $setAttributes, "rm_duplicates" );
@@ -64,13 +64,80 @@ function getPrimaryOptionId($options) {
 		}
 	}
 	
+	// Complete missing options:
+	$value = 0;
+	if (! in_array("remove_bad_reads", $setAttributes)) {		
+		array_push ( $setQueryAttribute,  "rm_bad_reads=" . $value );
+		array_push ( $setAttributes, "rm_bad_reads" );
+		array_push ( $setValues, $value );
+	} 
+	
+	if (! in_array("trimming", $setAttributes) ) {
+		array_push ( $setQueryAttribute, "trimming=" . $value );
+		array_push ( $setAttributes, "trimming" );
+		array_push ( $setValues, $value );
+	}
+	
+	if (! in_array("masking", $setAttributes)  ) {
+		array_push ( $setQueryAttribute, "masking=" . $value );
+		array_push ( $setAttributes, "masking" );
+		array_push ( $setValues, $value );
+	} 
+	
+	if (! in_array("aln", $setAttributes) ) {
+		array_push ( $setQueryAttribute,  "alignment=" . $value );
+		array_push ( $setAttributes, "alignment" );
+		array_push ( $setValues, $value );
+	} 
+	
+	if (! in_array("aln_prog", $setAttributes)  ) {
+		array_push ( $setQueryAttribute,  "aln_prog='' ");
+		array_push ( $setAttributes, "aln_prog" );
+		array_push ( $setValues, '""' );
+	} 
+	
+	if (! in_array("aln_options", $setAttributes)  ) {
+		array_push ( $setQueryAttribute,  "aln_options='' ");
+		array_push ( $setAttributes, "aln_options" );
+		array_push ( $setValues, '""' );
+	} 
+	
+	if (! in_array("paired", $setAttributes)  ) {
+		array_push ( $setQueryAttribute,  "paired=" . $value);
+		array_push ( $setAttributes, "paired" );
+		array_push ( $setValues, $value );
+	} 
+	
+	if (! in_array("rm_tmp_files", $setAttributes)  ) {
+		array_push ( $setQueryAttribute,  "rm_tmp_files=" . $value );
+		array_push ( $setAttributes, "rm_tmp_files" );
+		array_push ( $setValues, $value );
+	} 
+	
+	if (! in_array("rm_duplicates", $setAttributes)  ) {
+		array_push ( $setQueryAttribute, "rm_duplicates=" . $value );
+		array_push ( $setAttributes, "rm_duplicates" );
+		array_push ( $setValues, $value );
+	} 
+	
+	if (! in_array("stranded", $setAttributes)  ) {
+		array_push ( $setQueryAttribute, "stranded=" . $value );
+		array_push ( $setAttributes, "stranded" );
+		array_push ( $setValues, $value );
+	}
+	
+	
+	
+	
+	
+	
 	// $valuesToBeInserted = '';
 	// foreach ($setValues as $val) {
 	// $valuesToBeInserted .= $val . ",";
 	// }
 	// $valuesToBeInserted = substr($valuesToBeInserted, 0, - 1);
 	$query = 'SELECT id from pa_options where ' .  implode ( " AND ", $setQueryAttribute ) ;
-	
+	error_log($query);
 	$res = mysqli_query ( $con, $query );
 	
 	while ( $line = mysqli_fetch_assoc ( $res ) ) {
@@ -86,7 +153,7 @@ function getPrimaryOptionId($options) {
 // 	$totQuery .= $subquery;
 	$totQuery .= implode ( ",", $setValues );
 	$totQuery .= ");";
-	
+	error_log($totQuery);
 	$stmt = mysqli_prepare ( $con, $totQuery );
 	
 	if ($stmt) {

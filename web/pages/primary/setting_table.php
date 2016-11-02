@@ -217,14 +217,14 @@ $defaultProgram = $defaultOptions[$typeOfDefault]["program"];
     }
     ?><tr>
 								<td>Remove Temp Files</td>
-								<td><select name="removeTmpfqfiles"><option value="TRUE"
+								<td><select name="rm_tmp_files"><option value="TRUE"
 											selected>TRUE</option>
 										<option value="FALSE">FALSE</option></select></td>
 							</tr><?php
 							$defaultRemoveDuplicates = $defaultOptions[$typeOfDefault]["remove-duplicates"];
    							?><tr>
 								<td>Remove Duplicates</td>
-								<td><select name="removeDuplicates">
+								<td><select name="rm_duplicates">
 								<option value="TRUE" <?php if ($defaultRemoveDuplicates == TRUE) { echo "selected"; } ?>>TRUE</option>
 								<option value="FALSE" <?php if ($defaultRemoveDuplicates == FALSE) { echo "selected"; } ?>>FALSE</option></select></td>
 							</tr>
