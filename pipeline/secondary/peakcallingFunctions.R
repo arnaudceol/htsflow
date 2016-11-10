@@ -14,15 +14,10 @@
 
 create_saturation_file <- function( label, macsOUT ) {
 	# GENERATING THE FINAL TABLE FOR SATURATION ANALYSIS
-	label20 <- paste0(label,"_20")
-	label40 <- paste0(label,"_40")
-	label60 <- paste0(label,"_60")
-	label80 <- paste0(label,"_80")
-	
-	CHIP_FILE20 <- paste0( macsOUT, label20, "_peaks.xls" )
-	CHIP_FILE40 <- paste0( macsOUT, label40, "_peaks.xls" )
-	CHIP_FILE60 <- paste0( macsOUT, label60, "_peaks.xls" )
-	CHIP_FILE80 <- paste0( macsOUT, label80, "_peaks.xls" )
+	CHIP_FILE20 <- paste0( macsOUT, label,"_20", "_peaks.xls" )
+	CHIP_FILE40 <- paste0( macsOUT, label,"_40", "_peaks.xls" )
+	CHIP_FILE60 <- paste0( macsOUT, label,"_60", "_peaks.xls" )
+	CHIP_FILE80 <- paste0( macsOUT, label,"_80", "_peaks.xls" )
 	CHIP_FILE100 <- paste0( macsOUT, label, "_peaks.xls" )
 	
 	SaturationMatrix <- as.data.frame( t ( as.matrix( sapply( 1:length(seq(2,100,2)), function(x) { c( seq(2,100,2)[x],seq(2,100,2)[x+1]  )  } ) ) ) )
@@ -37,7 +32,8 @@ create_saturation_file <- function( label, macsOUT ) {
 					dim( tmp20[ tmp20$fold_enrichment > R1_20 & tmp20$fold_enrichment <= R2_20, ] )[1]
 				})
 	} else {
-		l20 <- rep(0, dim(SaturationMatrix)[1])
+		stop(paste0("File ",CHIP_FILE20, " not found." ))
+		#l20 <- rep(0, dim(SaturationMatrix)[1])
 	}
 	
 	if (file.exists(CHIP_FILE40)) {
@@ -48,7 +44,8 @@ create_saturation_file <- function( label, macsOUT ) {
 					dim( tmp40[ tmp40$fold_enrichment > R1_40 & tmp40$fold_enrichment <= R2_40, ] )[1]
 				})
 	} else {
-		l40 <- rep(0, dim(SaturationMatrix)[1])
+		stop(paste0("File ",CHIP_FILE40, " not found." ))
+		#l40 <- rep(0, dim(SaturationMatrix)[1])
 	}
 	
 	if (file.exists(CHIP_FILE60)) {
@@ -59,7 +56,8 @@ create_saturation_file <- function( label, macsOUT ) {
 					dim( tmp60[ tmp60$fold_enrichment > R1_60 & tmp60$fold_enrichment <= R2_60, ] )[1]
 				})
 	} else {
-		l60 <- rep(0, dim(SaturationMatrix)[1])
+		stop(paste0("File ",CHIP_FILE60, " not found." ))
+		#l60 <- rep(0, dim(SaturationMatrix)[1])
 	}
 	
 	if (file.exists(CHIP_FILE80)) {
@@ -70,7 +68,8 @@ create_saturation_file <- function( label, macsOUT ) {
 					dim( tmp80[ tmp80$fold_enrichment > R1_80 & tmp80$fold_enrichment <= R2_80, ] )[1]
 				})
 	} else {
-		l80 <- rep(0, dim(SaturationMatrix)[1])
+		stop(paste0("File ",CHIP_FILE80, " not found." ))
+		#l80 <- rep(0, dim(SaturationMatrix)[1])
 	}
 	
 	if (file.exists(CHIP_FILE100)) {
@@ -81,7 +80,8 @@ create_saturation_file <- function( label, macsOUT ) {
 					dim( tmp100[ tmp100$fold_enrichment > R1_100 & tmp100$fold_enrichment <= R2_100, ] )[1]
 				})
 	} else {
-		l100 <- rep(0, dim(SaturationMatrix)[1])
+		stop(paste0("File ",CHIP_FILE100, " not found." ))
+		#l100 <- rep(0, dim(SaturationMatrix)[1])
 	}
 	
 	SaturationMatrix <- cbind( SaturationMatrix, l100, l80, l60, l40, l20)
@@ -366,7 +366,7 @@ peakcaller <- function( IDpeak, INPUT_ID, CHIP_ID, label, pvalue, stats, IDsec_F
 		# check if bam are missing
 		
 		batch_CHIP_BAM <- c(CHIP_BAM_80,CHIP_BAM_60,CHIP_BAM_40,CHIP_BAM_20)
-		batch_label<- c(paste0( IDpeak, "_", label, "_80" ), paste0( IDpeak, "_", label, "_60" ), paste0( IDpeak, "_", label, "_40" ), paste0( IDpeak, "_", label, "_20" ))
+		batch_label<- c(paste0( label, "_80" ), paste0( label, "_60" ), paste0( label, "_40" ), paste0( label, "_20" ))
 		
 		# load config and common functions
 		workdir <- getwd()
@@ -407,7 +407,7 @@ peakcaller <- function( IDpeak, INPUT_ID, CHIP_ID, label, pvalue, stats, IDsec_F
 			stop(paste0(length(errors), " job(s) failed, exit"))
 		}
 	
-		create_saturation_file( label, macsOUT )
+		create_saturation_file(label, macsOUT )
 	} else {	
 		macs2Exec( INPUT_BAM, CHIP_BAM, label, pvalue, stats, macsOUT, REFGENOME, narrow )
 	}
