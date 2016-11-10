@@ -65,26 +65,30 @@ function getPrimaryOptionId($options) {
 	}
 	
 	// Complete missing options:
-	$value = 0;
-	if (! in_array("remove_bad_reads", $setAttributes)) {		
+	
+	if (! in_array("rm_bad_reads", $setAttributes)) {
+		$value = 0;
 		array_push ( $setQueryAttribute,  "rm_bad_reads=" . $value );
 		array_push ( $setAttributes, "rm_bad_reads" );
 		array_push ( $setValues, $value );
 	} 
 	
 	if (! in_array("trimming", $setAttributes) ) {
+		$value = 0;
 		array_push ( $setQueryAttribute, "trimming=" . $value );
 		array_push ( $setAttributes, "trimming" );
 		array_push ( $setValues, $value );
 	}
 	
 	if (! in_array("masking", $setAttributes)  ) {
+		$value = 0;
 		array_push ( $setQueryAttribute, "masking=" . $value );
 		array_push ( $setAttributes, "masking" );
 		array_push ( $setValues, $value );
 	} 
 	
-	if (! in_array("aln", $setAttributes) ) {
+	if (! in_array("alignment", $setAttributes) ) {
+		$value = 1;
 		array_push ( $setQueryAttribute,  "alignment=" . $value );
 		array_push ( $setAttributes, "alignment" );
 		array_push ( $setValues, $value );
@@ -96,31 +100,35 @@ function getPrimaryOptionId($options) {
 		array_push ( $setValues, '""' );
 	} 
 	
-	if (! in_array("aln_options", $setAttributes)  ) {
+	if (! in_array("aln_options", $setAttributes)  ) {		
 		array_push ( $setQueryAttribute,  "aln_options='' ");
 		array_push ( $setAttributes, "aln_options" );
 		array_push ( $setValues, '""' );
 	} 
 	
 	if (! in_array("paired", $setAttributes)  ) {
+		$value = 0;
 		array_push ( $setQueryAttribute,  "paired=" . $value);
 		array_push ( $setAttributes, "paired" );
 		array_push ( $setValues, $value );
 	} 
 	
 	if (! in_array("rm_tmp_files", $setAttributes)  ) {
+		$value = 1;
 		array_push ( $setQueryAttribute,  "rm_tmp_files=" . $value );
 		array_push ( $setAttributes, "rm_tmp_files" );
 		array_push ( $setValues, $value );
 	} 
 	
 	if (! in_array("rm_duplicates", $setAttributes)  ) {
+		$value = 0;
 		array_push ( $setQueryAttribute, "rm_duplicates=" . $value );
 		array_push ( $setAttributes, "rm_duplicates" );
 		array_push ( $setValues, $value );
 	} 
 	
 	if (! in_array("stranded", $setAttributes)  ) {
+		$value = 0;
 		array_push ( $setQueryAttribute, "stranded=" . $value );
 		array_push ( $setAttributes, "stranded" );
 		array_push ( $setValues, $value );
