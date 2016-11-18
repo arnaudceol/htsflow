@@ -196,11 +196,11 @@ annotateGR <- function( INPUT_ID, CHIP_ID, label, IDsec_FOLDER, typeOfpeakCallin
 		fileTMP <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
 		GR <- loadGRBind( fileTMP, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
 	} else if ( typeOfpeakCalling == "MACSbroad" ){
-		fileTMP <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+		fileTMP <- paste0( IDsec_FOLDER, "BROAD", "/", label, "broad_peaks.bed" )
 		GR <- loadGRBind( fileTMP, paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam"), typeOfpeakCalling )
 	}  else if ( typeOfpeakCalling == "MACSboth" ){
 		fileTMPnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-		fileTMPbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+		fileTMPbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "broad_peaks.bed" )
 		GR <- loadGRBindBOTH( fileTMPnarrow, fileTMPbroad,  paste0( BAMfolder,CHIP_ID,".bam" ), paste0(BAMfolder,INPUT_ID,".bam") )
 	}
 	

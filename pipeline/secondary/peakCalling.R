@@ -62,7 +62,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 	loginfo(paste("ChIP/input reads: ", CHIPReads, INPUTReads))
 	
 	fileBEDnarrow <- paste0( IDsec_FOLDER, "NARROW", "/", label, "_peaks.bed" )
-	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_peaks.bed" )
+	fileBEDbroad <- paste0( IDsec_FOLDER, "BROAD", "/", label, "_broad_peaks.bed" )
 	
 	bedFolder <- paste0(getHTSFlowPath("HTSFLOW_BED"), '/', IDsec, '/bed/' )
 	createDir(bedFolder,  recursive =  TRUE)		
@@ -136,8 +136,8 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 			}
 			loginfo("Prepare bigbed")       
 			# GR -> bedfile
-			grCHIP1 <- loadGR( fileBEDnarrow, typeOfpeakCalling )
-			grCHIP2 <- loadGR( fileBEDbroad, typeOfpeakCalling )
+			grCHIP1 <- loadGR( fileBEDnarrow, 'MACSnarrow' )
+			grCHIP2 <- loadGR( fileBEDbroad, 'MACSbroad' )
 			loginfo("bigbed union")                 
 			grCHIP <- GenomicRanges::union( grCHIP1, grCHIP2 )
 			
@@ -152,7 +152,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 			#write.table(as.data.frame(grCHIP)[,1:4], fileBEDboth, quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
 			
 			loginfo("Write table" )
-			fileBEDboth <- paste0( macsOUTboth, label, "_peaks.bed" )
+			fileBEDboth <- paste0( macsOUTboth, label, "_both_peaks.bed" )
 			loginfo(paste("Write table: ", fileBEDboth))
 			write.table(GenomicRanges::as.data.frame(grCHIP)[,1:4], fileBEDboth, quote=FALSE, sep="\t", row.names=FALSE, col.names=FALSE)
 			loginfo("Make bigbed" )
@@ -179,6 +179,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 		}
 		
 	}
+	
 	###### annotation function #######
 	if ( annotation ) {
 		loginfo("Annotating")
@@ -199,8 +200,8 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 			grCHIP <- loadGR( fileBEDbroad, typeOfpeakCalling )
 		}
 		if ( typeOfpeakCalling == 'MACSboth' ) {
-			grCHIP1 <- loadGR( fileBEDnarrow, typeOfpeakCalling )
-			grCHIP2 <- loadGR( fileBEDbroad, typeOfpeakCalling )
+			grCHIP1 <- loadGR( fileBEDnarrow, 'MACSnarrow' )
+			grCHIP2 <- loadGR( fileBEDbroad, 'MACSboth' )
 			grCHIP <- union( grCHIP1, grCHIP2 )
 		}
 		saveRDS( grCHIP, file = paste0( label, ".rds" ) )
