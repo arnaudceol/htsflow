@@ -71,7 +71,7 @@ deleteFile <- function(filename, recursive=FALSE) {
 
 createDir <- function(filename, recursive=FALSE) {
 	
-	if (! file.exists(filename)) {
+	if (! dir.exists(filename)) {
 		
 		if (recursive) {
 			loginfo(paste("mkdir -p ", filename))	
@@ -79,7 +79,8 @@ createDir <- function(filename, recursive=FALSE) {
 			loginfo(paste("mkdir ", filename))
 		}
 		
-		result <- dir.create(filename, recursive=recursive, showWarnings = FALSE )
+		result <- ifelse(!dir.exists(filename), 
+		         dir.create(filename, recursive=recursive, showWarnings = FALSE), TRUE)
 		
 		if (result != TRUE) {
 			setError(paste("Cannot create directory: ", filename))
