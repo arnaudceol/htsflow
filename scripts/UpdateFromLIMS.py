@@ -197,7 +197,7 @@ order by run_id DESC;" % pisQuery;
                 continue
         else :
         	print("New sample: new ID = " + id_sample) 
-        	continue
+
 
         
         # if id_sample not in HTSsamples and id_sample not in samplesDone:
