@@ -225,8 +225,27 @@ sampleDescriptionTemplate = '<?php echo str_replace("\n", '\n\'+\'',  str_replac
 while ($row = mysqli_fetch_assoc($result)) {
     
     ?><tr>
-				<?php if ($selectable ) {?>
-					<td align="left"><?php if ( true) {?><input type="checkbox"
+    			<?php 
+				$sampleDescription = "";
+				$queryDescription = sprintf("SELECT description FROM sample_description WHERE sample_id = '%s'", $row["id"]);	
+    			
+    			$class ="";
+    			if ($resDescription = mysqli_query($con, $queryDescription)) {
+    				if (mysqli_num_rows($resDescription) >= 1) {
+    					$sampleDescription =  mysqli_fetch_assoc($resDescription)["description"];
+    					if ($sampleDescription != '') {
+    						$class = "title=\"sample description, click to edit\" class=\"fa fa-file-text-o\" style=\"color: green\"";
+    					} else {
+    						$class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\"";
+    					}
+    				} else {
+    					$class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\"";
+    				}
+    				mysqli_free_result($resDescription);
+    			}
+    			
+    			if ( $selectable) {?>
+					<td align="left"><?php if ( $sampleDescription != '') {?><input type="checkbox"
 					value="<?php echo $row["id"]; ?>" id="selected_<?php echo $row["id"]; ?>"
 					name="selected_<?php echo $row["id"]; ?>"
 					onclick="updateSelectedIds($(this).is(':checked'), '<?php echo $row["id"]; ?>', 'selectedIds')"
@@ -234,25 +253,9 @@ while ($row = mysqli_fetch_assoc($result)) {
 				<?php } ?>
 				<td class="centered"><?php echo $row["id"]; ?>
 				</td>
-				<td><?php 
-				$sampleDescription = "";
-				$queryDescription = sprintf("SELECT description FROM sample_description WHERE sample_id = '%s'", $row["id"]);		
+				<td><?php 	
 				
-				$class ="";
-				if ($resDescription = mysqli_query($con, $queryDescription)) {
-				if (mysqli_num_rows($resDescription) >= 1) {
-				    $sampleDescription =  mysqli_fetch_assoc($resDescription)["description"];
-				    if ($sampleDescription != '') {
-				        $class = "title=\"sample description, click to edit\" class=\"fa fa-file-text-o\" style=\"color: green\"";				        
-				    } else {
-				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
-				    }
-				} else {
-				        $class = "title=\"sample description missing, click to edit\" class=\"fa fa-file-o\" style=\"color: red\""; 
-				}
-				mysqli_free_result($resDescription);
-				}
-				if ($editable) { ?><a <?php echo $class; ?>  href='#'
+				if ( true ) { ?><a <?php echo $class; ?>  href='#'
 									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><?php } ?>
 										<form action="#" style="display: none; " class="popupstyle"
 											id="submitDescription_<?php echo $row["id"]; ?>"
