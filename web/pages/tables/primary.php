@@ -97,8 +97,6 @@ if (sizeof($secondaryIds) > 0) {
 }
 
 
-
-
 if (isset($_POST['primaryId']) && $_POST['primaryId'] != "") {
     $querySampleId = "UPPER(primary_analysis.id) ='" . strtoupper($_POST['primaryId']) . "'";
     array_push($concatArray, $querySampleId);
@@ -318,6 +316,18 @@ if (! isset($_REQUEST["browsable"]) || $_REQUEST["browsable"] == false) {
 			<tbody>
 <?php
 
+$pageURL = 'http';
+if (isset ( $_SERVER ["HTTPS"] ) && $_SERVER ["HTTPS"] == "on") {
+	$pageURL .= "s";
+}
+$pageURL .= "://";
+if ($_SERVER ["SERVER_PORT"] != "80") {
+	$pageURL .= $_SERVER ["SERVER_NAME"] . ":" . $_SERVER ["SERVER_PORT"];
+} else {
+	$pageURL .= $_SERVER ["SERVER_NAME"];
+}
+
+
 while ($row = mysqli_fetch_assoc($result)) {
         ?><tr <?php if ($row['status'] == "deleted") { echo " style=\"color: grey\""; }?>>
 	<?php if ($selectable) { ?>
@@ -431,8 +441,9 @@ while ($row = mysqli_fetch_assoc($result)) {
             ?><?php if ($row["status"] == "completed") { 
             		if (! in_array($row ["id_pre"], $mergedIds)) { ?>
 							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc/fastqc_report.html" ><img src="images/fastqc_icon.png" width="12" title="Browse FastQC Report"/></a>
-							<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a>
+ 						<!--	<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a> -->
 					<?php } ?>
+							<a href="<?php echo $pageURL . "/" .$HTSFLOW_PATHS['HTSFLOW_WEB_TRACKS']; ?>/primary/tracks/bw/<?php  echo $row ["id_pre"]; ?>.bw" ><i title="Download BigWig" class="fa fa-download"></i></a>
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
