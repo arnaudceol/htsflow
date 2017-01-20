@@ -398,7 +398,16 @@ while ($row = mysqli_fetch_assoc($result)) {
 						</tbody>
 					</table>
 				</td>
-				<td><?php echo $row["raw_data_path"]; ?></td>
+				<td><?php echo $row["raw_data_path"]; 
+				// if taken from the lims, add link
+				/** 
+				* TODO: generaluze it				
+				*/
+				if ($row["source"] == 0) {
+					$link = str_replace ("/Illumina/PublicData", "http://hilt.iit.ieo.eu/data/", $row["raw_data_path"] );
+					?> <a class="fa fa-external-link" href="<?php echo $link; ?>"></a><?
+				}				
+				?></td>
 				<td><?php
 				    if ($row["raw_data_path_date"] != "") {
 				        echo $row["raw_data_path_date"];
