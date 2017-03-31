@@ -15,14 +15,14 @@ paths={}
 
 with open(configFile) as f:
     content = f.readlines()
-    for line in content:        
+    for line in content:
         if not line[0] == ';' and not line[0] == '[' and not len(line.rstrip()) == 0:
             mylist = line.strip().split('=')
             key=mylist[0].strip()
             value=mylist[1].strip()
             if value.startswith("["):
                 toReplace=re.sub(r'^\[(.*)\].*$', r'\1', value)
-                replacement=paths[toReplace] 
+                replacement=paths[toReplace]
                 value='['+replacement+']'+value
                 value=re.sub(r'^\[(.*)\]\[.*\](.*)$', r'\1\2', value)
             paths[key] = value
@@ -110,9 +110,9 @@ for genome in igbGenomesToLoad.keys():
 
 # For each genome, create a annots.xml
 for htsFlowGenomeRow in htsFlowGenomes:
-    # get type, primary id and label 
+    # get type, primary id and label
     htsFlowGenome = htsFlowGenomeRow[0]
-    
+
     if not htsFlowGenome in synomymToGenome:
         print("Skip %s: not in IGB" % htsFlowGenome)
         continue
@@ -181,9 +181,9 @@ for htsFlowGenomeRow in htsFlowGenomes:
         for path in glob.glob(paths['HTSFLOW_BED'] + str(primaryId) + "/bed/*.bb"):            
             fileName = os.path.basename(path)   
             print(path)         
-            userInput = "  <file title=\"users/%s/secondary/%s-%s\" name=\"%s/%s/bed/%s\"/>\n" % (userName, primaryId, fileName, tracksSecondaryUrl, primaryId,fileName)            
+            userInput = "  <file title=\"users/%s/secondary/%s_%s\" name=\"%s/%s/bed/%s\"/>\n" % (userName, primaryId, fileName, tracksSecondaryUrl, primaryId,fileName)            
             # by method
-            methodInput = "  <file title=\"secondary/%s/%s-%s\" name=\"%s/%s/bed/%s\"/>\n" % (seqMethod, primaryId, fileName, tracksSecondaryUrl, primaryId, fileName)
+            methodInput = "  <file title=\"secondary/%s/%s_%s\" name=\"%s/%s/bed/%s\"/>\n" % (seqMethod, primaryId, fileName, tracksSecondaryUrl, primaryId, fileName)
             f.write(userInput)
             f.write(methodInput)
             

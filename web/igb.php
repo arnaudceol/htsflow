@@ -42,12 +42,35 @@ if (strpos ( $_GET ['id'], 'primary' )) {
 	preg_match ( '/([0-9]+)\/([a-z\_]+)\.igb/', $_GET ['id'], $m );
 	$analysisId = $m [1];
 	$analysisType = $m [2];
-	$queryGenome = sprintf ( "SELECT ref_genome, label FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+	
+	
+	if ($analysisType == "peak_calling") {
+		$queryGenome = sprintf ( "SELECT ref_genome, label, program FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+	} else {
+		$queryGenome = sprintf ( "SELECT ref_genome, label FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+	}
 	
 	$igbQuery = mysqli_query ( $con, $queryGenome );
 	while ( $igbResult = mysqli_fetch_assoc ( $igbQuery ) ) {
 		$htsFlowGenome = $igbResult ["ref_genome"];
-		$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
+		
+		if ($analysisType == "peak_calling") {
+			/* For peak calling */ 
+			$program =  $igbResult ["program"];
+			if ($program == "MACSnarrow") {
+				$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
+			} elseif ($program == "MACSbroad") {
+				$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_broad_peaks.bb";
+			} else {
+				 /* both */
+				$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
+				$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_broad_peaks.bb";
+				$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_both_peaks.bb";			
+			} 
+		} else {
+				$files [] = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
+		}			
+		
 	}
 	mysqli_free_result ( $igbQuery );
 }

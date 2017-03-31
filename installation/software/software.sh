@@ -132,23 +132,23 @@ tmpdir=`pwd`
 wget https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tar.xz
 tar xf Python-2.7.10.tar.xz
 cd Python-2.7.10
-./configure --prefix $deploydir/python-2.7
-make altinstall prefix=$deploydir/python2.7 exec-prefix=$deploydir/python2.7
+./configure --prefix $deploydir/python-2.7 --with-ensurepip=install
+make altinstall prefix=$deploydir/python2.7 exec-prefix=$deploydir/python-2.7
 
 cd $deploydir/python2.7
 ./bin/python2.7 -m ensurepip
 
-./bin/pip install virtualenv
+./bin/pip2.7 install virtualenv
 
 ./bin/virtualenv $deploydir/virtualenv
-cd $deploydir/bin/virtualenv
+cd $deploydir/virtualenv
 
 source bin/activate
 
 ./bin/pip2.7   install --upgrade pip
 ./bin/pip2.7  install numpy
 ./bin/pip2.7  install configparser
-./bin/pip2.7  install MySQL-python
+#./bin/pip2.7  install MySQL-python
 ./bin/pip2.7  install pymysql
 ./bin/pip2.7  install command
 ./bin/pip2.7  install -Iv pyDNase==0.1.6

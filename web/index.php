@@ -33,7 +33,6 @@ header('Content-type: text/html; charset=utf-8');
 			<div>
 				<b>HTS-flow</b> provides a framework for the management of
 				NGS-samples, data retrieval, primary and secondary analyses.
-
 			</div>
 
 
