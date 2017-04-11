@@ -405,7 +405,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 				*/
 				if ($row["source"] == 0) {
 					$link = str_replace ("/Illumina/PublicData", "http://hilt.iit.ieo.eu/data/", $row["raw_data_path"] );
-					?> <a class="fa fa-external-link" href="<?php echo $link; ?>"></a><?
+					?> <a class="fa fa-external-link" href="<?php echo $link; ?>"></a><?php
 				}				
 				?></td>
 				<td><?php
