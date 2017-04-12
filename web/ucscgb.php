@@ -37,7 +37,7 @@ $tracks = array ();
 
 if ($_GET ['type'] == 'primary' ) {
 	$analysisType = 'primary';
-	$analysisId = str_replace ( '/primary.igb', '', $_GET ['id'] );
+	$analysisId =  $_GET ['id'] ;
 	$queryGenome = sprintf ( "SELECT sample.sample_name, ref_genome, stranded FROM sample, pa_options, primary_analysis WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id = '%s'", $analysisId );
 	
 	$file= "/primary/tracks/bw/" . $analysisId . ".bw";
@@ -62,40 +62,43 @@ if ($_GET ['type'] == 'primary' ) {
 	mysqli_free_result ( $resGenome );
 } else {
 	preg_match ( '/([0-9]+)\/([a-z\_]+)\.igb/', $_GET ['id'], $m );
-	$analysisId = $m [1];
-	$analysisType = $m [2];
+	$analysisId =  $_GET ['id'] ;
+	$analysisType =  $_GET ['type'];
 	
 	if ($analysisType == "peak_calling") {
-		$queryGenome = sprintf ( "SELECT ref_genome, label, program FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	} else {
-		$queryGenome = sprintf ( "SELECT ref_genome, label FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	}
 	
 	$igbQuery = mysqli_query ( $con, $queryGenome );
 	while ( $igbResult = mysqli_fetch_assoc ( $igbQuery ) ) {
 		$htsFlowGenome = $igbResult ["ref_genome"];
 		
+		$name = $_GET ['id'] . "-" . $igbResult["label"] . "-" . $igbResult["id"];
+		
 		if ($analysisType == "peak_calling") {
 			/* For peak calling */ 
+			
 			$program =  $igbResult ["program"];
 			if ($program == "MACSnarrow") {
 				$file = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
-				$tracks[] = "track type=bigBed name=\"\" description=\"\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;
+				$tracks[] = "track type=bigBed name=\"$name\" description=\"$name\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;
 			} elseif ($program == "MACSbroad") {
 				$file= "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_broad_peaks.bb";
-				$tracks[] = "track type=bigBed name=\"\" description=\"\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
+				$tracks[] = "track type=bigBed name=\"$name\" description=\"$name\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
 			} else {
 				 /* both */
 				$file = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
-				$tracks[] = "track type=bigBed name=\"\" description=\"\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
+				$tracks[] = "track type=bigBed name=\"$name-narrow\" description=\"$name\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
 				$file = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_broad_peaks.bb";
-				$tracks[] = "track type=bigBed name=\"\" description=\"\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;
+				$tracks[] = "track type=bigBed name=\"$name-broad\" description=\"$name\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;
 				$file = "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_both_peaks.bb";
-				$tracks[] = "track type=bigBed name=\"\" description=\"\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
+				$tracks[] = "track type=bigBed name=\"$name-both\" description=\"$name\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
 			} 
 		} else {
 				$file= "/secondary/" . $analysisId . "/bed/" . $igbResult ["label"] . "_peaks.bb";
-				$tracks[] = "track type=bigBed name=\"\" description=\"\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
+				$tracks[] = "track type=bigBed name=\"$name\" description=\"$name\" bigDataUrl=" . $pageURL . "/" . $HTSFLOW_PATHS ["HTSFLOW_WEB_TRACKS"] .$file;				
 		}			
 		
 	}

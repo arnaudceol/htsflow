@@ -197,6 +197,20 @@ function igbLoad(id, type) {
 		 })
 		;
 }
+
+
+
+function ucscGbLoad(id, genome, type) {
+	ucscScript = "<?php echo str_replace("pages/tables", "", dirname($pageURL)) . "ucscgb.php"; ?>";
+	url="<?php echo $HTSFLOW_PATHS['UCSC_GENOME_BROWSER_URL']?>/cgi-bin/hgTracks?db=" + genome + "&hgt.customText=" + ucscScript + "<?php echo urlencode("?id="); ?>" +  id + "<?php echo urlencode("&type="); ?>" + type;
+	//alert(url)
+	//url = ucscScript + "?id=" + id + "&type=primary"
+	window.open(url, '_gb');	
+	return false;
+}
+
+
+
 </script>
 
 
@@ -224,6 +238,7 @@ function igbLoad(id, type) {
 					<th style="width:0%;"></th>
 					<th style="width: 100px; text-align:left" >TITLE</th>
 					<th>METHOD</th>
+					<th>REF GENOME</th>
 					<th>DESCRIPTION</th>
 					<th style="text-align:right">USER</th>
 					<th></th>
@@ -238,7 +253,11 @@ function igbLoad(id, type) {
 				if ($numRighe != 0) {					
 					while ( $row = mysqli_fetch_assoc ( $result ) ) {
 					
-							?> <tr  <?php if ($row['status'] == "deleted") { echo " style=\"color: grey\""; }?>>
+						// Get ref genome
+						$result_ref_genome = mysqli_query($con, "SELECT ref_genome FROM sample, primary_analysis, " . $row ["method"] . " WHERE primary_id = primary_analysis.id AND sample_id = sample.id AND secondary_id = " . $row ["id"] );
+						$row_ref_genome = mysqli_fetch_assoc ( $result_ref_genome);
+						$ref_genome = $row_ref_genome["ref_genome"];						
+					?> <tr  <?php if ($row['status'] == "deleted") { echo " style=\"color: grey\""; }?>>
 							<?php if ($selectable) { ?>
 				<td style="text-align: left"> 
 				<input type="checkbox" id="selected_<?php echo $row["id"]; ?>"
@@ -260,10 +279,14 @@ function igbLoad(id, type) {
 							include '../secondary/' . $row ["method"] . '/detail_table.php'; ?>
 						</div>
 						<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/secondary/<?php  echo $row ["id"]; ?>/" ><i class="fa fa-folder"></i></a>
-						<?php if ($row ["method"] == 'peak_calling') {?><span class="fa-stack " >  
+						<?php if ($row ["method"] == 'peak_calling') {?>												
+						<a href="#" title="Load track in UCSC Genome Browser" onclick="ucscGbLoad('<?php  echo $row ["id"]; ?>', '<?php echo $ref_genome; ?>', '<?php echo $row ["method"]; ?>')"><img height=16" src="images/ucsc-genome-browser.png"/></a>  							
+						<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id"] . "', '" .  $row ["method"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id"]; ?>" style="display: none;"></a> 
-						</span>	<?php }?>
+						</span>	
+					
+						<?php }?>
 					</td>
 					<td>
 					<table>
@@ -293,7 +316,8 @@ function igbLoad(id, type) {
 						</tbody>
 					</table>
 					</td>
-					<td class="centered"><?php echo $row["method"]; ?></td>		
+					<td class="centered"><?php echo $row["method"]; ?></td>
+					<td class="centered"><?php echo $ref_genome; ?></td>		
 					<td><?php echo $row['description']; ?>
 							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><form action="#"

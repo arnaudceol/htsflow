@@ -192,7 +192,7 @@ if (isset($_REQUEST['messageYes'])) {
 			$availableAssemblies= array();
 			// BS need a different assembly
 			$availableAssembliesBs= array();
-			
+						
 			foreach (scandir(GENOMES_FOLDER) as $assembly) {
 				if ($assembly[0] != ".") {
 					if (strrpos($assembly, "_bs") > 0) {
