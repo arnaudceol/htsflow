@@ -275,6 +275,16 @@ function igbLoad(id) {
 	;
 		
 }
+
+function ucscGbLoad(id, genome) {
+	ucscScript = "<?php echo str_replace("pages/tables", "", dirname($pageURL)) . "ucscgb.php"; ?>";
+	url="<?php echo $HTSFLOW_PATHS['UCSC_GENOME_BROWSER_URL']?>/cgi-bin/hgTracks?db=" + genome + "&hgt.customText=" + ucscScript + "<?php echo urlencode("?id="); ?>" +  id + "<?php echo urlencode("&type=primary") ; ?>";
+	//alert(url)
+	//url = ucscScript + "?id=" + id + "&type=primary"
+	window.open(url, '_blank');	
+	return false;
+}
+
 </script>
 
 
@@ -446,9 +456,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 							<a href="<?php echo $pageURL . "/" .$HTSFLOW_PATHS['HTSFLOW_WEB_TRACKS']; ?>/primary/tracks/bw/<?php  echo $row ["id_pre"]; ?>.bw" ><i title="Download BigWig" class="fa fa-download"></i></a>
 							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
-  								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
+								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
 							</span>	
-							<?php if ( $stranded == 1  ) { ?>
+							<a href="#" title="Load track in UCSC Genome Browser" onclick="ucscGbLoad('<?php  echo $row ["id_pre"]; ?>', '<?php echo $row["ref_genome"]; ?>')"><img height=16" src="images/ucsc-genome-browser.png"/></a>
+  							<?php if ( $stranded == 1  ) { ?>
 								<i class="fa fa-exchange" style="color: green" aria-hidden="true" title="stranded"></i>								
 							<?php 
             			} else {
