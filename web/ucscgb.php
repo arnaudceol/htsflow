@@ -66,9 +66,9 @@ if ($_GET ['type'] == 'primary' ) {
 	$analysisType =  $_GET ['type'];
 	
 	if ($analysisType == "peak_calling") {
-		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType, program WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	} else {
-		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType, program WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	}
 	
 	$igbQuery = mysqli_query ( $con, $queryGenome );
