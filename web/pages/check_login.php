@@ -93,6 +93,8 @@ if (isset($_GET["logout"])) {
         
         if ($authenticated) {            
             $_SESSION["hf_user_name"] = $loginName;
+            
+            $_SESSION["hf_user_group"] = $_POST["user_group"];
     
             // then we check that the user is in HTSflow Database users table.
             // if not, it has to be added.

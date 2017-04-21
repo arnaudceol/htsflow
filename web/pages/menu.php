@@ -46,7 +46,7 @@ if (isset($_SESSION["hf_user_name"])) {
     ?>
 <div id="userlog" align="right">
 	<div style="margin-right: 15px;">
-		You are logged as <b><?php echo $_SESSION["hf_user_name"]; ?></b>. - <a
+		You are logged as <b><?php echo $_SESSION["hf_user_name"]; ?></b>, group <b><?php echo $_SESSION["hf_user_group"] ; ?></b>. - <a
 			href="index.php?logout">Logout</a>
 	</div>
 </div>

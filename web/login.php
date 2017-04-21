@@ -54,7 +54,15 @@ include 'pages/users/createAdmin.php';
 									name="user_name" required /> <label for="login_input_password">Password</label>
 								<input id="login_input_password" class="login_input"
 									type="password" name="user_password" autocomplete="off"
-									required /> <input type="submit" name="login" value="Log in" />
+									required /> 
+								<select id="login_input_group" class="login_input"
+									type="select" name="user_group" autocomplete="off"
+									required>
+									<option value="BA">BA</option>
+ 									<option value="PGP">PGP</option>
+ 									<option value="FN">FN</option>
+ 								</select>
+								<input type="submit" name="login" value="Log in" />
 							</form>
 						</div>
 					</div>
