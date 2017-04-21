@@ -70,6 +70,7 @@ CREATE TABLE `pa_options` (
   `paired` tinyint(1) NOT NULL,
   `rm_tmp_files` tinyint(1) NOT NULL,
   `rm_duplicates` tinyint(1) NOT NULL,
+  `stranded` tinyint(1) NOT NULL,
   `created` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
@@ -384,13 +385,12 @@ END $$
 DELIMITER ;
 
 
-
 -- Default options  (for merging)
-INSERT INTO pa_options (rm_bad_reads, trimming, masking, alignment, paired, rm_tmp_files,  rm_duplicates )
-VALUES (0, 0, 0, 0, 0, 0, 0);
+INSERT INTO pa_options (rm_bad_reads, trimming, masking, alignment, paired, rm_tmp_files,  rm_duplicates, stranded )
+VALUES (0, 0, 0, 0, 0, 0, 0,0);
 
-INSERT INTO pa_options (rm_bad_reads, trimming, masking, alignment, paired, rm_tmp_files,  rm_duplicates )
-VALUES (0, 0, 0, 0, 0, 0, 1);
+INSERT INTO pa_options (rm_bad_reads, trimming, masking, alignment, paired, rm_tmp_files,  rm_duplicates, stranded )
+VALUES (0, 0, 0, 0, 0, 0, 1,0);
 
 
 INSERT INTO seq_samples VALUES(0);
