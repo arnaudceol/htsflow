@@ -5,6 +5,7 @@
 # Or else the script may fail as it will execute in your top level home directory /home/username
 #$ -cwd
 #$ -j yes
+#$ -l h=!(iit-n2.iit.ieo.eu|modhep-n1.bioinfo.ieo.eu|modhep-n2.bioinfo.ieo.eu)
 # use environment variables
 #$ -V
 #$ -S /bin/bash
