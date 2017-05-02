@@ -136,7 +136,7 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	                         CASE WHEN origin = 0 THEN 'LIMS' WHEN origin = 2 THEN 'EXTERNAL' END AS source,
 	                         sample_name,
 	                         reads_mode,
-	                         ref_genome,
+	                         genome,
 	                         raw_data_path
 	                         FROM sample, primary_analysis, pa_options, users
 	                         WHERE sample.id = sample_id  AND source = origin  AND pa_options.id = options_id and primary_analysis.user_id = users.user_id and primary_analysis.id="
@@ -145,7 +145,7 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	         flags <- extractInfoFromDB( SQL )
 	         sample <- flags$raw_data_path # sample path
 	         names(sample) <- id
-	         genomePaths <- getGenomePaths( flags$ref_genome )
+	         genomePaths <- getGenomePaths( flags$genome )
 	         tryCatch(
 	                 primaryPipeline( sample, flags, genomePaths ) ,
 	                 error = function(e)

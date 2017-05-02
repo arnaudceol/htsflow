@@ -65,6 +65,7 @@ CREATE TABLE `pa_options` (
   `trimming` tinyint(1) NOT NULL,
   `masking` tinyint(1) NOT NULL,
   `alignment` tinyint(1) NOT NULL,
+  `genome` varchar(20) DEFAULT NULL,
   `aln_prog` varchar(20) DEFAULT NULL,
   `aln_options` text,
   `paired` tinyint(1) NOT NULL,

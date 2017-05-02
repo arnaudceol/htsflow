@@ -39,7 +39,7 @@ fixHTS <- function( ID ) {
                CASE WHEN origin = 0 THEN 'LIMS' WHEN origin = 2 THEN 'EXTERNAL' END AS source,
                sample_name,
                reads_mode,
-               ref_genome,
+               genome,
                raw_data_path
              FROM primary_analysis, pa_options, users, sample WHERE sample.source <> 1 AND id_sample = sample.id AND source = origin  AND options_id = pa_options.id and users.user_id = primary_analysis.user_id and primary_analysis="
 	        ,ID
@@ -47,7 +47,7 @@ fixHTS <- function( ID ) {
 		flags <- extractInfoFromDB( SQL )
 		sample <- flags$raw_data_path # sample path
 		names(sample) <- ID
-		genomePaths <- getGenomePaths( flags$ref_genome )
+		genomePaths <- getGenomePaths( flags$genome )
 
 		sampleName <- names(sample)
 	    bamFileName <- paste0 ( getHTSFlowPath("HTSFLOW_ALN"), "/", sampleName, ".bam" )

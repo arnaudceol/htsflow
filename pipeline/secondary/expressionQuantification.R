@@ -22,10 +22,10 @@ expressionQuantification <- function( IDsec ) {
 	if ( checkMixPresence(values) ) {
 		loginfo ("Normalization with mix")
 	} else {		
-		REFGENOME <- unique( unlist( sapply( values$primary_id, function(x) extractInfoFromDB( paste0('SELECT ref_genome FROM sample, primary_analysis WHERE sample.id = sample_id AND source = origin AND primary_analysis.id=',x ) ) ) ) )
+		REFGENOME <- unique( unlist( sapply( values$primary_id, function(x) extractInfoFromDB( paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND source = origin AND primary_analysis.id=',x ) ) ) ) )
 		
 		if ( length(REFGENOME) > 1 ) {
-			setSecondaryStatus( IDsec=IDsec, status='ref_genome error..', endTime=T )
+			setSecondaryStatus( IDsec=IDsec, status='genome error..', endTime=T )
 			loginfo("REFGENOME error. The user provided samples with more than one reference genome.")
 		} else {
 			if ( REFGENOME == 'mm9' || REFGENOME == 'mm10' ) {

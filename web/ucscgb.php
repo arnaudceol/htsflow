@@ -38,14 +38,14 @@ $tracks = array ();
 if ($_GET ['type'] == 'primary' ) {
 	$analysisType = 'primary';
 	$analysisId =  $_GET ['id'] ;
-	$queryGenome = sprintf ( "SELECT sample.sample_name, ref_genome, stranded FROM sample, pa_options, primary_analysis WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id = '%s'", $analysisId );
+	$queryGenome = sprintf ( "SELECT sample.sample_name, genome, stranded FROM sample, pa_options, primary_analysis WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id = '%s'", $analysisId );
 	
 	$file= "/primary/tracks/bw/" . $analysisId . ".bw";
 	
 	$resGenome = mysqli_query ( $con, $queryGenome );
 	
 	$row = mysqli_fetch_assoc ( $resGenome );
-	$htsFlowGenome = $row ["ref_genome"];
+	$htsFlowGenome = $row ["genome"];
 	$stranded = $row ["stranded"];	
 	
 	$shortLabel = $row ["sample_name"];
@@ -66,14 +66,14 @@ if ($_GET ['type'] == 'primary' ) {
 	$analysisType =  $_GET ['type'];
 	
 	if ($analysisType == "peak_calling") {
-		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id, program FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT genome, label, $analysisType.id, program FROM pa_option, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	} else {
-		$queryGenome = sprintf ( "SELECT ref_genome, label, $analysisType.id FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT genome, label, $analysisType.id FROM pa_options, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	}
 	
 	$igbQuery = mysqli_query ( $con, $queryGenome );
 	while ( $igbResult = mysqli_fetch_assoc ( $igbQuery ) ) {
-		$htsFlowGenome = $igbResult ["ref_genome"];
+		$htsFlowGenome = $igbResult ["genome"];
 		
 		$name = $_GET ['id'] . "-" . $igbResult["label"] . "-" . $igbResult["id"];
 		

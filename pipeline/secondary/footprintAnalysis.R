@@ -53,8 +53,8 @@ footprintAnalysis <- function( IDsec ){
 					paste0(  getHTSFlowPath("HTSFLOW_SECONDARY"), flags[x,]$secondary_id, "/BROAD/", flags[x,]$label, '_broad_peaks.bed' )
 				}
 	)
-	ref_genome <- unique( unlist( sapply( flags$imput_id, function(x) extractSingleColumnFromDB(paste0('SELECT ref_genome FROM sample, primary_analysis WHERE sample.id = sample_id AND source = origin AND primary_analysis.id = ',x)) ) ) )
-	genomePaths <- getGenomePaths( ref_genome )
+	genome <- unique( unlist( sapply( flags$imput_id, function(x) extractSingleColumnFromDB(paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND source = origin AND primary_analysis.id = ',x)) ) ) )
+	genomePaths <- getGenomePaths( genome )
 	
 	for( i in 1:length(bedFiles)){
 		BED <- bedFiles[i]

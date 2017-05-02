@@ -34,7 +34,7 @@ if ( TypeOfAnalysis == "primary" ) {
             CASE WHEN origin = 0 THEN 'LIMS' WHEN origin = 2 THEN 'EXTERNAL' END AS source,
             sample_name,
             reads_mode,
-            ref_genome,
+            genome,
             raw_data_path
           FROM primary_analysis, pa_options, users, sample
 		  WHERE sample.source <> 1 AND sample.id = sample_id AND source = origin  AND pa_options.id = options_id and primary_analysis.user_id = users.user_id and primary_analysis.id="

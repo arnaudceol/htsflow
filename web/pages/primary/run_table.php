@@ -26,10 +26,10 @@ if (isset ( $_POST ['seq_method'] ) && $_POST ['seq_method'] != "") {
 } else {
 	$seq_method = 0;
 }
-if (isset ( $_POST ['ref_genome'] ) && $_POST ['ref_genome'] != "") {
-	$ref_genome = "ref_genome=\"" . trim($_POST ['ref_genome']) . "\"";
+if (isset ( $_POST ['genome'] ) && $_POST ['genome'] != "") {
+	$genome = "genome=\"" . trim($_POST ['genome']) . "\"";
 } else {
-	$ref_genome = 0;
+	$genome = 0;
 }
 if (isset ( $_POST ['user_id'] ) && $_POST ['user_id'] != "") {
 	$user_id = "user_id=\"" . $_POST ['user_id'] . "\"";
@@ -60,7 +60,7 @@ if (isset($_POST["submit"])) {
 
 
 array_push ( $concatArray, $seq_method );
-array_push ( $concatArray, $ref_genome );
+array_push ( $concatArray, $genome );
 array_push ( $concatArray, $user_id );
 $filtArray = array_filter ( $concatArray );
 $numOfelements = count ( $filtArray );
@@ -205,7 +205,7 @@ if ($numRighe == 0) {
 													<tr>
 														<td width="100%"><textarea rows="2"
 																name="REFGENOMEdescription" style="width: 98%;">
-                                                                            <?php echo $row["ref_genome"]; ?>
+                                                                            <?php echo $row["genome"]; ?>
                                                                         </textarea>
 
 														</td>
@@ -217,7 +217,7 @@ if ($numRighe == 0) {
 											</table>
 										</form>
 									</div></td>
-								<td><?php echo $row["ref_genome"]; ?></td>
+								<td><?php echo $row["genome"]; ?></td>
 							</tr>
 						</tbody>
 					</table>

@@ -139,15 +139,15 @@ merging <- function ( flags, flagsPRE, id_merge_primary ) {
 	# if method = RNAseq we have to perform the reads count.
 	
 	reads_modeSQL <- paste0("SELECT reads_mode FROM sample, primary_analysis WHERE sample.id=sample_id AND primary_analysis.id = ", id_merge_primary ,";")	
-	ref_genomeSQL <- paste0("SELECT ref_genome FROM sample, primary_analysis WHERE sample.id=sample_id AND primary_analysis.id = ", id_merge_primary ,";")
+	genomeSQL <- paste0("SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id=options_id AND primary_analysis.id = ", id_merge_primary ,";")
 	
 	reads_mode <- extractSingleColumnFromDB( reads_modeSQL )
-	ref_genome <- extractSingleColumnFromDB( ref_genomeSQL )
+	genome <- extractSingleColumnFromDB( genomeSQL )
 	
-	if (dim(ref_genome)[1] > 1) {
-		RefGenomes <- getGenomePaths( ref_genome[1,] )
+	if (dim(genome)[1] > 1) {
+		RefGenomes <- getGenomePaths( genome[1,] )
 	} else {
-		RefGenomes <- getGenomePaths( ref_genome )
+		RefGenomes <- getGenomePaths( genome )
 	}
 	
 	if ( dim( reads_mode )[1] > 1 ) {

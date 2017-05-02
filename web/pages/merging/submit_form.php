@@ -32,7 +32,7 @@ foreach ( $values as $selectedId ) {
 
 global $con;
 
-$sql = "SELECT DISTINCT ref_genome, seq_method, stranded FROM sample, primary_analysis, pa_options WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id in (" . implode ( ", ", $selectedSamples ) . ")";
+$sql = "SELECT DISTINCT genome, seq_method, stranded FROM sample, primary_analysis, pa_options WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id in (" . implode ( ", ", $selectedSamples ) . ")";
 
 $result = mysqli_query ( $con, $sql );
 
@@ -41,8 +41,8 @@ $genomes = array ();
 $stranded = array ();
 
 while ( $row = mysqli_fetch_assoc ( $result ) ) {
-	if (! in_array ( $row ['ref_genome'], $genomes )) {
-		array_push ( $genomes, $row ['ref_genome'] );
+	if (! in_array ( $row ['genome'], $genomes )) {
+		array_push ( $genomes, $row ['genome'] );
 	}
 	
 	if (! in_array ( $row ['seq_method'], $methods )) {

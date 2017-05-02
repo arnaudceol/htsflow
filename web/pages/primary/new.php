@@ -76,7 +76,7 @@ Select one or more samples and press the Settings button:
     			editable: false,       
 	       		<?php if (isset ( $_POST ['seq_method'] )) { echo "seq_method: \"" . $_POST ['seq_method'] ."\",\n"; } ?>
        			<?php if (isset ( $_POST ['user_id'] )) { echo "user_id: \"" . $_POST ['user_id'] ."\",\n" ; } ?>
-       			<?php if (isset ( $_POST ['ref_genome'] )) { echo "ref_genome: \"" . $_POST ['ref_genome'] ."\",\n"; } ?>
+       			<?php if (isset ( $_POST ['genome'] )) { echo "genome: \"" . $_POST ['genome'] ."\",\n"; } ?>
        			<?php if (isset ( $_POST ['source'] )) { echo "source: \"" . $_POST ['source'] ."\",\n"; } ?>			 						
 			}, function(response) {		   
 			    $( "#sampleTable" ).html(response);
