@@ -31,15 +31,15 @@ foreach ($values as $selectedId) {
 
 global $con;
 
-$sql = "SELECT DISTINCT ref_genome FROM sample, primary_analysis WHERE  sample_id = sample.id AND primary_analysis.id in (" . implode(", ", $selectedSamples) . ")";
+$sql = "SELECT DISTINCT genome FROM pa_options, primary_analysis WHERE  options_id = pa_options.id AND primary_analysis.id in (" . implode(", ", $selectedSamples) . ")";
 
 $result = mysqli_query($con, $sql);
 
 $genomes = array();
 
 while ($row = mysqli_fetch_assoc($result)) {
-    if (! in_array($row['ref_genome'], $genomes)) {
-        array_push($genomes, $row['ref_genome']);
+    if (! in_array($row['genome'], $genomes)) {
+        array_push($genomes, $row['genome']);
     }
 }
 

@@ -139,12 +139,12 @@ for ($i = 0; $i < $numIds; $i++) {
     $sample = preg_replace("/[\'\ ]/", "", $selectedId);
     if ($sample != "") {
 
-        $checkQuery = "SELECT ref_genome FROM sample WHERE id= '" . $sample . "';";
+//         $checkQuery = "SELECT genome FROM primary_analysis WHERE sample_id= '" . $sample . "';";
         
-        $res = mysqli_query($con, $checkQuery);
-        while ($line = mysqli_fetch_assoc($res)) {
-            $refgenome = $line["ref_genome"];
-        }
+//         $res = mysqli_query($con, $checkQuery);
+//         while ($line = mysqli_fetch_assoc($res)) {
+//             $refgenome = $line["ref_genome"];
+//         }
         // echo $refgenome;
         $checkQuery = "SELECT id FROM primary_analysis WHERE sample_id = '" . $sample . "' and options_id = " . $val_option . ";";
         //echo $checkQuery;

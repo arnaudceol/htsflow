@@ -60,7 +60,7 @@ if (isset($_POST['status']) && $_POST['status'] != "") {
 
 
 
-$sql = "SELECT tc.user_id, user_name, paired, tc.id as primary_id, sample.id as  sample_id, SOURCE, ref_genome, 
+$sql = "SELECT tc.user_id, user_name, paired, tc.id as primary_id, sample.id as  sample_id, SOURCE, genome, 
     seq_method, pk.id as peak_id, pk.label, s.method, s.description, s.id as secondary_id, tc.reads_num  
     FROM primary_analysis tc, secondary_analysis s, peak_calling pk, users, pa_options, sample
     WHERE (seq_method = 'DNase-Seq' OR seq_method='ChIP-seq') and s.id = pk.secondary_id and pk.primary_id = tc.id 

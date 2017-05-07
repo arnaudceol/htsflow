@@ -124,7 +124,7 @@ $result = mysqli_query($con, $sql);
 				
 				
 				<?php
-    $sql = "SELECT DISTINCT genome FROM pa_options , primary_analysis  WHERE pa_options.id = options_id AND source <> 1 ORDER BY genome ASC;";
+    $sql = "SELECT DISTINCT genome FROM pa_options , primary_analysis  WHERE pa_options.id = options_id AND origin <> 1 ORDER BY genome ASC;";
     $result = mysqli_query($con, $sql);
     ?>
 <div class="group">
