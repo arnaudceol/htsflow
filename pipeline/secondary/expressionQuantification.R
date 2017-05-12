@@ -22,7 +22,7 @@ expressionQuantification <- function( IDsec ) {
 	if ( checkMixPresence(values) ) {
 		loginfo ("Normalization with mix")
 	} else {		
-		REFGENOME <- unique( unlist( sapply( values$primary_id, function(x) extractInfoFromDB( paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND source = origin AND primary_analysis.id=',x ) ) ) ) )
+		REFGENOME <- unique( unlist( sapply( values$primary_id, function(x) extractInfoFromDB( paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND primary_analysis.id=',x ) ) ) ) )
 		
 		if ( length(REFGENOME) > 1 ) {
 			setSecondaryStatus( IDsec=IDsec, status='genome error..', endTime=T )

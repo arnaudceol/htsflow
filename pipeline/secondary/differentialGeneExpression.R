@@ -30,7 +30,7 @@ differentialGeneExpression <- function( IDsec ){
 		# next line will check the reference genome to which each sample has been aligned.
 		# if there are more then one reference genome, it raises an error, otherwise it will
 		# continue with the right annotation.
-		REFGENOME <- unique( unlist( sapply( values$primary_id, function(x) extractInfoFromDB( paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND source = origin AND primary_analysis.id=',x ) ) ) ) )
+		REFGENOME <- unique( unlist( sapply( values$primary_id, function(x) extractInfoFromDB( paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND primary_analysis.id=',x ) ) ) ) )
 		if ( length(REFGENOME) > 1 ) {
 			setSecondaryStatus( IDsec=IDsec, status='genome error..', endTime=T )
 			logerror("REFGENOME error. The user provided samples with more than one reference genome.")
