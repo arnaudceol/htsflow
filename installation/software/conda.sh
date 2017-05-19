@@ -46,3 +46,8 @@ conda install -y r=3.2.0
 
 # mysql 
 conda install -y mysql
+
+# For some reason, we need this to avoid bug:
+# conda R symbol lookup error: libreadline.so.6: "undefined symbol: PC"
+conda remove --force readline
+
