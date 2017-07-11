@@ -123,7 +123,10 @@ geoDownload <- function( taskId ) {
 		library_layout <- "unspecified"
 		organism <- "unspecified"
 		
-		description <- paste0("Data downloaded from GEO: ", geoIds, ". No metadata available, we cannot download this dataset.")
+		description <- paste0("Data downloaded from GEO: ", geoIds, ". We cannot download this dataset: ", paste(getErrorMessages(reg), collapse="; "))
+				
+		description<-gsub("'", "\\'", description)
+		description<-gsub("\\ +\\|\\|\\ +", "\n", description)
 		
 		sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
 				"SELECT 'X" , sampleId, "', '" , "GEO SAMPLE NOT AVAILABLE", "','" , method , "','" , 
@@ -131,8 +134,6 @@ geoDownload <- function( taskId ) {
 		
 		res <- updateInfoOnDB( sqlSample )
 		
-		description<-gsub("'", "\\'", description)
-		description<-gsub("\\ +\\|\\|\\ +", "\n", description)
 		
 		sqlDescription <- paste0("INSERT INTO sample_description (sample_id, description) VALUES ('X", sampleId, "', '", description, "')")
 		loginfo(sqlDescription)
@@ -168,7 +169,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 	
 	if(gse=='' | is.null(gse) | is.na(gse)){
 		if(gsm=='' | is.null(gsm) | is.na(gsm)){l
-			stop("Invalid GSE and GSM provided")
+			stop("Invalid GSE and GSM provided", call.=FALSE)
 		}else{
 			gse_ids <- dbGetQuery(geo_con, paste0("select distinct gse from gse_gsm where gsm ='", toupper(gsm), "'"))
 			loginfo(gse_ids)
@@ -186,7 +187,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		gsm_ids <-  dbGetQuery(geo_con, paste0("select distinct gsm from gse_gsm where gse ='", toupper(gse), "'"))
 		
 		if(length(gsm_ids)==0){
-			stop(paste0("No GSMs found for id ", gse))
+			stop(paste0("No GSMs found for id ", gse), call.=FALSE)
 		}
 		
 		if(gsm=='' | is.null(gsm) | is.na(gsm)) {
@@ -194,7 +195,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		} 
 		
 		if(! toupper(gsm) %in% gsm_ids[,1]) {
-			stop(paste0("Wrong match: ", gsm , " does not belong to  " , gse))
+			stop(paste0("Wrong match: ", gsm , " does not belong to  " , gse), call.=FALSE)
 		}
 		
 	}	
@@ -202,7 +203,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 	
 	#Create the appropriate folder structure
 	if(!file.exists(userUploadDir)){
-		stop("Invalid directory")
+		stop("Invalid directory", call.=FALSE)
 	}else{
 		
 		userUploadDir <- paste0(userUploadDir, '/', gse, '/', gsm)
@@ -224,10 +225,10 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		
 		if(nrow(gsm_metadata)==0) {			
 			loginfo(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))	
-			stop(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))
+			stop(paste0('No metadata found in database for SRAdb for GSM: ' , gsm), call.=FALSE)
 		} else if(nrow(gsm_metadata)>1) {
 			loginfo('Multiple experiments found')
-			stop('Multiple experiments found')
+			stop('Multiple experiments found', call.=FALSE)
 		} else {
 			sra_metadata <- dbGetQuery(sra_con, paste0("select distinct taxon_id, scientific_name, sample_attribute from sample where sample_accession=='", gsm_metadata$sample_accession, "'"))[1,]
 			method <- tolower(gsm_metadata$library_strategy)
