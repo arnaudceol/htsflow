@@ -45,31 +45,32 @@ if (isset($_GET["logout"])) {
                         
             $ldapconn = ldap_connect($HTSFLOW_PATHS['LDAP_URL']);
             
-            $uid = "uid=" . $loginName; // . ",ou=lar,ou=Users,ou=People,ou=Accounts,dc=ieo,dc=eu";
+//             $uid = "uid=" . $loginName; // . ",ou=lar,ou=Users,ou=People,ou=Accounts,dc=ieo,dc=eu";
             
-            if (isset($HTSFLOW_PATHS['LDAP_OU']) && $HTSFLOW_PATHS['LDAP_OU'] != '') {
-                foreach (explode (",", $HTSFLOW_PATHS['LDAP_OU']) as $ou) {
-                    if ($ou != '') {
-                        $uid = $uid . ",ou=" . $ou;
-                    }
-                }
-            }
+//             if (isset($HTSFLOW_PATHS['LDAP_OU']) && $HTSFLOW_PATHS['LDAP_OU'] != '') {
+//                 foreach (explode (",", $HTSFLOW_PATHS['LDAP_OU']) as $ou) {
+//                     if ($ou != '') {
+//                         $uid = $uid . ",ou=" . $ou;
+//                     }
+//                 }
+//             }
 
-            if (isset($HTSFLOW_PATHS['LDAP_DC']) && $HTSFLOW_PATHS['LDAP_DC'] != '') {
-                foreach (explode (",", $HTSFLOW_PATHS['LDAP_DC']) as $dc) {
-                    if ($dc != '') {
-                        $uid = $uid . ",dc=" . $dc;
-                    }
-                }
-            }            
+//             if (isset($HTSFLOW_PATHS['LDAP_DC']) && $HTSFLOW_PATHS['LDAP_DC'] != '') {
+//                 foreach (explode (",", $HTSFLOW_PATHS['LDAP_DC']) as $dc) {
+//                     if ($dc != '') {
+//                         $uid = $uid . ",dc=" . $dc;
+//                     }
+//                 }
+//             }            
             
             error_log( "URL: " . $HTSFLOW_PATHS['LDAP_URL']);
             error_log( "uid: " .$uid);
+            error_log( "login name: " .$loginName);
             
             if ($ldapconn) {
                 if (ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3)) { // WITHOUT THIS IS NOT POSSIBLE BIND TO LDAP SERVER
                     try {
-                        $authenticated = ldap_bind($ldapconn, $uid, $loginPassword);
+                        $authenticated = ldap_bind($ldapconn, $loginName, $loginPassword);
                     } catch (Exception $err) {
                         $errors = "Username or password is wrong. Are you from the campus?";
                         $authenticated = 0;
