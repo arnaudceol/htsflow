@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+session_start();
 $selectedIds = $_POST["selectedIds"];
 
 require_once ("../../config.php");
@@ -62,10 +62,10 @@ $errors = FALSE;
 $numMethods = sizeof($methods);
 $numGenomes = sizeof($genomes);
 
-
+// Allow different genomes: we choose the one on which to do the alignment
 if ($numGenomes > 1) {
-    $errors = TRUE;
-    echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>The samples selected are based on different genomes. </div>"; 
+    //$errors = TRUE;
+    echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>Warning: the samples selected are based on different genomes. </div>"; 
 }
 
 if ($numMethods > 1) {
@@ -94,6 +94,24 @@ $programs = array();
 foreach ($defaultOptions['options'] as $key => $value) {
 	$programs[] = $key; 
 }
+// Get available genomes:
+$availableAssemblies= array();
+// BS need a different assembly
+$availableAssembliesBs= array();
+
+foreach (scandir(GENOMES_FOLDER) as $assembly) {
+	if ($assembly[0] != "." && $assembly != 'alternative-genomes' ) {
+		if (strrpos($assembly, "_bs") > 0) {
+			$assemblyName = explode("_", $assembly) [0];
+			array_push($availableAssembliesBs, $assemblyName );
+		} else {
+			error_log("assembly : " . $assembly);
+			array_push($availableAssemblies, $assembly);
+		}
+	}
+}
+
+
 
 $defaultProgram = $defaultOptions[$typeOfDefault]["program"];
 ?>
@@ -167,6 +185,14 @@ $defaultProgram = $defaultOptions[$typeOfDefault]["program"];
 								<td>Alignment</td>
 								<td><select name="aln"><option value="TRUE" selected>TRUE</option>
 										<option value="FALSE">FALSE</option></select></td>
+							</tr>
+							<tr>
+								<td>Genome</td>
+								<td><select name="genome"><?php foreach ($availableAssemblies as $assembly) {
+									?><option value="<?php echo $assembly; ?>" <?php  if ($genomes[0] == $assembly) {
+                                                    		echo "selected";
+                                                    	}?>><?php echo $assembly; ?></option>
+									<?php }?></select></td>
 							</tr>
 							<tr>
 								<td>Program</td>

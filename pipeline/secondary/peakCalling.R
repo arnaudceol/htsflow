@@ -46,7 +46,7 @@ peakCallingJob <- function( IDsec, IDpeak, peak_calling=TRUE, annotation=TRUE ) 
 	
 	stats_opt <- IDpreList$stats #options for macs2 calling
 	
-	REFGENOME <- unique( unlist( sapply( IDpreList$primary_id, function(x) extractInfoFromDB( paste0('SELECT ref_genome FROM sample, primary_analysis WHERE sample.id = sample_id AND source = origin AND primary_analysis.id=',x ) ) ) ) )
+	REFGENOME <- unique( unlist( sapply( IDpreList$primary_id, function(x) extractInfoFromDB( paste0('SELECT genome FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND primary_analysis.id=',x ) ) ) ) )
 	genomePaths <- getGenomePaths( REFGENOME )
 	
 	loginfo(paste("Ref genome:", REFGENOME))

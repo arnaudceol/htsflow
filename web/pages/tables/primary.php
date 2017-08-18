@@ -25,7 +25,7 @@ include 'tableCommons.php';
 // $result = mysqli_query ( $con, $sql );
 // $numRighe = $result->num_rows;
 
-$baseQuery = "SELECT  description, dateStart, dateEnd, CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart )  ELSE timediff( NOW(), dateStart ) END AS time, options_id, primary_analysis.id as id_pre, sample_id as id_sample_fk, reads_num, raw_reads_num, primary_analysis.status, ref_genome, users.user_name, sample_owner.user_name as sample_owner,seq_method, origin AS SOURCE, sample_name, reads_mode, raw_data_path FROM primary_analysis, pa_options, users, sample, users sample_owner WHERE sample.id = primary_analysis.sample_id AND pa_options.id = primary_analysis.options_id and primary_analysis.user_id = users.user_id  and sample_owner.user_id = sample.user_id" ;
+$baseQuery = "SELECT  description, dateStart, dateEnd, CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart )  ELSE timediff( NOW(), dateStart ) END AS time, options_id, primary_analysis.id as id_pre, sample_id as id_sample_fk, reads_num, raw_reads_num, primary_analysis.status, genome, users.user_name, sample_owner.user_name as sample_owner,seq_method, origin AS SOURCE, sample_name, reads_mode, raw_data_path FROM primary_analysis, pa_options, users, sample, users sample_owner WHERE sample.id = primary_analysis.sample_id AND pa_options.id = primary_analysis.options_id and primary_analysis.user_id = users.user_id  and sample_owner.user_id = sample.user_id" ;
 
 $typeToQuery = array(
     'completed' => $baseQuery . " AND primary_analysis.status='completed'",
@@ -44,9 +44,9 @@ if (isset($_POST["type"]) && file_exists ( '../../pages/secondary/' . $_POST["ty
 
 $concatArray = array();
 
-if (isset($_POST['ref_genome']) && $_POST['ref_genome'] != "") {
-    $ref_genome = " ref_genome=\"" . trim($_POST['ref_genome']) . "\"";
-    array_push($concatArray, $ref_genome);
+if (isset($_POST['genome']) && $_POST['genome'] != "") {
+    $genome = " genome=\"" . trim($_POST['genome']) . "\"";
+    array_push($concatArray, $genome);
 } 
 if (isset($_POST['user_id']) && $_POST['user_id'] != "") {
     $user_id = " users.user_id=" . $_POST['user_id'] . "";
@@ -454,7 +454,7 @@ while ($row = mysqli_fetch_assoc($result)) {
  						<!--	<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/QC/<?php  echo $row ["id_pre"]; ?>_fastqc.zip" ><i title="Download FastQC Report" class="fa fa-download"></i></a> -->
 					<?php } ?>
 							<a href="<?php echo $pageURL . "/" .$HTSFLOW_PATHS['HTSFLOW_WEB_TRACKS']; ?>/primary/tracks/bw/<?php  echo $row ["id_pre"]; ?>.bw" ><i title="Download BigWig" class="fa fa-download"></i></a>
-							<a href="#" title="Load track in UCSC Genome Browser" onclick="ucscGbLoad('<?php  echo $row ["id_pre"]; ?>', '<?php echo $row["ref_genome"]; ?>')"><img height=16" src="images/ucsc-genome-browser.png"/></a>
+							<a href="#" title="Load track in UCSC Genome Browser" onclick="ucscGbLoad('<?php  echo $row ["id_pre"]; ?>', '<?php echo $row["genome"]; ?>')"><img height=16" src="images/ucsc-genome-browser.png"/></a>
   							<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id_pre"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
 								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id_pre"]; ?>" style="display: none;"></a> 
@@ -471,7 +471,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 					<td class="centered"><a href="samples.php?sampleId=<?php echo $row["id_sample_fk"]; ?>"><?php echo $row["id_sample_fk"]; ?></a></td>
 					<td><?php echo $row["sample_name"]; ?></td>
 					<td class="centered"><span <?php if (isset($row["reads_num"]) && intval($row["reads_num"]) > 200000000) { echo "style=\"color: #CC9900\" title=\"High definition sample: > 200,000,000 aligned reads\"";} ?>"><?php echo (isset($row["raw_reads_num"]) ? number_format($row["raw_reads_num"]) : " - ")  . " / " . (isset($row["reads_num"]) ? number_format($row["reads_num"]) : " - "); if (isset($row["reads_num"]) && intval($row["reads_num"]) > 200000000) { echo " (hd)"; }?></span></td>
-								<td class="centered"><?php echo $row["ref_genome"]; ?></td>
+								<td class="centered"><?php echo $row["genome"]; ?></td>
 					<td class="centered method"><?php echo $row["seq_method"]; ?></td>
 					<td class="centered"><?php echo $mergArr[$row["SOURCE"]]; 
 					   // merging

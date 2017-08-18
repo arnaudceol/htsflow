@@ -26,11 +26,11 @@ $files = array ();
 if (strpos ( $_GET ['id'], 'primary' )) {
 	$analysisType = 'primary';
 	$analysisId = str_replace ( '/primary.igb', '', $_GET ['id'] );
-	$queryGenome = sprintf ( "SELECT ref_genome, stranded FROM sample, pa_options, primary_analysis WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id = '%s'", $analysisId );
+	$queryGenome = sprintf ( "SELECT genome, stranded FROM pa_options, primary_analysis WHERE pa_options.id = options_id AND primary_analysis.id = '%s'", $analysisId );
 	$files [] = "/primary/tracks/bw/" . $analysisId . ".bw";
 	$resGenome = mysqli_query ( $con, $queryGenome );
 	$row = mysqli_fetch_assoc ( $resGenome );
-	$htsFlowGenome = $row ["ref_genome"];
+	$htsFlowGenome = $row ["genome"];
 	$stranded = $row ["stranded"];
 	if ($stranded == 1) {
 		$files [] = "/primary/tracks/bw/" . $analysisId . "_p.bw";
@@ -45,14 +45,14 @@ if (strpos ( $_GET ['id'], 'primary' )) {
 	
 	
 	if ($analysisType == "peak_calling") {
-		$queryGenome = sprintf ( "SELECT ref_genome, label, program FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT genome, label, program FROM pa_options, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	} else {
-		$queryGenome = sprintf ( "SELECT ref_genome, label FROM sample, primary_analysis, $analysisType WHERE sample_id = sample.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT genome, label FROM pa_options, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	}
 	
 	$igbQuery = mysqli_query ( $con, $queryGenome );
 	while ( $igbResult = mysqli_fetch_assoc ( $igbQuery ) ) {
-		$htsFlowGenome = $igbResult ["ref_genome"];
+		$htsFlowGenome = $igbResult ["genome"];
 		
 		if ($analysisType == "peak_calling") {
 			/* For peak calling */ 

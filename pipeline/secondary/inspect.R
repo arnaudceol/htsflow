@@ -27,7 +27,7 @@ inspect <- function( IDsec ){
 	
 	
 	
-	sqlGenome <- paste( "SELECT ref_genome FROM inspect, primary_analysis, sample WHERE primary_id = primary_analysis.id AND sample.id = sample_id AND secondary_id=",IDsec," LIMIT 1;")
+	sqlGenome <- paste( "SELECT genome FROM inspect, primary_analysis, pa_options WHERE primary_id = primary_analysis.id AND pa_options.id = options_id AND secondary_id=",IDsec," LIMIT 1;")
 	tmp <- dbQuery(sqlGenome)
 	genome <- tmp[2]
 	

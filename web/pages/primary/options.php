@@ -3,8 +3,6 @@
 // Get or create options
 function getPrimaryOptionId($options) {
 	global $con;
-	
-	
 
 	$setAttributes = Array();
 	$setValues = Array();
@@ -61,6 +59,11 @@ function getPrimaryOptionId($options) {
 			array_push ( $setQueryAttribute, "stranded=" . $value );
 			array_push ( $setAttributes, "stranded" );
 			array_push ( $setValues, $value );
+		} elseif ($key == "genome") {
+			// 			$query .= "and stranded=" . $value . " ";
+			array_push ( $setQueryAttribute, "genome='" . $value . "'" );
+			array_push ( $setAttributes, "genome" );
+			array_push ( $setValues, "'" . $value . "'" );
 		}
 	}
 	
@@ -103,6 +106,12 @@ function getPrimaryOptionId($options) {
 	if (! in_array("aln_options", $setAttributes)  ) {		
 		array_push ( $setQueryAttribute,  "aln_options='' ");
 		array_push ( $setAttributes, "aln_options" );
+		array_push ( $setValues, '""' );
+	} 
+	
+	if (! in_array("genome", $setAttributes)  ) {
+		array_push ( $setQueryAttribute,  "genome='' ");
+		array_push ( $setAttributes, "genome" );
 		array_push ( $setValues, '""' );
 	} 
 	

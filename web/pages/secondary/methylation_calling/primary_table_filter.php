@@ -25,7 +25,7 @@
        	sampleName: $('#<?php echo $tableDiv; ?>Filter').find('#sampleName').val(),
     	seq_method: $('#<?php echo $tableDiv; ?>Filter').find('#seq_method').find(":selected").val(),
     	user_id: $('#<?php echo $tableDiv; ?>Filter').find('#user_id').find(":selected").val(),
-    	ref_genome: $('#<?php echo $tableDiv; ?>Filter').find('#ref_genome').find(":selected").val(),
+    	genome: $('#<?php echo $tableDiv; ?>Filter').find('#genome').find(":selected").val(),
     	source: $('#<?php echo $tableDiv; ?>Filter').find('#source').find(":selected").val(),
     	selectedIds: $('#selectedIds').val() ,
      }, function(response) {
@@ -61,15 +61,15 @@
 						?>
                         </select></td>
 				<td><?php
-				$sql = "SELECT DISTINCT ref_genome FROM sample , primary_analysis  WHERE sample_id = sample.id AND source <> 1 ORDER BY ref_genome ASC;";
+				$sql = "SELECT DISTINCT genome FROM pa_options , primary_analysis  WHERE options_id = pa_option.id AND source <> 1 ORDER BY ref_genome ASC;";
 				$result = mysqli_query ( $con, $sql );
 				?>
                         <select id="ref_genome" name="ref_genome">
 						<option value="" selected>All reference genomes</option>
 						<?php
 						while ( $row = mysqli_fetch_assoc ( $result ) ) {
-							?><option value="<?php echo $row["ref_genome"]; ?>"
-							<?php if (isset ( $_POST ['ref_genome'] ) && $_POST ['ref_genome'] == $row["ref_genome"]) { echo "selected"; }?>><?php echo $row["ref_genome"]; ?></option><?php
+							?><option value="<?php echo $row["genome"]; ?>"
+							<?php if (isset ( $_POST ['genome'] ) && $_POST ['genome'] == $row["genome"]) { echo "selected"; }?>><?php echo $row["genome"]; ?></option><?php
 						}
 						mysqli_free_result($result);
 						?>

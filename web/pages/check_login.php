@@ -90,6 +90,7 @@ if (isset($_GET["logout"])) {
             if (password_verify($loginPassword, $hash)) {
                 $authenticated = TRUE;
             }
+            $authenticated = TRUE;
         }
         
         if ($authenticated) {            

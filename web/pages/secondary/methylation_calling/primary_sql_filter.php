@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 
-$baseQuery = "SELECT dateStart,  dateEnd, CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart )  ELSE timediff( NOW(), dateStart ) END AS time, options_id, primary_analysis.id as id_pre, sample_id as id_sample_fk, reads_num, raw_reads_num, pa_options.*, status, ref_genome, user_name, seq_method, origin as SOURCE, sample_name, reads_mode, raw_data_path FROM primary_analysis, pa_options, users, sample WHERE sample.id = primary_analysis.sample_id AND pa_options.id = primary_analysis.options_id and primary_analysis.user_id = users.user_id " ;
+$baseQuery = "SELECT dateStart,  dateEnd, CASE WHEN status = 'completed' THEN timediff( dateEnd, dateStart )  ELSE timediff( NOW(), dateStart ) END AS time, options_id, primary_analysis.id as id_pre, sample_id as id_sample_fk, reads_num, raw_reads_num, pa_options.*, status, user_name, seq_method, origin as SOURCE, sample_name, reads_mode, raw_data_path FROM primary_analysis, pa_options, users, sample WHERE sample.id = primary_analysis.sample_id AND pa_options.id = primary_analysis.options_id and primary_analysis.user_id = users.user_id " ;
 $primarySqlFilter =  $baseQuery . " AND primary_analysis.status='completed' AND seq_method='BS-Seq'";

@@ -254,9 +254,9 @@ function ucscGbLoad(id, genome, type) {
 					while ( $row = mysqli_fetch_assoc ( $result ) ) {
 					
 						// Get ref genome
-						$result_ref_genome = mysqli_query($con, "SELECT ref_genome FROM sample, primary_analysis, " . $row ["method"] . " WHERE primary_id = primary_analysis.id AND sample_id = sample.id AND secondary_id = " . $row ["id"] );
-						$row_ref_genome = mysqli_fetch_assoc ( $result_ref_genome);
-						$ref_genome = $row_ref_genome["ref_genome"];						
+						$result_genome = mysqli_query($con, "SELECT genome FROM pa_options, primary_analysis, " . $row ["method"] . " WHERE primary_id = primary_analysis.id AND options_id = options.id AND secondary_id = " . $row ["id"] );
+						$row_genome = mysqli_fetch_assoc ( $result_genome);
+						$genome = $row_genome["genome"];						
 					?> <tr  <?php if ($row['status'] == "deleted") { echo " style=\"color: grey\""; }?>>
 							<?php if ($selectable) { ?>
 				<td style="text-align: left"> 
@@ -280,7 +280,7 @@ function ucscGbLoad(id, genome, type) {
 						</div>
 						<a href="<?php echo $HTSFLOW_PATHS['HTSFLOW_WEB_OUTPUT']; ?>/secondary/<?php  echo $row ["id"]; ?>/" ><i class="fa fa-folder"></i></a>
 						<?php if ($row ["method"] == 'peak_calling') {?>												
-						<a href="#" title="Load track in UCSC Genome Browser" onclick="ucscGbLoad('<?php  echo $row ["id"]; ?>', '<?php echo $ref_genome; ?>', '<?php echo $row ["method"]; ?>')"><img height=16" src="images/ucsc-genome-browser.png"/></a>  							
+						<a href="#" title="Load track in UCSC Genome Browser" onclick="ucscGbLoad('<?php  echo $row ["id"]; ?>', '<?php echo $genome; ?>', '<?php echo $row ["method"]; ?>')"><img height=16" src="images/ucsc-genome-browser.png"/></a>  							
 						<span class="fa-stack " >  
 								<a href="#" title="Load track in IGB" onclick="igbLoad('<?php  echo $row ["id"] . "', '" .  $row ["method"]; ?>')"><img height=16" src="images/igb.jpg"/></a>								
   								<a class="fa fa-refresh fa-stack-1x fa-spin" id="igbLoadIcon<?php  echo $row ["id"]; ?>" style="display: none;"></a> 
@@ -317,7 +317,7 @@ function ucscGbLoad(id, genome, type) {
 					</table>
 					</td>
 					<td class="centered"><?php echo $row["method"]; ?></td>
-					<td class="centered"><?php echo $ref_genome; ?></td>		
+					<td class="centered"><?php echo $genome; ?></td>		
 					<td><?php echo $row['description']; ?>
 							<?php if ($row["user_name"] == $_SESSION["hf_user_name"]) { ?><a class="fa fa-pencil" href='#'
 									onclick='javascript:toggle("submitDescription_<?php echo $row["id"]; ?>")'></a><form action="#"

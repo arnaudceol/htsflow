@@ -16,7 +16,7 @@
  */
 
 $primarySqlFilter =  "SELECT tc.user_id as user_id_fk, user_name, paired, tc.id as id_pre, sample_id as id_sample_fk, SOURCE,
-ref_genome, seq_method, pk.input_id as S2, pk.label, pk.id as id_peak, s.method, s.description, s.id as id_sec 
-FROM primary_analysis tc, secondary_analysis s, peak_calling pk, users, pa_options, sample  
-WHERE (seq_method='DNaseI-Seq' OR seq_method='ChIP-seq') and s.id=pk.secondary_id and pk.input_id=tc.id AND users.user_id = tc.user_id AND pa_options.id  = options_id AND sample.id = sample.id";
+genome, seq_method, pk.input_id as S2, pk.label, pk.id as id_peak, s.method, s.description, s.id as id_sec 
+FROM primary_analysis tc, secondary_analysis s, peak_calling pk, users, pa_options  
+WHERE (seq_method='DNaseI-Seq' OR seq_method='ChIP-seq') and s.id=pk.secondary_id and pk.input_id=tc.id AND users.user_id = tc.user_id AND pa_options.id  = options_id";
 
