@@ -338,7 +338,7 @@ fastQCexec <- function( sample ) {
          getHTSFlowPath("fastQC")
         ,' -o '
         ,getHTSFlowPath("HTSFLOW_QC")
-        ,' -c '
+        ,' --contaminants '
         ,getHTSFlowPath("HTSFLOW_CONTAMINANTS")
         ,' '
         ,getHTSFlowPath("HTSFLOW_ALN")
