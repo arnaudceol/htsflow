@@ -437,10 +437,10 @@ doUniquelyAlignedBam <- function( sample ) {
         getHTSFlowPath("samtools")
         ,' sort '
         ,bamFileNameIn
-        ," "
+        ," -O BAM -o  "
         ,getPreprocessDir()
         ,primaryId
-        ,'_sort'
+        ,'_sort.bam'
         ,sep = ""
     )
     result <- tryOrExit( execute, 'Create a bam file with only uniquely mapped reads' )
@@ -545,9 +545,9 @@ doTophatAlignment <- function( sample , outFolder, RefGenomes, reference, flags 
                     getHTSFlowPath("samtools")
                     ," sort "
                     ,dirname
-                    ,"accepted_hits.bam "
+                    ,"accepted_hits.bam -O BAM -o "
                     ,dirname
-                    ,"accepted_hits.sorted "
+                    ,"accepted_hits.sorted.bam "
                 )
 	tryOrExit(execute, "Tophat Alignment")
 	
@@ -669,10 +669,10 @@ doBismarkAlignment <- function( sample , outFolder, RefGenomes, reference, flags
                     ," sort "
                     ,dirname
                     ,primaryId
-                    ,".bam "
+                    ,".bam -O BAM -o "
                     ,dirname
                     ,primaryId
-                    ,".sorted"
+                    ,".sorted.bam"
                 )
 	tryOrExit(execute, "Bismark Alignment")
 
@@ -801,10 +801,10 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
             ,fastaFile
             ," - | "
             ,getHTSFlowPath("samtools")
-            ," sort - "
+            ," sort - -O BAM -o "
             ,getHTSFlowPath("HTSFLOW_ALN")
             ,"/"
-            ,primaryId
+            ,primaryId, '.bam'
             ,sep=""
             )
 
@@ -836,10 +836,10 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
             ,fastaFile
             ," - | "
             ,getHTSFlowPath("samtools")
-            ," sort - "
+            ," sort - -O BAM -o "
             ,getHTSFlowPath("HTSFLOW_ALN")
             ,"/"
-            ,primaryId
+            ,primaryId, '.bam'
             ,sep=""
             )
 		tryOrExit(execute, "BWA Alignment")
