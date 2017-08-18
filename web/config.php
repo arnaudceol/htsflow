@@ -19,16 +19,19 @@
 // ini_set("display_startup_errors", 1);
 // ini_set("display_errors", 1);
 
-$conf= "/home/aceol/Work/data/htsflow-conf/htsflow-" + $_SESSION["hf_user_group"]+" .ini";
-
+if (isset($_SESSION["hf_user_group"])) {
+    $filename= "htsflow-" . $_SESSION["hf_user_group"].".ini";
+} else {    
+    $filename= "htsflow.ini";
+}
 if (! file_exists($filename)) {
 	header('Location: missing_config.php');
 }
 
+
 $HTSFLOW_PATHS=array();
 
-$conf = parse_ini_file($conf);
-
+$conf=parse_ini_file($filename);
 			
 foreach ($conf as $key => $value) {			
 			if (strpos($value, "]") != false) {
