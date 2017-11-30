@@ -39,7 +39,6 @@ loginfo(Sys.getenv("PATH"))
 
 genomeListFile <-commandArgs(TRUE)[1]
 
-
 genomesDir <- getHTSFlowPath("HTSFLOW_GENOMES")
 tmpDir <-  paste0(genomesDir, "/tmp")
 
@@ -56,10 +55,11 @@ if (! file.exists(tmpDir)) {
 genomes <- read.table(genomeListFile ,header=TRUE, sep=" ")
 
 
-bioclitePackages <- available.packages(contriburl = contrib.url("http://bioconductor.org/packages/3.2/data/annotation"))[,'Package']
-
+annotationsUrl <- biocinstallRepos()['BioCann']
+bioclitePackages <- available.packages(contriburl = contrib.url(annotationsUrl))[,'Package']
 
 downloadGenome <- function(genome) {
+	# Homo_sapiens UCSC hg19 TxDb.Hsapiens.UCSC.hg19.knownGene org.Hs.eg.db knownGene org.Hs.egSYMBOL
 	species <- genome[1]
 	host <- genome[2]
 	version <- genome[3]
