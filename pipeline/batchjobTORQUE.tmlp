@@ -1,0 +1,27 @@
+#PBS -N <%= job.name %>
+## merge standard error and output
+#PBS -j oe
+## direct streams to our logfile
+#PBS -o <%= log.file %>
+##PBS -l walltime=<%= resources$walltime %>,nodes=<%= resources$nodes %>,vmem=<%= resources$memory %>M
+## remove this line if your cluster does not support arrayjobs
+#PBS -J 1-<%= arrayjobs %>
+
+
+if [ -z "$HTSFLOW_CONF" ]; then
+    echo "Need to set HTSFLOW_CONF"
+    exit 1
+fi
+
+echo "HTSFLOW_CONF: $HTSFLOW_CONF"
+HTSFLOW_PIPELINE=$(awk -F "=" '/HTSFLOW_PIPELINE/ {print $2}' $HTSFLOW_CONF);
+HTSFLOW_RPATH=$(awk -F "=" '/Rbase/ {print $2}' $HTSFLOW_CONF);
+
+echo "Pipeline: $HTSFLOW_PIPELINE"
+echo "Rpath: $HTSFLOW_RPATH"
+
+cd $HTSFLOW_PIPELINE
+
+source activate htsflow
+
+R CMD BATCH --no-save --no-restore "<%= rscript %>" /dev/stdout
