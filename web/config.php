@@ -14,16 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// ini_set('display_errors', 'On');
-// error_reporting(E_ALL ^ E_WARNING);
-// ini_set("display_startup_errors", 1);
-// ini_set("display_errors", 1);
+
+/**
+ * Configuration files should be in the conf directory.
+ * This may be a symbolic link to the directory in the main htsflow folder.
+ */
+
+session_start();
+
+/**
+ * This is the only variabl that should be set manually.
+ */
+$conf_dir = "C:/Users/aceol/Work/workspace/htsflow-multiannot/web/conf";
+
 
 if (isset($_SESSION["hf_user_group"])) {
-    $filename= "htsflow-" . $_SESSION["hf_user_group"].".ini";
+    $filename= $conf_dir . "/htsflow-" . strtolower($_SESSION["hf_user_group"]).".ini";
 } else {    
-    $filename= "htsflow.ini";
+    $filename= $conf_dir. "/htsflow-default.ini";
 }
+error_log("htsflow-conf: " .$filename );
 if (! file_exists($filename)) {
 	header('Location: missing_config.php');
 }
