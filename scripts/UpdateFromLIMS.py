@@ -187,7 +187,7 @@ order by run_id DESC;" % pisQuery;
         
         # if the sample was alreay present, it means it has been sequenced again,
         # we update the ID before to insert it in HTSflow.
-        if id_sample in HTSsamples:
+        if id_sample in HTSsamples or id_sample in samplesDone:
             try:
                 date_tag = re.search('.*FASTQ/([0-9]+)/.*', FOLD).group(1)                    
                 id_sample = id_sample + "-" + date_tag
