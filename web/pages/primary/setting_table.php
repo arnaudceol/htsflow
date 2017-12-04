@@ -80,7 +80,7 @@ if ($errors) {
 $method = $methods[0];
 	
 
-$defaultOptions = parse_ini_file("../../conf/primary_default.ini", true);
+$defaultOptions = parse_ini_file("../../defaults/primary_default.ini", true);
 
 if (array_key_exists( $method,  $defaultOptions)) {
 	$typeOfDefault = $method;
