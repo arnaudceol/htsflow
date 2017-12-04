@@ -37,11 +37,11 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
 
     # location of files important for the primary analysis ############
     outPath <- getPreprocessDir()
-    tmpFold <- getPreprocessDir()
+	## tmpFold <- getPreprocessDir()
 	
-	createDir(tmpFold, TRUE);
+	createDir(outPath, TRUE);
 
-	loginfo(paste("Start primary, primary id: ", primaryId, ", BAM file: ", bamFileName, ", Pre-process directory: ", outPath, ", tmp directory: ", tmpFold))
+	loginfo(paste("Start primary, primary id: ", primaryId, ", BAM file: ", bamFileName, ", Pre-process directory: ", outPath))
 	
     ## update the DB with dateStart and status 'running'
     SQL <-
@@ -168,11 +168,12 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
 		## command <- paste0 ( "rm -f ", outPath, primaryId , "*" )
 		## tryOrExit(command, "delete temporary files")
 		deleteFile(outPath, recursive = TRUE )
-    } else {
-        loginfo ("Move files to TMP/ folder..")
-        command <- paste0( "mv ", outPath, primaryId, "* ", tmpFold)
-		tryOrExit(command, "moving files to temporary folder")
-    }
+    } 
+	## else {
+	##     loginfo ("Move files to TMP/ folder..")
+	##     command <- paste0( "mv ", outPath, primaryId, "* ", tmpFold)
+	##     tryOrExit(command, "moving files to temporary folder")
+	## }
     ## Finally let's update the status with 'completed'.
     SQL <- paste("UPDATE primary_analysis SET status='completed', dateEnd=NOW() WHERE id=", primaryId ,sep="")
     res <- updateInfoOnDB( SQL )
@@ -184,8 +185,8 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
     primaryId <- names(sample)
     ## the code is divided for working separately paired end and single end data.
     if( as.numeric( flags$paired ) ) {
-        tag1 <- " -not -iname  '*_R2*'"
-        tag2 <- " -iname  '*_R2*'"
+        tag1 <- " -not -iname  '*_R2[\\.\\_]*'"
+        tag2 <- " -iname  '*_R2[\\.\\_]*'"
         fastqFileNameR1 <- paste0(
             outPath
             ,'/'
@@ -243,7 +244,7 @@ qualityCheckOnReads <- function( flags, sample, outPath ){
         SQL <- paste0( "UPDATE primary_analysis SET raw_reads_num='",totReads,"' WHERE id=", primaryId )
         res <- updateInfoOnDB( SQL )
     } else {		
-		tag1 <- " -not -iname  '*_R2*'"
+		tag1 <- " -not -iname  '*_R2[\\.\\_]*'"
         fastqFileNameR1 <- paste0(
             outPath
             ,'/'
@@ -528,7 +529,7 @@ doTophatAlignment <- function( sample , outFolder, RefGenomes, reference, flags 
 
 	sets <- flags$aln_options
     # run tophat and create a file 'tophatexecfailed' to control
-	tophat_exe <- paste0(getHTSFlowPath("tophat_dir"), "/tophat")
+	tophat_exe <- paste0(getHTSFlowPath("tophat_dir"), "/hisat2")
     execute <- paste(
 		tophat_exe    # path of the aligner
         ,sets              # settings
