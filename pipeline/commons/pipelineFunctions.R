@@ -16,10 +16,13 @@
 options(scipen=999)
 library(logging)
 
+
 getUserDir <- function() {
-	user<-Sys.getenv("USER")
+	system_id<-Sys.getenv("USER")
+	user_name <- extractSingleColumnFromDB(paste0("select user_name FROM users WHERE system_id = '", system_id, "'"))
+	
 	userdirs<-getHTSFlowPath("HTSFLOW_USERS")	
-	return (paste0(userdirs, "/", user))	
+	return (paste0(userdirs, "/", user_name))	
 }
 
 # Workdir is a sub folder of the user directory in the HTS flow output

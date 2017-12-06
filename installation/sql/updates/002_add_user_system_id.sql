@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN  `system_id` varchar(64) COLLATE utf8_unicode_ci  COMMENT 'user''s id, unique';

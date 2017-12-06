@@ -72,6 +72,7 @@ $result = mysqli_query ( $con, $sql );
 				<tr>
 					<th>User ID</th>
 					<th>User name</th>
+					<th>System ID</th>
 					<th>Samples in LIMS</th>
 					<th>External samples</th>
 					<th>Merged samples</th>
@@ -90,6 +91,7 @@ $result = mysqli_query ( $con, $sql );
 														?><tr class="centered">
 					<td><?php echo $userId; ?></td>
 					<td><?php echo $userName; ?></td>
+					<td><?php echo $row["system_id"]; ?></td>
 					<td><?php if (isset($lims[$userId])) {echo $lims[$userId];}  else { echo "-"; } ?></td>
 					<td><?php if (isset($external[$userId])) {echo $external[$userId];}  else { echo "-"; } ?></td>
 					<td><?php if (isset($merged[$userId])) {echo $merged[$userId];}  else { echo "-"; } ?></td>

@@ -24,7 +24,14 @@ if (isset($_GET["logout"])) {
     // login via post data (if user just submitted a login form)
     require ('pages/dbaccess.php');
     
-    $con = mysqli_connect($hostname, $username, $loginPassword, $dbname);
+    
+    $loginId = $_POST['user_name'];    
+    $loginPassword = $_POST['user_password'];
+    $loginName = '';
+    
+   // $con = mysqli_connect($hostname, $username, $loginPassword, $dbname);
+    
+    global $con;
     
     // /////////////////////////////////////////////////////////////
     // check login form contents
@@ -35,8 +42,6 @@ if (isset($_GET["logout"])) {
     } elseif (! empty($_POST['user_name']) && ! empty($_POST['user_password'])) {
         
         // Login con LDAP server
-        $loginName = $_POST['user_name'];
-        $loginPassword = $_POST['user_password'];
         
         $authenticated = FALSE;
         if (isset($HTSFLOW_PATHS['LDAP_URL']) && $HTSFLOW_PATHS['LDAP_URL'] != '') {
@@ -44,18 +49,18 @@ if (isset($_GET["logout"])) {
             $ldapconn = ldap_connect($HTSFLOW_PATHS['LDAP_URL']);
             
             if ($ldapconn) {
-                if (ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3) && ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0)) { // WITHOUT THIS IS NOT POSSIBLE BIND TO LDAP SERVER
-                    try {
-                        $authenticated = ldap_bind($ldapconn, $loginName, $loginPassword);
-                        
-                        $loginId = str_replace("@ieo.it", "", $loginName);
+                if (ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3) && ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0)) { 
+                    try {                        
+                        $authenticated = ldap_bind($ldapconn, $loginId, $loginPassword);
                         
                         $attributes = [
                             'unixhomedirectory'
                         ];
                         
+                        $loginId =  explode("@", $loginId)[0];
+                        
                         $filter = "(&(objectCategory=Person)(anr=" . $loginId . "))";
-                        error_log("ldap search: " . $filter);
+                        
                         $baseDn = "DC=ieo,DC=it";
                         $results = ldap_search($ldapconn, $baseDn, $filter, $attributes);
                         $info = ldap_get_entries($ldapconn, $results);
@@ -75,7 +80,9 @@ if (isset($_GET["logout"])) {
             }
         } else {
             // use db authentication
-            $checkQuery = "SELECT password FROM users WHERE user_name = '" . $loginName . "' LIMIT 1";
+            $checkQuery = "SELECT password FROM users WHERE user_name = '" . $loginId . "' LIMIT 1";
+            
+            $loginName = $loginId;
             
             $res = mysqli_query($con, $checkQuery);
             $line = mysqli_fetch_assoc($res);
@@ -94,19 +101,19 @@ if (isset($_GET["logout"])) {
             
             // then we check that the user is in HTSflow Database users table.
             // if not, it has to be added.
-            $checkQuery = "SELECT * FROM users WHERE user_name = \"" . $_SESSION["hf_user_name"] . "\";";
+            $checkQuery = "SELECT * FROM users WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
             
             $res = mysqli_query($con, $checkQuery);
             $line = mysqli_fetch_assoc($res);
             if (is_null($line)) {
-                $querySample = "INSERT INTO users (user_name) VALUES (\"" . $_SESSION["hf_user_name"] . "\");";
+                $querySample = "INSERT INTO users (user_name, system_id) VALUES ('" . $_SESSION["hf_user_name"] . "', '" . $loginId ."');";
                 $stmt = mysqli_prepare($con, $querySample);
                 if ($stmt) {
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_store_result($stmt);
                     mysqli_stmt_close($stmt);
                     
-                    $checkQuery = "SELECT * FROM users WHERE user_name = \"" . $_SESSION["hf_user_name"] . "\";";
+                    $checkQuery = "SELECT * FROM users WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
                     
                     $res = mysqli_query($con, $checkQuery);
                     $line = mysqli_fetch_assoc($res);
@@ -114,6 +121,21 @@ if (isset($_GET["logout"])) {
                 } else {
                     $errors = "There was an error in entering your user name in the system. Please contact the administrator.";
                 }
+            } elseif ($line['system_id'] == '' || $line['system_id'] == null ) {
+                // update system id
+                
+                // Remove the part before the @ if this is an email.
+              
+                $querySample = "UPDATE users set system_id = '" . $loginId ."' WHERE user_name = ''" . $_SESSION["hf_user_name"] . "';";
+                $stmt = mysqli_prepare($con, $querySample);
+                if ($stmt) {
+                    mysqli_stmt_execute($stmt);
+                    mysqli_stmt_store_result($stmt);
+                    mysqli_stmt_close($stmt);                  
+                } else {
+                    $errors = "There was an error in entering your user name in the system. Please contact the administrator.";
+                }
+                
             }
             
             $_SESSION['grantedBrowse'] = $line['granted_browse'];

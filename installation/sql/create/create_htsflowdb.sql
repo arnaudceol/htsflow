@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'auto incrementing user_id of each user, unique index',
   `user_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s name, unique',
+  `system_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'user''s id, unique',
   `is_dev` tinyint(1) NOT NULL DEFAULT '0',
   `granted_browse` tinyint(1) NOT NULL DEFAULT '0',
   `granted_primary` tinyint(1) NOT NULL DEFAULT '0',
