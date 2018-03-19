@@ -33,7 +33,7 @@ source("commons/wrappers.R")
 ## source("deletePrimary.R")
 ## source("deleteSecondary.R")
 
-pipeline <- function(id, TypeOfAnalysis, action) {
+pipeline <- function(id, TypeOfAnalysis, action, user_name) {
 	
 	basicConfig(level="DEBUG")
 	loginfo("start")
@@ -93,7 +93,7 @@ pipeline <- function(id, TypeOfAnalysis, action) {
 	
 	
 	# Go to user dir
-	setUserWorkDir()
+	setUserWorkDir(user_name)
 	
 	 # Check if this job can be run: the combination of id/type/action should be in the job_list table and launch should be null
 	 sqlCheck <- paste0("SELECT count(*) FROM job_list WHERE analyses_type = '",TypeOfAnalysis,"' AND analyses_id = '",id,"' AND action = '",action,"' AND started is null;")

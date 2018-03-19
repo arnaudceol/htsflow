@@ -17,7 +17,7 @@ options(scipen=999)
 library(logging)
 
 
-getUserDir <- function() {
+getUserDir <- function(user_name) {
 	system_id<-Sys.getenv("USER")
 	user_name <- extractSingleColumnFromDB(paste0("select user_name FROM users WHERE system_id = '", system_id, "'"))
 	
@@ -26,12 +26,12 @@ getUserDir <- function() {
 }
 
 # Workdir is a sub folder of the user directory in the HTS flow output
-setUserWorkDir <- function() {
+setUserWorkDir <- function(user_name) {
 		
 	id <- get("PIPELINE_ID", envir=globalenv())
 	type <- get("PIPELINE_TYPE", envir=globalenv())
 	
-	workdir<-paste0(getUserDir(), "/", getJobID(id, type))
+	workdir<-paste0(getUserDir(user_name), "/", getJobID(id, type))
 	
 	loginfo(paste("set Workdir: " , workdir))
 	if (! file.exists(workdir)) {

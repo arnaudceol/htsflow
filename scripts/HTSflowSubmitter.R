@@ -22,7 +22,7 @@ loadConfig("BatchJobs.R")
 
 userName <-  Sys.getenv("USER")
 
-userDir <- getUserDir() 
+userDir <- getUserDir(userName) 
 
 if (!dir.exists(userDir)) {
 	createDir(userDir)
@@ -40,14 +40,13 @@ if (file.exists(lockFile)) {
 }
 
 #sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' ")
-sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL ")
+sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created, user_name from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL ")
 #sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' AND analyses_ty")
 
 jobs = extractInfoFromDB(sqlQuery)
 
 if (length(jobs$id) > 0) {
 	
-	setwd(getUserDir())
 
 	for (i in 1:length(jobs$id)) {
 		
@@ -55,12 +54,14 @@ if (length(jobs$id) > 0) {
 		analysisId<-jobs$analyses_id[i]
 		type<-jobs$analyses_type[i]
 		action<-jobs$action[i]
+		jobUser=jobs$user_name[i]
+		
 		
 		id = getJobID(analysisId, type)
 		
 		regName <- paste0("HF_",id)
 		
-		jobDir<-paste0(getUserDir(), "/",id, "/")
+		jobDir<-paste0(getUserDir(jobUser), "/",id, "/")
 		
 		if (! file.exists(jobDir)) {
 			createDir(jobDir, recursive=TRUE)
@@ -70,7 +71,6 @@ if (length(jobs$id) > 0) {
 		if (file.exists(registryDir)) {
 			loginfo(sprintf("Remove run files: %s", deleteFile(registryDir, recursive=TRUE)))
 		}
-		
 		
 		setwd(jobDir)
 		loginfo(sprintf("Work in : %s " , jobDir))
