@@ -101,6 +101,7 @@ downloadGenome <- function(genome) {
 	flist<-list.files(versionDir,pattern="genome")
 	
 	
+	
 	sapply(flist,FUN=function(eachPath){
 				file.rename(from=paste(versionDir,eachPath, sep="/"),to=sub(pattern=paste(version, "genome", sep="/") ,replacement=paste(version, version, sep="/"),paste(versionDir,eachPath, sep="/")))				
 			})

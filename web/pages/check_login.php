@@ -50,14 +50,21 @@ if (isset($_GET["logout"])) {
             
             if ($ldapconn) {
                 if (ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3) && ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0)) { 
-                    try {                        
-                        $authenticated = ldap_bind($ldapconn, $loginId, $loginPassword);
+                    try {                   
+                        
+                        
+                        if (strpos($loginId, '@') == false) {
+                            $email = $loginId . '@' . $HTSFLOW_PATHS['LDAP_DOMAIN'];
+                        } else {
+                            $email = $loginId;
+                            $loginId = explode("@", $loginId)[0];
+                        }
+                        
+                        $authenticated = ldap_bind($ldapconn, $email, $loginPassword);
                         
                         $attributes = [
                             'unixhomedirectory'
                         ];
-                        
-                        $loginId =  explode("@", $loginId)[0];
                         
                         $filter = "(&(objectCategory=Person)(anr=" . $loginId . "))";
                         
@@ -69,7 +76,7 @@ if (isset($_GET["logout"])) {
                         if ($loginName == '') {
                             $loginName = $loginId;
                         }
-                        
+                        echo "login id/name: " . $loginId . "/" . $loginName;
                     } catch (Exception $err) {
                         $errors = "Username or password is wrong. Are you from the campus?";
                         $authenticated = 0;
@@ -106,6 +113,9 @@ if (isset($_GET["logout"])) {
             $res = mysqli_query($con, $checkQuery);
             $line = mysqli_fetch_assoc($res);
             if (is_null($line)) {
+                
+                echo "CREATE: login id/name: " . $loginId . "/" . $loginName;
+                
                 $querySample = "INSERT INTO users (user_name, system_id) VALUES ('" . $_SESSION["hf_user_name"] . "', '" . $loginId ."');";
                 $stmt = mysqli_prepare($con, $querySample);
                 if ($stmt) {
@@ -125,8 +135,9 @@ if (isset($_GET["logout"])) {
                 // update system id
                 
                 // Remove the part before the @ if this is an email.
-              
-                $querySample = "UPDATE users set system_id = '" . $loginId ."' WHERE user_name = ''" . $_SESSION["hf_user_name"] . "';";
+                
+                $querySample = "UPDATE users set system_id = '" . $loginId ."' WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
+                error_log($querySample);
                 $stmt = mysqli_prepare($con, $querySample);
                 if ($stmt) {
                     mysqli_stmt_execute($stmt);
@@ -134,6 +145,8 @@ if (isset($_GET["logout"])) {
                     mysqli_stmt_close($stmt);                  
                 } else {
                     $errors = "There was an error in entering your user name in the system. Please contact the administrator.";
+                    error_log($errors);
+                    
                 }
                 
             }
@@ -145,6 +158,7 @@ if (isset($_GET["logout"])) {
             
             $_SESSION["hf_user_id"] = intval($line["user_id"]);
             
+            echo "SELECTED: login id/name: " . $loginId . "/" . $loginName . " -> ".intval($line["user_id"]);
             $_SESSION['user_login_status'] = 1;
         } else {
             $errors = "Wrong password. Try again.";

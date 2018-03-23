@@ -15,7 +15,7 @@
 library('raster', quietly = TRUE)
 
 
-dbQuery <- function(sql) {
+dbQuery <- function(sql) {	
 	dbConfig <- readIniFile(getHTSFlowPath("DB_CONF"), aslist = TRUE)	
 	user <- dbConfig$database$username
 	host <- dbConfig$database$hostname

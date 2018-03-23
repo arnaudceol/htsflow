@@ -37,19 +37,20 @@ if (file.exists(lockFile)) {
 	quit(save = "no", status = 0, runLast = TRUE)
 } else {
 	loginfo(sprintf("Lock user folder: %s", file.create(lockFile)))
+	loginfo("created lock")
 }
-
+loginfo("sqlquery")
 #sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' ")
 sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created, user_name from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL ")
 #sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' AND analyses_ty")
-
+loginfo(sqlQuery)
 jobs = extractInfoFromDB(sqlQuery)
-
+length("start")
 if (length(jobs$id) > 0) {
-	
+	loginfo(length(jobs$id))
 
 	for (i in 1:length(jobs$id)) {
-		
+		loginfo(i)
 		jobId<-jobs$id[i]
 		analysisId<-jobs$analyses_id[i]
 		type<-jobs$analyses_type[i]
@@ -58,9 +59,9 @@ if (length(jobs$id) > 0) {
 		
 		
 		id = getJobID(analysisId, type)
-		
+		loginfo(id)
 		regName <- paste0("HF_",id)
-		
+		loginfo(jobUser)
 		jobDir<-paste0(getUserDir(jobUser), "/",id, "/")
 		
 		if (! file.exists(jobDir)) {
@@ -85,7 +86,7 @@ if (length(jobs$id) > 0) {
 		reg <- addRegistrySourceFiles(reg, paste0(getHTSFlowPath("HTSFLOW_PIPELINE"),"/geoDownload.R"))
 		reg <- addRegistryPackages(reg, "logging")
 		
-		ids <- batchMap(reg, use.names = TRUE, fun=pipeline, analysisId, type, action)
+		ids <- batchMap(reg, use.names = TRUE, fun=pipeline, analysisId, type, action, jobUser)
 		#jobs$analyses_id
 		#getJobID
 		setJobNames(reg, getJobIds(reg), jobnames = sapply(analysisId, function(x) paste0("PROUT", x)))
@@ -103,5 +104,6 @@ if (length(jobs$id) > 0) {
 	
 	
 }
+
 loginfo(sprintf("Unlock user folder: %s", file.remove(lockFile)))
 

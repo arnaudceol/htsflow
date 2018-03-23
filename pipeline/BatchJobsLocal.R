@@ -1,1 +1,1 @@
-cluster.functions = makeClusterFunctionsLocal()
+	

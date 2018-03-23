@@ -18,8 +18,8 @@ library(logging)
 
 
 getUserDir <- function(user_name) {
-	system_id<-Sys.getenv("USER")
-	user_name <- extractSingleColumnFromDB(paste0("select user_name FROM users WHERE system_id = '", system_id, "'"))
+	#system_id<-Sys.getenv("USER")
+	#user_name <- extractSingleColumnFromDB(paste0("select user_name FROM users WHERE system_id = '", system_id, "'"))
 	
 	userdirs<-getHTSFlowPath("HTSFLOW_USERS")	
 	return (paste0(userdirs, "/", user_name))	

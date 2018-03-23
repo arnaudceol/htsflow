@@ -21,41 +21,39 @@
 // visible from the web, in order to protect the access to
 // the database.
 
-// /////////////////////////////////////////////////////////////
-//mysqli_connect();
-
-$config = parse_ini_file( DB_CONF, true);
-$hostname = $config['database']['hostname'];
-$username = $config['database']['username'];
-$loginPassword = $config['database']['pass'];
-$dbname = $config['database']['dbname'];
-$con = mysqli_connect($hostname, $username, $loginPassword, $dbname);
-
-///////////////////////////////////////////////////////////////
-// to use the connection to the db in each function use:
-// global $con;
-// ---- end of connection ---- //
-///////////////////////////////////////////////////////////////
-
-$con->query("SET GLOBAL general_log = 'ON'");
-
+if ( DB_CONF != '' ) {
+    $config = parse_ini_file(DB_CONF, true);
+    $hostname = $config['database']['hostname'];
+    $username = $config['database']['username'];
+    $loginPassword = $config['database']['pass'];
+    $dbname = $config['database']['dbname'];
+    $con = mysqli_connect($hostname, $username, $loginPassword, $dbname);
+    
+    // /////////////////////////////////////////////////////////////
+    // to use the connection to the db in each function use:
+    // global $con;
+    // ---- end of connection ---- //
+    // /////////////////////////////////////////////////////////////
+    
+    $con->query("SET GLOBAL general_log = 'ON'");
+}
 // Get new id
-if (!function_exists("getNewId")) {
-function getNewId()
-{
-    global $con;
-    
-    $queryGetId = "SELECT nextSampleId();";
-    
-    $result = mysqli_query($con, $queryGetId);
-    
-    if ($result) {
-        $id = mysqli_fetch_row($result)[0];
-        return $id;
-     }
-    
-     return NULL;
- }
-    
+if (! function_exists("getNewId")) {
+
+    function getNewId()
+    {
+        global $con;
+        
+        $queryGetId = "SELECT nextSampleId();";
+        
+        $result = mysqli_query($con, $queryGetId);
+        
+        if ($result) {
+            $id = mysqli_fetch_row($result)[0];
+            return $id;
+        }
+        
+        return NULL;
+    }
 }
   
