@@ -339,7 +339,7 @@ fastQCexec <- function( sample ) {
          getHTSFlowPath("fastQC")
         ,' -o '
         ,getHTSFlowPath("HTSFLOW_QC")
-        ,' -c '
+        ,' --contaminants '
         ,getHTSFlowPath("HTSFLOW_CONTAMINANTS")
         ,' '
         ,getHTSFlowPath("HTSFLOW_ALN")
@@ -438,10 +438,10 @@ doUniquelyAlignedBam <- function( sample ) {
         getHTSFlowPath("samtools")
         ,' sort '
         ,bamFileNameIn
-        ," "
+        ," -O BAM -o  "
         ,getPreprocessDir()
         ,primaryId
-        ,'_sort'
+        ,'_sort.bam'
         ,sep = ""
     )
     result <- tryOrExit( execute, 'Create a bam file with only uniquely mapped reads' )
@@ -529,7 +529,7 @@ doTophatAlignment <- function( sample , outFolder, RefGenomes, reference, flags 
 
 	sets <- flags$aln_options
     # run tophat and create a file 'tophatexecfailed' to control
-	tophat_exe <- paste0(getHTSFlowPath("tophat_dir"), "/tophat")
+	tophat_exe <- paste0(getHTSFlowPath("tophat_dir"), "/hisat2")
     execute <- paste(
 		tophat_exe    # path of the aligner
         ,sets              # settings
@@ -546,9 +546,9 @@ doTophatAlignment <- function( sample , outFolder, RefGenomes, reference, flags 
                     getHTSFlowPath("samtools")
                     ," sort "
                     ,dirname
-                    ,"accepted_hits.bam "
+                    ,"accepted_hits.bam -O BAM -o "
                     ,dirname
-                    ,"accepted_hits.sorted "
+                    ,"accepted_hits.sorted.bam "
                 )
 	tryOrExit(execute, "Tophat Alignment")
 	
@@ -670,10 +670,10 @@ doBismarkAlignment <- function( sample , outFolder, RefGenomes, reference, flags
                     ," sort "
                     ,dirname
                     ,primaryId
-                    ,".bam "
+                    ,".bam -O BAM -o "
                     ,dirname
                     ,primaryId
-                    ,".sorted"
+                    ,".sorted.bam"
                 )
 	tryOrExit(execute, "Bismark Alignment")
 
@@ -802,10 +802,10 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
             ,fastaFile
             ," - | "
             ,getHTSFlowPath("samtools")
-            ," sort - "
+            ," sort - -O BAM -o "
             ,getHTSFlowPath("HTSFLOW_ALN")
             ,"/"
-            ,primaryId
+            ,primaryId, '.bam'
             ,sep=""
             )
 
@@ -837,10 +837,10 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
             ,fastaFile
             ," - | "
             ,getHTSFlowPath("samtools")
-            ," sort - "
+            ," sort - -O BAM -o "
             ,getHTSFlowPath("HTSFLOW_ALN")
             ,"/"
-            ,primaryId
+            ,primaryId, '.bam'
             ,sep=""
             )
 		tryOrExit(execute, "BWA Alignment")
