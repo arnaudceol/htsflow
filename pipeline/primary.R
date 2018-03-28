@@ -291,7 +291,7 @@ getExtractFastqCommand <- function ( sample, tag ) {
             ,DirToProcess
             ," \\( -iname '*.fastq.gz' -o  -iname '*.fq.gz' \\) "
             ,tag
-            ," | sort | xargs -I {} pigz -cd {} "
+            ," | sort | xargs -I {} gzip -cd {} "
             )
     return( execute )
 }
@@ -834,7 +834,7 @@ doBwaAlignment <- function( sample , outFolder, RefGenomes, reference, flags ) {
             ," | "
             ,getHTSFlowPath("samtools")
             ," view -q 1 -ut "
-            ,fastaFile
+            ,fastaFile	
             ," - | "
             ,getHTSFlowPath("samtools")
             ," sort - "
