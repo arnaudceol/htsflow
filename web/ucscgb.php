@@ -66,7 +66,7 @@ if ($_GET ['type'] == 'primary' ) {
 	$analysisType =  $_GET ['type'];
 	
 	if ($analysisType == "peak_calling") {
-		$queryGenome = sprintf ( "SELECT genome, label, $analysisType.id, program FROM pa_option, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
+		$queryGenome = sprintf ( "SELECT genome, label, $analysisType.id, program FROM pa_options, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	} else {
 		$queryGenome = sprintf ( "SELECT genome, label, $analysisType.id FROM pa_options, primary_analysis, $analysisType WHERE options_id = pa_options.id  AND primary_id = primary_analysis.id AND secondary_id = %s", $analysisId );
 	}
