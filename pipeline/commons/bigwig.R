@@ -126,7 +126,7 @@ createSingleBigWig <- function( primaryId, genomePaths, seq_method, strand = FAL
 			,readsAln
 			,")+1}' "
 			,bedgraphF
-			," | sort -k1,1 -k2,2n >  "
+			," | sort -k1,1 -k2,2n | sed 's/ /\t/g' | sortBed >  "
 			,bedgraphTmp
 	)
 	
