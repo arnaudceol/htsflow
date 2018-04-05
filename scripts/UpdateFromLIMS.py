@@ -63,7 +63,7 @@ def main(configFile):
     # selection of the first scheduled element
     # Order by runid desc: if more than one run, keep the last one
     stringa1 = "SELECT sample.sam_id, sample.name, samplerun.flowcell, application.readlength, application.readmode,application.depth,  user.login, user.username, user.mailadress, organism,  \
-application.applicationname, pi.login, runfolder \
+application.applicationname, pi.login, pi.username, runfolder \
 FROM sample, samplerun, application, user, user as pi \
 WHERE application.application_id = sample.application_id AND samplerun.sam_id = sample.sam_id \
 AND sample.requester_user_id = user.user_id AND pi.user_id = user.pi \
@@ -153,7 +153,9 @@ order by run_id DESC;" % pisQuery;
         refgen = elem[9]
         app = elem[10]  # seq_method	
         pi = elem[11]
-        runFolder = elem[12]
+	piFullName = elem[12]
+	piSurname = piFullName.split(" ")[1]
+        runFolder = elem[13]
         
         runId = runFolder.split("_")[0].strip()        
 
@@ -163,7 +165,7 @@ order by run_id DESC;" % pisQuery;
             continue
         
         
-        FOLD = "%s/%s/FASTQ/%s/Sample_%s/" % (fastqLimsDir, user, runId, sample_name)
+        FOLD = "%s/%s/%s/FASTQ/%s/Sample_%s/" % (fastqLimsDir, piSurname, user, runId, sample_name)
         FOLD = FOLD.replace("//", "/")
         
         #print("->" + FOLD)
