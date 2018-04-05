@@ -25,7 +25,7 @@ suppressWarnings(suppressMessages(library('R.utils')))
 ####
 #### Use a new table rather than the sample one.
 ####
-geoDownload <- function( taskId ) {
+geoDownload <- function( taskId, username ) {
 	
 	## outpath: for preprocess files
 	# outPath <- getPreprocessDir()
@@ -58,10 +58,10 @@ geoDownload <- function( taskId ) {
 	} 
 	
 	# External user dir: 	
-	user<-Sys.getenv("USER")
+	#user<-Sys.getenv("USER")
 	uploadDir <- unlist(strsplit(getHTSFlowPath("HTSFLOW_UPLOAD_DIR"), ","))[1]	
 	
-	userUploadDir<-paste0(uploadDir, "/", user)
+	userUploadDir<-paste0(uploadDir, "/", username)
 
 	# Create it if it does not exist
 	if (! file.exists(userUploadDir)){
@@ -127,7 +127,7 @@ geoDownload <- function( taskId ) {
 		
 		sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
 				"SELECT 'X" , sampleId, "', '" , "GEO SAMPLE NOT AVAILABLE", "','" , method , "','" , 
-				readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , user , "'")
+				readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , username , "'")
 		
 		res <- updateInfoOnDB( sqlSample )
 		
@@ -161,7 +161,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 	sampleId <- extractSingleColumnFromDB(sqlSampleId)
 	loginfo(paste0("Create new sample: ", sampleId, " for GSM ", gse, "/", gsm))
 	
-	user<-Sys.getenv("USER")
+	#user<-Sys.getenv("USER")
 	
 	
 	#If GSE field is empty or null we have to find the GSE associated to the GSM
@@ -314,7 +314,7 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 			
 			sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
 					"SELECT 'X" , sampleId, "', '" , gsm , "','" , method , "','" , 
-					readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , user , "'")
+					readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , username , "'")
 			
 			
 			res <- updateInfoOnDB( sqlSample )
