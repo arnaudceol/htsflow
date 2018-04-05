@@ -4,9 +4,12 @@
 ## direct streams to our logfile
 #PBS -o <%= log.file %>
 ##PBS -l walltime=<%= resources$walltime %>,nodes=<%= resources$nodes %>,vmem=<%= resources$memory %>M
+#PBS -l select=1:ncpus=8
 ## remove this line if your cluster does not support arrayjobs
 #PBS -J 1-<%= arrayjobs %>
 #PBS -V
+
+LC_ALL="C"
 
 if [ -z "$HTSFLOW_CONF" ]; then
     echo "Need to set HTSFLOW_CONF"
