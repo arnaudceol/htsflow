@@ -76,9 +76,12 @@ differentialGeneExpression <- function( IDsec ){
 						names(reads) <- rownames(tmp)
 						reads
 					} )
-			colnames(matCounts) <- unlist(sampleName)
+			
+			# Known bug with DESeq2 and R3.3
+			#colnames(matCounts) <- unlist(sampleName)
 			colData_dds <- data.frame(treatment=conditions)
 			rownames(colData_dds) <- unlist(sampleName)
+			colnames(matCounts) <- NULL
 			TvsCdds <- DESeqDataSetFromMatrix( countData = matCounts, colData = colData_dds, design = ~treatment )
 			
 			# creating output folder
