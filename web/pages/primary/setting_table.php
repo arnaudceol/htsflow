@@ -162,7 +162,8 @@ $defaultProgram = $defaultOptions[$typeOfDefault]["program"];
 								<td>Remove Bad Reads</td>
 								<td><select name="remove_bad_reads"><option value="TRUE"
 											selected>TRUE</option>
-										<option value="FALSE">FALSE</option></select></td>
+										<option value="FALSE">FALSE</option></select> <span style="color: red">Do not use for external data (only 
+										for data  imported from the LIMS)</span></td>
 							</tr>
 							<tr>
 								<td>Trimming</td>
