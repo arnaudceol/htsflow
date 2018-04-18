@@ -23,6 +23,6 @@ connectToGEOmetaDB <- function(){
 
 downloadSRA <- function(sra_con, destinationDir, SRX_id){
 	getSRAfile(SRX_id, sra_con, destDir = destinationDir, fileType = 'sra', 
-			srcType = 'ftp', makeDirectory = FALSE, method = 'curl', ascpCMD = NULL )
+			srcType = 'fasp', makeDirectory = FALSE, method = 'curl', ascpCMD = '/hpcnfs/home/ieo3004/.aspera/cli/bin/ascp -QT -l 50m  -v -i /hpcnfs/home/ieo3004//.aspera/cli/etc/asperaweb_id_dsa.openssh ' )
 }
 
