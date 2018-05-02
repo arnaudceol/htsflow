@@ -213,7 +213,7 @@ pipeline <- function(id, TypeOfAnalysis, action, user_name) {
 		## flags <- extractInfoFromDB( SQL )	
 		## description <- flags$description
 		tryCatch(			
-			geoDownload ( id, user_name ),
+			geoDownload ( id ),
 			error = function(e)
 			{
 				print(e)

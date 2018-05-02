@@ -43,11 +43,12 @@ geoDownload <- function( taskId, username ) {
 	# Get ids, in the database they are store in the sample description
 	# as a list of type:value, separated by ,
 	# where type is either gse or gsm. There may be only one gsm
-	sqlGeoIds <- paste0("SELECT description FROM other_analysis WHERE id = '", taskId,"'") 
-	
-	taskDescription <- extractSingleColumnFromDB(sqlGeoIds)
+	sqlGeoIds <- paste0("SELECT description, user_name FROM other_analysis, users WHERE users.user_id = other_analysis.user_id AND other_analysis.id = '", taskId,"'") 
+	row <- extractInfoFromDB(sqlGeoIds)
+	taskDescription <- row$description
+	username <- row$user_name
 	loginfo(taskDescription)
-	geoIds <- strsplit(taskDescription[1,], ';')[[1]]
+	geoIds <- strsplit(taskDescription, ';')[[1]]
 	for(id in geoIds) {
 		geoType <- substr(id, 1,3) # strsplit(id, ':')[[1]][0]
 		if (geoType == 'GSE') {
@@ -94,50 +95,71 @@ geoDownload <- function( taskId, username ) {
 	loadConfig("BatchJobs.R")
 	setwd(workdir)
 	
-	regName <- paste0("HF_GEO_",taskId)
+#	regName <- paste0("HF_GEO_",taskId)
 	
-	reg <- makeHtsflowRegistry(regName)
+#	reg <- makeHtsflowRegistry(regName)
 	
 	numjobs <- length(gsms)
 	
-	ids <- batchMap(reg, fun=downloadGSM, rep(gse, numjobs), gsms, rep(userUploadDir, numjobs))
-	submitJobs(reg)
-	waitForJobs(reg)
+	successes <- c()
+	failures <- c()
 	
-	print(paste0("Status of jobs for registry %s: ", regName))
+	for (gsm in gsms){
+		success = 	downloadGSM(gse, gsm, userUploadDir, username)
+		if (success) {
+			successes<-c(successes, gsm)
+		} else {
+			failures <- c(failures, gsm)
+		}
+	}	
+		
+#	ids <- batchMap(reg, fun=downloadGSM, rep(gse, numjobs), gsms, rep(userUploadDir, numjobs))
+#	submitJobs(reg)
+#	waitForJobs(reg)
 	
-	showStatus(reg)
+#	print(paste0("Status of jobs for registry %s: ", regName))
 	
-	errors<-findErrors(reg)
+#	showStatus(reg)
+	
+	errors<-failures #findErrors(reg)
+	
+	if (length(successes) > 0) {
+		loginfo("Success: ")
+		loginfo(paste(successes, collapse = ' '))
+	}
 	
 	if (length(errors) > 0) { 
-		sqlSampleId <- "SELECT nextSampleId();";
-		sampleId <- extractSingleColumnFromDB(sqlSampleId)
-		loginfo(paste0("Create new sample: ", sampleId, " for GSMs: ", geoIds))
+		loginfo("Failures: ")
+		loginfo(paste(failures, collapse = ' '))
 		
-		readLength = 0		
-		readMode   = ''
-		refGenome  = 'unspecified'
 		
-		method <- "unspecified"
-		library_layout <- "unspecified"
-		organism <- "unspecified"
-		
-		description <- paste0("Data downloaded from GEO: ", geoIds, ". No metadata available, we cannot download this dataset.")
-		
-		sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
-				"SELECT 'X" , sampleId, "', '" , "GEO SAMPLE NOT AVAILABLE", "','" , method , "','" , 
-				readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , username , "'")
-		
-		res <- updateInfoOnDB( sqlSample )
-		
-		description<-gsub("'", "\\'", description)
-		description<-gsub("\\ +\\|\\|\\ +", "\n", description)
-		
-		sqlDescription <- paste0("INSERT INTO sample_description (sample_id, description) VALUES ('X", sampleId, "', '", description, "')")
-		loginfo(sqlDescription)
-		res <- updateInfoOnDB( sqlDescription )
-		
+#		sqlSampleId <- "SELECT nextSampleId();";
+#		sampleId <- extractSingleColumnFromDB(sqlSampleId)
+#		loginfo(paste0("Create new sample: ", sampleId, " for GSMs: ", geoIds))
+#		
+#		readLength = 0		
+#		readMode   = ''
+#		refGenome  = 'unspecified'
+#		
+#		method <- "unspecified"
+#		library_layout <- "unspecified"
+#		organism <- "unspecified"
+#		
+#		description <- paste0("Data downloaded from GEO: ", geoIds, ". GEO download failed, please check the error log.")
+#		
+#		sqlSample <- paste0('INSERT INTO sample (id, sample_name, seq_method, reads_length, reads_mode, ref_genome, raw_data_path, user_id, source, raw_data_path_date) ', 
+#				"SELECT 'X" , sampleId, "', '" , "GEO download failed", "','" , method , "','" , 
+#				readLength , "','" , readMode , "','" ,refGenome  , "','" , userUploadDir, "', user_id, 2, NOW() FROM users WHERE user_name = '" , username , "'")
+#		
+#		res <- updateInfoOnDB( sqlSample )
+#		
+#		description<-gsub("'", "\\'", description)
+#		description<-gsub("\\ +\\|\\|\\ +", "\n", description)
+#		
+#		sqlDescription <- paste0("INSERT INTO sample_description (sample_id, description) VALUES ('X", sampleId, "', '", description, "')")
+#		loginfo(sqlDescription)
+#		res <- updateInfoOnDB( sqlDescription )
+#		
 		SQL <- paste("UPDATE other_analysis SET status='Error', dateEnd=NOW() WHERE id=", taskId ,sep="")
 		res <- updateInfoOnDB( SQL )
 		
@@ -148,7 +170,12 @@ geoDownload <- function( taskId, username ) {
 	res <- updateInfoOnDB( SQL )
 }
 
-downloadGSM <- function( gse, gsm , userUploadDir) {
+downloadGSM <- function( gse, gsm , userUploadDir, username) {
+	
+	proceed = TRUE;
+	
+	# For the output
+	success = FALSE;
 	
 	initSpecies()
 	
@@ -167,8 +194,10 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 	#If GSE field is empty or null we have to find the GSE associated to the GSM
 	
 	if(gse=='' | is.null(gse) | is.na(gse)){
-		if(gsm=='' | is.null(gsm) | is.na(gsm)){l
-			stop("Invalid GSE and GSM provided")
+		if(gsm=='' | is.null(gsm) | is.na(gsm)){
+			logerror("Invalid GSE and GSM provided")
+			proceed = FALSE;
+			#stop("Invalid GSE and GSM provided")
 		}else{
 			gse_ids <- dbGetQuery(geo_con, paste0("select distinct gse from gse_gsm where gsm ='", toupper(gsm), "'"))
 			loginfo(gse_ids)
@@ -186,15 +215,20 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		gsm_ids <-  dbGetQuery(geo_con, paste0("select distinct gsm from gse_gsm where gse ='", toupper(gse), "'"))
 		
 		if(length(gsm_ids)==0){
-			stop(paste0("No GSMs found for id ", gse))
-		}
+			#stop(paste0("No GSMs found for id ", gse))
+			logerror(paste0("No GSMs found for id ", gse))
+			proceed = FALSE;
+		} else {
 		
-		if(gsm=='' | is.null(gsm) | is.na(gsm)) {
-			print("Missing GSM")
-		} 
+			if(gsm=='' | is.null(gsm) | is.na(gsm)) {
+				print("Missing GSM")
+			} 
 		
-		if(! toupper(gsm) %in% gsm_ids[,1]) {
-			stop(paste0("Wrong match: ", gsm , " does not belong to  " , gse))
+			if(! toupper(gsm) %in% gsm_ids[,1]) {
+				logerror(paste0("Wrong match: ", gsm , " does not belong to  " , gse))
+				proceed = FALSE;
+				#stop(paste0("Wrong match: ", gsm , " does not belong to  " , gse))
+			}
 		}
 		
 	}	
@@ -202,8 +236,14 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 	
 	#Create the appropriate folder structure
 	if(!file.exists(userUploadDir)){
-		stop("Invalid directory")
-	}else{
+		#stop("Invalid directory")
+		logerror("Invalid directory")
+		proceed = FALSE;
+	}
+		
+		
+		
+	if (proceed) {	
 		
 		userUploadDir <- paste0(userUploadDir, '/', gse, '/', gsm)
 		if(file.exists(userUploadDir))
@@ -224,10 +264,10 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 		
 		if(nrow(gsm_metadata)==0) {			
 			loginfo(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))	
-			stop(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))
+			#stop(paste0('No metadata found in database for SRAdb for GSM: ' , gsm))
 		} else if(nrow(gsm_metadata)>1) {
 			loginfo('Multiple experiments found')
-			stop('Multiple experiments found')
+			#stop('Multiple experiments found')
 		} else {
 			sra_metadata <- dbGetQuery(sra_con, paste0("select distinct taxon_id, scientific_name, sample_attribute from sample where sample_accession=='", gsm_metadata$sample_accession, "'"))[1,]
 			method <- tolower(gsm_metadata$library_strategy)
@@ -328,7 +368,11 @@ downloadGSM <- function( gse, gsm , userUploadDir) {
 			
 			
 			loginfo(paste0("Create new sample: ", sampleId, " for GSM ", gse, "/", gsm, "added in directory ", userUploadDir))
+			
+			success = TRUE
 		}
+		
+		return(success)
 	}
 }
 

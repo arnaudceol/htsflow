@@ -28,6 +28,7 @@ $sample_name = $_POST ["merge_name"];
 $seq_method = $_POST ["seq_method"];
 $rm_duplicates = $_POST ["rm_duplicates"];
 $stranded = $_POST ["stranded"];
+$genome= $_POST ["genome"];
 
 $options = array (
 		"rm_bad_reads" => "0",
@@ -37,7 +38,8 @@ $options = array (
 		"paired" => "0",
 		"rm_tmp_files" => "0",
 		"rm_duplicates" => $rm_duplicates,
-		"stranded" => $stranded 
+		"stranded" => $stranded,
+        "genome" => $genome 
 );
 
 $optID = getPrimaryOptionId ( $options );
@@ -94,7 +96,7 @@ foreach ( $_POST as $key => $value ) {
 $mergePrimaryId = getNewId ();
 
 $QueryPrimary = "INSERT INTO primary_analysis ( id, sample_id, options_id, status, user_id, origin, description ) VALUES ( " . $mergePrimaryId . ", '" . $mergeSampleId . "', " . $optID . ", 'scheduled', '" . $user_id . "', 1, '" . mysqli_real_escape_string ( $con, $_POST ['description'] ) . "'  );";
-
+echo $QueryPrimary;
 $stmt = mysqli_prepare ( $con, $QueryPrimary );
 if ($stmt) {
 	mysqli_stmt_execute ( $stmt );

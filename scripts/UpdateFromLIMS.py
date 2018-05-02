@@ -31,7 +31,7 @@ def main(configFile):
         pisQuery = " AND pi.login IN ('%s')" % "', '".join(pis); 
     
 
-    fastqLimsDir = config.get('lims', 'FASTQ_LIMS_DIR')
+    fastqLimsDir = config.get('lims', 'FASTQ_LIMS_DIR').split(",")[0]
     
     
     dbConfig = configparser.ConfigParser()
@@ -75,9 +75,7 @@ order by run_id DESC;" % pisQuery;
 
     ########################
 
-    # selection of the first scheduled element
-    folder = "/Illumina/PublicData/SampleSheets/"
-
+  
     stringa = "select id, raw_data_path from sample"
     cHTSflow.execute(stringa)
     samples = cHTSflow.fetchall()

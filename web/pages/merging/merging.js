@@ -21,6 +21,8 @@ function DNDmerging(){
     var selectedSamples = $('#selectedIds').val().replace(/\'/g, "").replace(/\ +/g, " ").trim().split(" ");
     var rm_dup = $('#rm_duplicates').val();
     var stranded = $('#stranded').val();
+    var genome = $('#genome').val();
+   
     INFO = INFO + "<form id=\"mergeRUN\" action=\"pages/merging/submit.php\" method=\"POST\">";
     INFO = INFO + "<input type='hidden' name='analysis' value='merging' />";
 
@@ -58,6 +60,7 @@ function DNDmerging(){
             INFO = INFO + "<input type='hidden' name='rm_duplicates' value='"+rm_dup+"' />";
             INFO = INFO + "<input type='hidden' name='seq_method' value='"+methods[0]+"' />";
             INFO = INFO + "<input type='hidden' name='stranded' value='"+stranded+"' />";
+            INFO = INFO + "<input type='hidden' name='genome' value='"+genome+"' />";
         }
     }
     INFO = INFO + "<input type='hidden' name='description' value='"+$('#description').val()+"' >";

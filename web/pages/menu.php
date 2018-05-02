@@ -35,6 +35,7 @@
 			<li><a href="secondary-browse.php">secondary</a></li>
 			<!-- <li><a href="analyses.php">My flow</a></li>  -->
 			<li><a href="usage.php">help</a></li>
+			<li><a href="analyses.php">my HTS-flow</a></li>
 			<li><a href="users.php">admin</a></li>
 			<!-- <li><a href="#">contact</a></li> -->
 		</ul>

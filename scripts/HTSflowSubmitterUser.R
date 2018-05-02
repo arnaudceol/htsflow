@@ -20,7 +20,9 @@ library("BatchJobs", quietly = TRUE)
 #loadConfig("BatchJobsLocal.R")
 loadConfig("BatchJobs.R")
 
-userName <-  Sys.getenv("USER")
+userName <-  commandArgs(TRUE)[1]
+loginfo("username: ")
+loginfo(userName)
 
 userDir <- getUserDir(userName) 
 
@@ -40,8 +42,8 @@ if (file.exists(lockFile)) {
 	loginfo("created lock")
 }
 loginfo("sqlquery")
-#sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' ")
-sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created, user_name from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL ")
+sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created, user_name from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' ")
+#sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created, user_name from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL ")
 #sqlQuery = paste0("select job_list.id, analyses_type, analyses_id, job_list.action, job_list.created from users, job_list WHERE job_list.user_id= users.user_id AND queued is NULL AND user_name = '" , userName , "' AND analyses_ty")
 loginfo(sqlQuery)
 jobs = extractInfoFromDB(sqlQuery)
@@ -89,7 +91,7 @@ if (length(jobs$id) > 0) {
 		ids <- batchMap(reg, use.names = TRUE, fun=pipeline, analysisId, type, action, jobUser)
 		#jobs$analyses_id
 		#getJobID
-		setJobNames(reg, getJobIds(reg), jobnames = sapply(analysisId, function(x) paste0("HF", x)))
+		setJobNames(reg, getJobIds(reg), jobnames = sapply(analysisId, function(x) paste0("PROUT", x)))
 		
 		# mark as done in DB
 		sqlQuery = paste0("UPDATE job_list SET queued = NOW() WHERE id = '", jobId,"'" )	 

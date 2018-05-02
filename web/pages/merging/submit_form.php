@@ -21,64 +21,64 @@
 require_once ("../../config.php");
 require ('../dbaccess.php');
 
-$selectedSamples = array ();
-$values = explode ( " ", $_POST ['selectedIds'] );
-foreach ( $values as $selectedId ) {
-	$value = preg_replace ( "/[\'\ ]/", "", $selectedId );
-	if ($value != "") {
-		array_push ( $selectedSamples, $value );
-	}
+$selectedSamples = array();
+$values = explode(" ", $_POST['selectedIds']);
+foreach ($values as $selectedId) {
+    $value = preg_replace("/[\'\ ]/", "", $selectedId);
+    if ($value != "") {
+        array_push($selectedSamples, $value);
+    }
 }
 
 global $con;
 
-$sql = "SELECT DISTINCT genome, seq_method, stranded FROM sample, primary_analysis, pa_options WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id in (" . implode ( ", ", $selectedSamples ) . ")";
+$sql = "SELECT DISTINCT genome, seq_method, stranded FROM sample, primary_analysis, pa_options WHERE pa_options.id = options_id AND sample_id = sample.id AND primary_analysis.id in (" . implode(", ", $selectedSamples) . ")";
 
-$result = mysqli_query ( $con, $sql );
+$result = mysqli_query($con, $sql);
 
-$methods = array ();
-$genomes = array ();
-$stranded = array ();
+$methods = array();
+$genomes = array();
+$stranded = array();
 
-while ( $row = mysqli_fetch_assoc ( $result ) ) {
-	if (! in_array ( $row ['genome'], $genomes )) {
-		array_push ( $genomes, $row ['genome'] );
-	}
-	
-	if (! in_array ( $row ['seq_method'], $methods )) {
-		array_push ( $methods, $row ['seq_method'] );
-	}
-
-	if (! in_array ( $row ['stranded'], $stranded )) {
-		array_push ( $stranded, $row ['stranded'] );
-	}
+while ($row = mysqli_fetch_assoc($result)) {
+    if (! in_array($row['genome'], $genomes)) {
+        array_push($genomes, $row['genome']);
+    }
+    
+    if (! in_array($row['seq_method'], $methods)) {
+        array_push($methods, $row['seq_method']);
+    }
+    
+    if (! in_array($row['stranded'], $stranded)) {
+        array_push($stranded, $row['stranded']);
+    }
 }
-mysqli_free_result ( $result );
+mysqli_free_result($result);
 $errors = FALSE;
 
-$numMethods = sizeof ( $methods );
-$numGenomes = sizeof ( $genomes );
-$numStranded = sizeof ( $stranded );
+$numMethods = sizeof($methods);
+$numGenomes = sizeof($genomes);
+$numStranded = sizeof($stranded);
 
 if ($numGenomes > 1) {
-	$errors = TRUE;
-	echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>The samples selected are based on different genomes. </div>";
+    $errors = TRUE;
+    echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>The samples selected are based on different genomes. </div>";
 }
 
 if ($numMethods > 1) {
-	$errors = TRUE;
-	echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>The samples selected are based on different sequencing methods. </div>";
+    $errors = TRUE;
+    echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>The samples selected are based on different sequencing methods. </div>";
 }
 
 if ($numStranded > 1) {
-	$errors = TRUE;
-	echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>All alignments must be either stranded or unstranded, but not a combination of both. </div>";
+    $errors = TRUE;
+    echo "<div><i style=\"color: red\" class=\"fa fa-exclamation-triangle\"></i>All alignments must be either stranded or unstranded, but not a combination of both. </div>";
 }
 
 if ($errors) {
-	echo "<div>Please go back and select different genomes</div>";
+    echo "<div>Please go back and select different genomes</div>";
 } else {
-	?>
+    ?>
 
 <div id="INFO"></div>
 <div>
@@ -103,7 +103,6 @@ if ($errors) {
 					<option value="1">TRUE</option>
 					<option value="0">FALSE</option>
 			</select></td>
-			<input type="hidden" name="stranded" id="stranded" value="<?php echo $stranded[0]; ?>"/>
 		</tr>
 		<?php if ($methods[0] == 'rna-seq') { ?>
 		<tr>
@@ -111,7 +110,11 @@ if ($errors) {
 			<td><?php if ($stranded[0]) { echo "True"; } else { echo "False"; } ?></td>
 		</tr>		
 		<?php  } ?>
-		<tr><td><button type="button" name="" id="SUBMIT" onclick="DNDmerging()">Merge</button></td>
+		<tr>
+			<td><input type="hidden" name="genome" id="genome"
+				value="<?php echo $genomes[0]; ?>" /> <input type="hidden"
+				name="stranded" id="stranded" value="<?php echo $stranded[0]; ?>" />
+				<button type="button" name="" id="SUBMIT" onclick="DNDmerging()">Merge</button></td>
 		</tr>
 	</table>
 

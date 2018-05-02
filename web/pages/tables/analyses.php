@@ -67,7 +67,7 @@ if (isset($_POST['method']) && $_POST['method'] != "") {
 if (isset($_POST['user_id']) && $_POST['user_id'] != "") {    
      $user_id = "user_id=" . $_POST['user_id'] . "";
      array_push($concatArray, $user_id);
-} elseif ( $_SESSION['grantedAdmin'] == 1 ) { 
+} else { //if ( $_SESSION['grantedAdmin'] == 1 ) { 
     $user_id = "user_id=" . $_SESSION["hf_user_id"] . "";
     array_push($concatArray, $user_id);
 }

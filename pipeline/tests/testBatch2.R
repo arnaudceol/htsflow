@@ -4,9 +4,19 @@ library("BatchJobs")
 
 loadConfig("BatchJobs.R")
 
+
+f <- function(arg1){
+	Sys.sleep(10)
+	print(arg1)
+}
+
+
 reg <- makeRegistry(id="minimal") #, file.dir="/data/BA/public_html/htsflow2-data/htsflow-out/minimal", skip=FALSE)
 
+
 batchMap(reg, f, 1:10)
+
+
 
 ## Submit jobs:
 submitJobs(reg)

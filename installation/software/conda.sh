@@ -3,9 +3,10 @@
 source activate htsflow
 
 conda config --add channels conda-forge
-conda config --add channels defaults
-conda config --add channels r
 conda config --add channels bioconda
+	
+conda config --add channels r
+
 
 #Install first python 2.7, to avoid installing version 3 indirectly
 conda install -y python=2.7

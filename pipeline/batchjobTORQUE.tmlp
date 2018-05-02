@@ -27,4 +27,4 @@ cd $HTSFLOW_PIPELINE
 
 source activate /hpcnfs/techunits/bioinformatics/htsflow/v0.1/conda/
 
-R CMD BATCH --no-save --no-restore "<%= rscript %>" /dev/stdout
+$HTSFLOW_RPATH/bin/R CMD BATCH --no-save --no-restore "<%= rscript %>" /dev/stdout
