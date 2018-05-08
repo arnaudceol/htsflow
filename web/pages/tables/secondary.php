@@ -201,8 +201,8 @@ function igbLoad(id, type) {
 
 
 function ucscGbLoad(id, genome, type) {
-	ucscScript = "<?php echo str_replace("pages/tables", "", dirname($pageURL)) . "ucscgb.php"; ?>";
-	url="<?php echo $HTSFLOW_PATHS['UCSC_GENOME_BROWSER_URL']?>/cgi-bin/hgTracks?db=" + genome + "&hgt.customText=" + ucscScript + "<?php echo urlencode("?id="); ?>" +  id + "<?php echo urlencode("&type="); ?>" + type;
+	ucscScript = "<?php echo str_replace("pages/tables", "", dirname($pageURL)) . "ucscgb.php?user_group=". $_SESSION["hf_user_group"]; ?>";
+	url="<?php echo $HTSFLOW_PATHS['UCSC_GENOME_BROWSER_URL']?>/cgi-bin/hgTracks?db=" + genome + "&hgt.customText=" + ucscScript + "<?php echo urlencode("&id="); ?>" +  id + "<?php echo urlencode("&type="); ?>" + type;
 	//alert(url)
 	//url = ucscScript + "?id=" + id + "&type=primary"
 	window.open(url, '_gb');	

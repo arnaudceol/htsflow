@@ -31,6 +31,8 @@ if (isset($_SESSION["hf_user_group"])) {
     $userGroup = strtolower($_SESSION["hf_user_group"]);
 } else if (isset( $_POST["user_group"])) {
     $userGroup = strtolower($_POST["user_group"]);
+} else if (isset( $_GET["user_group"])) {
+    $userGroup = strtolower($_GET["user_group"]);
 } 
     
 if (isset($userGroup)) {
