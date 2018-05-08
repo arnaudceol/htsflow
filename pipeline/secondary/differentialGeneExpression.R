@@ -35,11 +35,11 @@ differentialGeneExpression <- function( IDsec ){
 			setSecondaryStatus( IDsec=IDsec, status='genome error..', endTime=T )
 			logerror("REFGENOME error. The user provided samples with more than one reference genome.")
 		} else {
-			if ( REFGENOME == 'mm9' || REFGENOME == 'mm10' ) {
+			if ( REFGENOME == 'mm9' || REFGENOME == 'mm10'  ) {
 				library( org.Mm.eg.db , quietly = TRUE)
 				EG2GSlist <- as.list( org.Mm.egSYMBOL )
 			}
-			if ( REFGENOME == 'hg18' || REFGENOME == 'hg19' ) {
+			if ( REFGENOME == 'hg18' || REFGENOME == 'hg19'  ) {
 				library( org.Hs.eg.db , quietly = TRUE)
 				EG2GSlist <- as.list( org.Hs.egSYMBOL )
 			}
@@ -51,6 +51,28 @@ differentialGeneExpression <- function( IDsec ){
 				library( org.Rn.eg.db , quietly = TRUE)
 				EG2GSlist <- as.list( org.Rn.egSYMBOL )
 			}
+			
+			# For ENSEMBL 
+			if (REFGENOME == 'GRCm38' ) {
+				tmp<-read.table(paste0(getHTSFlowPath("HTSFLOW_GENOMES"), '/', REFGENOME, '/GTF/id2genename.txt') , header=FALSE)
+				names <- tmp[, 1]
+				data <- tmp[, 1]
+				names(data) <- names
+				EG2GSlist <- data
+				#EG2GSlist <- select(org.Mm.eg.db, keys=allkeys, columns=c('SYMBOL'), keytype='ENSEMBL')
+				#EG2GSlist <- as.list( tmp )
+			}
+			if (REFGENOME == 'GRCh38' ) {
+				tmp<-read.table(paste0(getHTSFlowPath("HTSFLOW_GENOMES"), '/', REFGENOME, '/GTF/id2genename.txt') , header=FALSE)
+				names <- tmp[, 1]
+				data <- tmp[, 1]
+				names(data) <- names
+				EG2GSlist <- data
+				#select(org.Hs.eg.db, keys=allkeys, columns=c('SYMBOL'), keytype='ENSEMBL')
+				#EG2GSlist <- as.list( tmp )
+			}
+			
+			
 			COUNTfold <- paste ( getHTSFlowPath("HTSFLOW_COUNT"), "/", sep="" )
 			sampleFiles <- sapply(1:length(values$primary_id), function(x) paste(COUNTfold, values$primary_id[x], ".count", sep="") )
 			# sampleName <- values$S1

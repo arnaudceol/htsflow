@@ -45,6 +45,27 @@ expressionQuantification <- function( IDsec ) {
 				EG2GSlist <- as.list( org.Rn.egSYMBOL )
 			}
 			
+			
+			# For ENSEMBL 
+			if (REFGENOME == 'GRCm38' ) {
+				tmp<-read.table(paste0(getHTSFlowPath("HTSFLOW_GENOMES"), '/', REFGENOME, '/GTF/id2genename.txt') , header=FALSE)
+				names <- tmp[, 1]
+				data <- tmp[, 1]
+				names(data) <- names
+				EG2GSlist <- data
+				#EG2GSlist <- select(org.Mm.eg.db, keys=allkeys, columns=c('SYMBOL'), keytype='ENSEMBL')
+				#EG2GSlist <- as.list( tmp )
+			}
+			if (REFGENOME == 'GRCh38' ) {
+				tmp<-read.table(paste0(getHTSFlowPath("HTSFLOW_GENOMES"), '/', REFGENOME, '/GTF/id2genename.txt') , header=FALSE)
+				names <- tmp[, 1]
+				data <- tmp[, 1]
+				names(data) <- names
+				EG2GSlist <- data
+				#select(org.Hs.eg.db, keys=allkeys, columns=c('SYMBOL'), keytype='ENSEMBL')
+				#EG2GSlist <- as.list( tmp )
+			}
+			
 			# update the DB with the secondary analysis status deconvolute expression
 			setSecondaryStatus( IDsec=IDsec, status='Deconvolute expression..', startTime=T )
 	
@@ -92,7 +113,7 @@ expressionQuantification <- function( IDsec ) {
 						})
 				
 				RPKMS <- as.matrix( RPKMS[names(EG2GSlist[rownames(RPKMS)][!sapply(EG2GSlist[rownames(RPKMS)], is.null)]),] )
-				rownames(RPKMS) <- EG2GSlist[rownames(RPKMS)]
+					rownames(RPKMS) <- EG2GSlist[rownames(RPKMS)]
 				RPKMS <- as.matrix( RPKMS[order(rownames(RPKMS)),] )
 				
 				colnames(RPKMS) <- getColumnNames(IDpreList, sampleNames)
