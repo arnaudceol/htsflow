@@ -71,15 +71,18 @@ primaryPipeline <- function( sample, flags, genomePaths ) {
         ## WHEN THE READS ARE READY, BASED ON THE KIND OF EXPERIMENT THE APPROPRIATE ALIGNER WILL
         ## BE USED, AS WELL THE COUNT OF THE ALIGNED READS AND THE REMOVAL OF PCR DUPLICATES
         if( as.numeric( flags$alignment ) ) {
-            if ( flags$aln_prog == "tophat" ) {
+            if ( flags$aln_prog == "tophat" || flags$aln_prog == "tophat-stranded" ) {
                 doTophatAlignment( sample , outPath, genomePaths, 'genome', flags )
             }
-            if ( flags$aln_prog == "bwa" ) {
+            else if ( flags$aln_prog == "bwa" ) {
                 doBwaAlignment( sample , outPath, genomePaths, 'genome', flags )
             }
-            if ( flags$aln_prog == "bismark" ) {
+            else if ( flags$aln_prog == "bismark" ) {
                 doBismarkAlignment( sample , outPath, genomePaths, 'genome', flags )
             }
+			else {
+				loginfo (paste("WARNING: unknown alignement tool selected: ",flags$aln_prog ))
+			}
             ## if the analysis requires removal of PCR duplicates, doUniquelyAlignedBam
             ## returns a BAM file without duplicates and generates the corresponding
             ## index file.
