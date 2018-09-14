@@ -1,6 +1,6 @@
-create database htsflowdb;
+create database htsflowsc;
 
-USE htsflowdb;
+USE htsflowsc;
 
 
 --
@@ -398,7 +398,7 @@ VALUES (0, 0, 0, 0, 0, 0, 1,0);
 INSERT INTO seq_samples VALUES(0);
 
 
-grant all on `htsflowdb`.* to 'htsflow'@'%' identified by 'hts';
-grant select on `htsflowdb`.* to 'htsflow_view'@'%' identified by 'hts';
+grant all on `htsflowsc`.* to 'htsflow'@'%' identified by 'hts';
+grant select on `htsflowsc`.* to 'htsflow_view'@'%' identified by 'hts';
 
 

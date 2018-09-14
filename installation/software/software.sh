@@ -176,7 +176,7 @@ version=3.2.0
 wget http://cran.rstudio.com/src/base/R-3/R-$version.tar.gz
 tar xf R-$version.tar.gz
 cd R-$version
-./configure --prefix=$deploydir/R
+./configure --prefix=$deploydir/R-fn
 make && make install
 cd .. 
 rm -rf R-$version

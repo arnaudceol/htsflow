@@ -61,6 +61,7 @@ include 'pages/users/createAdmin.php';
 									<option value="BA">BA</option>
  									<option value="PGP">PGP</option>
  									<option value="FN">FN</option>
+ 									<option value="FN">SC</option>
  								</select>
 								<input type="submit" name="login" value="Log in" />
 							</form>

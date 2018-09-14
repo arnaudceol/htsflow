@@ -47,9 +47,12 @@ header('Content-type: text/html; charset=utf-8');
     ?>    
      		<div id="addUser" style="display: none" class="over-form">
 				<form method="post">
-					User name: <input type="text" id="addUserName" name="addUserName"></input>
-					Password: <input type="password" id="addUserPassword"
-						name="addUserPassword"></input> <input type="submit"
+					User name (e.g. cbello): <input type="text" id="addUserName" name="addUserName"></input>
+<!-- 					Password: <input type="password" id="addUserPassword" -->
+<!-- 						name="addUserPassword"></input>  -->
+					User id (e.g. ieo1234): <input type="text" id="addUserSystemId"
+                     	name="addUserSystemId">
+					<input type="submit"
 						value="add user" />
 				</form>
 			</div>

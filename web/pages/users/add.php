@@ -21,7 +21,7 @@ require ('pages/dbaccess.php');
 if (isset ( $_POST ['addUserName'] )) {
 	// add user
 	$userName = $_POST ['addUserName'];
-	$userPassword = $_POST ['addUserPassword'];
+	$userSystemId = $_POST ['addUserSystemId'];
 	
 	$checkQuery = "SELECT * FROM users WHERE user_name = \"" . $userName . "\";";
 	
@@ -33,10 +33,11 @@ if (isset ( $_POST ['addUserName'] )) {
 	} else {
 
 	    // Hash the password with the salt
-	    $hash = password_hash($userPassword, PASSWORD_BCRYPT );
+	    //$hash = password_hash($userPassword, PASSWORD_BCRYPT );
 		
-		$sql = "INSERT INTO users(user_name, password) VALUES ('" . $userName . "', '" . $hash . "')";
-		
+		//$sql = "INSERT INTO users(user_name, password) VALUES ('" . $userName . "', '" . $hash . "')";
+	    $sql = "INSERT INTO users(user_name, user_id) VALUES ('" . $userName . "', '" . $userSystemId . "')";
+	    
 		if (mysqli_query ( $con, $sql )) {
 			echo "User " . $userName . " has been added";
 		} else {

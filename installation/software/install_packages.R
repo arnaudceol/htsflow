@@ -15,11 +15,11 @@ library(BiocInstaller)
 
 packagesList <- c('RColorBrewer', 'gplots', 'BatchJobs', 'raster', 'logging', 'R.utils')
 biocLite(packagesList)
-biocliteList <- c('compEpiTools','DESeq2', 'GEOmetadb','SRAdb', 'INSPEcT', 'TxDb.Mmusculus.UCSC.mm9.knownGene', 'TxDb.Hsapiens.UCSC.hg19.knownGene', 'org.Mm.eg.db', 'org.Hs.eg.db')
-biocLite(biocliteList)
+#biocliteList <- c('compEpiTools','DESeq2') ;//, 'GEOmetadb','SRAdb'); , 'INSPEcT', 'TxDb.Mmusculus.UCSC.mm9.knownGene', 'TxDb.Hsapiens.UCSC.hg19.knownGene', 'org.Mm.eg.db', 'org.Hs.eg.db')
+#biocLite(biocliteList)
 
-biocliteList <- c('compEpiTools','DESeq2', 'TxDb.Mmusculus.UCSC.mm9.knownGene','TxDb.Mmusculus.UCSC.mm10.knownGene', 'TxDb.Hsapiens.UCSC.hg19.knownGene','TxDb.Hsapiens.UCSC.hg18.knownGene', 'org.Mm.eg.db', 'org.Hs.eg.db')
-biocLite(biocliteList)
+#biocliteList <- c('compEpiTools','DESeq2', 'TxDb.Mmusculus.UCSC.mm9.knownGene','TxDb.Mmusculus.UCSC.mm10.knownGene', 'TxDb.Hsapiens.UCSC.hg19.knownGene','TxDb.Hsapiens.UCSC.hg18.knownGene', 'org.Mm.eg.db', 'org.Hs.eg.db')
+#biocLite(biocliteList)
 
 
 #biocliteList <- c('compEpiTools','DESeq2', 'GEOmetadb','SRAdb')

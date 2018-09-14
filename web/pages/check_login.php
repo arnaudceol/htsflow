@@ -102,13 +102,13 @@ if (isset($_GET["logout"])) {
         }
         
         if ($authenticated) {
-            $_SESSION["hf_user_name"] = $loginName;
+            
             
             $_SESSION["hf_user_group"] = $_POST["user_group"];
             
             // then we check that the user is in HTSflow Database users table.
             // if not, it has to be added.
-            $checkQuery = "SELECT * FROM users WHERE user_name = '" . $_SESSION["hf_user_name"] . "';";
+            $checkQuery = "SELECT * FROM users WHERE user_name = '" . $loginName . "' or system_id = '" . $loginName . "';";
             
             $res = mysqli_query($con, $checkQuery);
             $line = mysqli_fetch_assoc($res);
@@ -149,7 +149,11 @@ if (isset($_GET["logout"])) {
                     
                 }
                 
+            } else {
+                // be sure I'm using login name and not system id
+                $_SESSION["hf_user_name"] = $line['user_name'];
             }
+            
             
             $_SESSION['grantedBrowse'] = $line['granted_browse'];
             $_SESSION['grantedPrimary'] = $line['granted_primary'];

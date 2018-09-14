@@ -60,12 +60,12 @@ bioclitePackages <- available.packages(contriburl = contrib.url(annotationsUrl))
 
 downloadGenome <- function(genome) {
 	# Homo_sapiens UCSC hg19 TxDb.Hsapiens.UCSC.hg19.knownGene org.Hs.eg.db knownGene org.Hs.egSYMBOL
-	species <- genome[,1]
-	host <- genome[,2]
-	version <- genome[,3]
-	txdbLib <- genome[,4]	
-	annotationLibName <- genome[,5]
-	tableName <- genome[,6]
+	species <- genome[1]
+	host <- genome[2]
+	version <- genome[3]
+	txdbLib <- genome[4]	
+	annotationLibName <- genome[5]
+	tableName <- genome[6]
 	
 	print(paste0("Download version: ", version, " of genome ", species, " lib: " , txdbLib))
 	

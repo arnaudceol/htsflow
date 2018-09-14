@@ -30,19 +30,6 @@ $rm_duplicates = $_POST ["rm_duplicates"];
 $stranded = $_POST ["stranded"];
 $genome= $_POST ["genome"];
 
-$options = array (
-		"rm_bad_reads" => "0",
-		"trimming" => "0",
-		"masking" => "0",
-		"alignment" => "0",
-		"paired" => "0",
-		"rm_tmp_files" => "0",
-		"rm_duplicates" => $rm_duplicates,
-		"stranded" => $stranded,
-        "genome" => $genome 
-);
-
-$optID = getPrimaryOptionId ( $options );
 
 $MergeData = Array (
 		"sample" => Array () 
@@ -68,6 +55,22 @@ foreach ( $MergeData ["sample"] as $key => $value ) {
 	}
 	mysqli_free_result ( $res );
 }
+
+$options = array (
+    "rm_bad_reads" => "0",
+    "trimming" => "0",
+    "masking" => "0",
+    "alignment" => "0",
+    "paired" => "0",
+    "rm_tmp_files" => "0",
+    "rm_duplicates" => $rm_duplicates,
+    "stranded" => $stranded,
+    "genome" => $refgenome
+);
+
+$optID = getPrimaryOptionId ( $options );
+
+
 
 // Get new ID for the sample associated to this merge
 $mergeSampleId = "M" . getNewId ();
